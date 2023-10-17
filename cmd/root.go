@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const appName = "go-template"
+const appName = "datum"
 
 var (
 	cfgFile string
@@ -21,7 +21,7 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   appName,
-	Short: "A go-template repo for graph apis",
+	Short: "A datum repo for graph apis",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

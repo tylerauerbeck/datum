@@ -8,7 +8,7 @@ import (
 
 	"github.com/vektah/gqlparser/v2/formatter"
 
-	"github.com/datumforge/go-template/internal/api"
+	"github.com/datumforge/datum/internal/api"
 )
 
 // read in schema from internal package and save it to the schema file

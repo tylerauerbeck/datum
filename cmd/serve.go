@@ -19,7 +19,7 @@ package cmd
 // 	"github.com/spf13/viper"
 // 	"go.uber.org/zap"
 
-// 	ent "github.com/datumforge/go-template/internal/ent/generated"
+// 	ent "github.com/datumforge/datum/internal/ent/generated"
 // )
 
 // const (
