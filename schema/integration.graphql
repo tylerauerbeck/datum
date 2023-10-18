@@ -1,0 +1,75 @@
+extend type Query {
+    """
+    Look up integration by ID
+    """
+     integration(
+        """
+        ID of the integration
+        """
+        id: ID!
+    ):  Integration!
+}
+
+extend type Mutation{
+    """
+    Create a new integration
+    """
+    createIntegration(
+        """
+        values of the integration
+        """
+        input: CreateIntegrationInput!
+    ): IntegrationCreatePayload!
+    """
+    Update an existing integration
+    """
+    updateIntegration(
+        """
+        ID of the integration
+        """
+        id: ID!
+        """
+        New values for the integration
+        """
+        input: UpdateIntegrationInput!
+    ): IntegrationUpdatePayload!
+    """
+    Delete an existing integration
+    """
+    deleteIntegration(
+        """
+        ID of the integration
+        """
+        id: ID!
+    ): IntegrationDeletePayload!
+}
+
+"""
+Return response for createIntegration mutation
+"""
+type IntegrationCreatePayload {
+    """
+    Created integration
+    """
+    integration: Integration!
+}
+
+"""
+Return response for updateIntegration mutation
+"""
+type IntegrationUpdatePayload {
+    """
+    Updated integration
+    """
+    integration: Integration!
+}
+
+"""
+Return response for deleteIntegration mutation
+"""
+type IntegrationDeletePayload {
+    """
+    Deleted integration ID
+    """
+    deletedID: ID!
+}

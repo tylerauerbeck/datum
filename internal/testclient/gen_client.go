@@ -27,5 +27,23 @@ type Query struct {
 	Memberships   []*Membership     "json:\"memberships\" graphql:\"memberships\""
 	Organizations []*Organization   "json:\"organizations\" graphql:\"organizations\""
 	Users         []*User           "json:\"users\" graphql:\"users\""
+	Integration   Integration       "json:\"integration\" graphql:\"integration\""
+	Membership    Membership        "json:\"membership\" graphql:\"membership\""
+	Organization  Organization      "json:\"organization\" graphql:\"organization\""
+	User          User              "json:\"user\" graphql:\"user\""
 	Service       Service           "json:\"_service\" graphql:\"_service\""
+}
+type Mutation struct {
+	UserCreate         UserCreatePayload         "json:\"userCreate\" graphql:\"userCreate\""
+	UserUpdate         UserUpdatePayload         "json:\"userUpdate\" graphql:\"userUpdate\""
+	UserDelete         UserDeletePayload         "json:\"userDelete\" graphql:\"userDelete\""
+	CreateIntegration  IntegrationCreatePayload  "json:\"createIntegration\" graphql:\"createIntegration\""
+	UpdateIntegration  IntegrationUpdatePayload  "json:\"updateIntegration\" graphql:\"updateIntegration\""
+	DeleteIntegration  IntegrationDeletePayload  "json:\"deleteIntegration\" graphql:\"deleteIntegration\""
+	CreateMembership   MembershipCreatePayload   "json:\"createMembership\" graphql:\"createMembership\""
+	UpdateMembership   MembershipUpdatePayload   "json:\"updateMembership\" graphql:\"updateMembership\""
+	DeleteMembership   MembershipDeletePayload   "json:\"deleteMembership\" graphql:\"deleteMembership\""
+	CreateOrganization OrganizationCreatePayload "json:\"createOrganization\" graphql:\"createOrganization\""
+	UpdateOrganization OrganizationUpdatePayload "json:\"updateOrganization\" graphql:\"updateOrganization\""
+	DeleteOrganization OrganizationDeletePayload "json:\"deleteOrganization\" graphql:\"deleteOrganization\""
 }
