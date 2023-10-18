@@ -21,7 +21,11 @@ func NewClient(cli *http.Client, baseURL string, options ...client.HTTPRequestOp
 }
 
 type Query struct {
-	Node    generated.Noder   "json:\"node\" graphql:\"node\""
-	Nodes   []generated.Noder "json:\"nodes\" graphql:\"nodes\""
-	Service Service           "json:\"_service\" graphql:\"_service\""
+	Node          generated.Noder   "json:\"node\" graphql:\"node\""
+	Nodes         []generated.Noder "json:\"nodes\" graphql:\"nodes\""
+	Integrations  []*Integration    "json:\"integrations\" graphql:\"integrations\""
+	Memberships   []*Membership     "json:\"memberships\" graphql:\"memberships\""
+	Organizations []*Organization   "json:\"organizations\" graphql:\"organizations\""
+	Users         []*User           "json:\"users\" graphql:\"users\""
+	Service       Service           "json:\"_service\" graphql:\"_service\""
 }

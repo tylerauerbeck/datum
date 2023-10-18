@@ -36,9 +36,59 @@ func (r *queryResolver) Nodes(ctx context.Context, ids []string) ([]generated.No
 	panic(fmt.Errorf("not implemented: Nodes - nodes"))
 }
 
+// Integrations is the resolver for the integrations field.
+func (r *queryResolver) Integrations(ctx context.Context) ([]*generated.Integration, error) {
+	panic(fmt.Errorf("not implemented: Integrations - integrations"))
+}
+
+// Memberships is the resolver for the memberships field.
+func (r *queryResolver) Memberships(ctx context.Context) ([]*generated.Membership, error) {
+	panic(fmt.Errorf("not implemented: Memberships - memberships"))
+}
+
+// Organizations is the resolver for the organizations field.
+func (r *queryResolver) Organizations(ctx context.Context) ([]*generated.Organization, error) {
+	panic(fmt.Errorf("not implemented: Organizations - organizations"))
+}
+
+// Users is the resolver for the users field.
+func (r *queryResolver) Users(ctx context.Context) ([]*generated.User, error) {
+	panic(fmt.Errorf("not implemented: Users - users"))
+}
+
 // ID is the resolver for the id field.
 func (r *userResolver) ID(ctx context.Context, obj *generated.User) (string, error) {
 	panic(fmt.Errorf("not implemented: ID - id"))
+}
+
+// OrganizationID is the resolver for the organizationID field.
+func (r *createIntegrationInputResolver) OrganizationID(ctx context.Context, obj *generated.CreateIntegrationInput, data string) error {
+	panic(fmt.Errorf("not implemented: OrganizationID - organizationID"))
+}
+
+// OrganizationID is the resolver for the organizationID field.
+func (r *createMembershipInputResolver) OrganizationID(ctx context.Context, obj *generated.CreateMembershipInput, data string) error {
+	panic(fmt.Errorf("not implemented: OrganizationID - organizationID"))
+}
+
+// UserID is the resolver for the userID field.
+func (r *createMembershipInputResolver) UserID(ctx context.Context, obj *generated.CreateMembershipInput, data string) error {
+	panic(fmt.Errorf("not implemented: UserID - userID"))
+}
+
+// MembershipIDs is the resolver for the membershipIDs field.
+func (r *createOrganizationInputResolver) MembershipIDs(ctx context.Context, obj *generated.CreateOrganizationInput, data []string) error {
+	panic(fmt.Errorf("not implemented: MembershipIDs - membershipIDs"))
+}
+
+// IntegrationIDs is the resolver for the integrationIDs field.
+func (r *createOrganizationInputResolver) IntegrationIDs(ctx context.Context, obj *generated.CreateOrganizationInput, data []string) error {
+	panic(fmt.Errorf("not implemented: IntegrationIDs - integrationIDs"))
+}
+
+// MembershipIDs is the resolver for the membershipIDs field.
+func (r *createUserInputResolver) MembershipIDs(ctx context.Context, obj *generated.CreateUserInput, data []string) error {
+	panic(fmt.Errorf("not implemented: MembershipIDs - membershipIDs"))
 }
 
 // ID is the resolver for the id field.
@@ -161,6 +211,51 @@ func (r *organizationWhereInputResolver) IDLte(ctx context.Context, obj *generat
 	panic(fmt.Errorf("not implemented: IDLte - idLTE"))
 }
 
+// OrganizationID is the resolver for the organizationID field.
+func (r *updateIntegrationInputResolver) OrganizationID(ctx context.Context, obj *generated.UpdateIntegrationInput, data *string) error {
+	panic(fmt.Errorf("not implemented: OrganizationID - organizationID"))
+}
+
+// OrganizationID is the resolver for the organizationID field.
+func (r *updateMembershipInputResolver) OrganizationID(ctx context.Context, obj *generated.UpdateMembershipInput, data *string) error {
+	panic(fmt.Errorf("not implemented: OrganizationID - organizationID"))
+}
+
+// UserID is the resolver for the userID field.
+func (r *updateMembershipInputResolver) UserID(ctx context.Context, obj *generated.UpdateMembershipInput, data *string) error {
+	panic(fmt.Errorf("not implemented: UserID - userID"))
+}
+
+// AddMembershipIDs is the resolver for the addMembershipIDs field.
+func (r *updateOrganizationInputResolver) AddMembershipIDs(ctx context.Context, obj *generated.UpdateOrganizationInput, data []string) error {
+	panic(fmt.Errorf("not implemented: AddMembershipIDs - addMembershipIDs"))
+}
+
+// RemoveMembershipIDs is the resolver for the removeMembershipIDs field.
+func (r *updateOrganizationInputResolver) RemoveMembershipIDs(ctx context.Context, obj *generated.UpdateOrganizationInput, data []string) error {
+	panic(fmt.Errorf("not implemented: RemoveMembershipIDs - removeMembershipIDs"))
+}
+
+// AddIntegrationIDs is the resolver for the addIntegrationIDs field.
+func (r *updateOrganizationInputResolver) AddIntegrationIDs(ctx context.Context, obj *generated.UpdateOrganizationInput, data []string) error {
+	panic(fmt.Errorf("not implemented: AddIntegrationIDs - addIntegrationIDs"))
+}
+
+// RemoveIntegrationIDs is the resolver for the removeIntegrationIDs field.
+func (r *updateOrganizationInputResolver) RemoveIntegrationIDs(ctx context.Context, obj *generated.UpdateOrganizationInput, data []string) error {
+	panic(fmt.Errorf("not implemented: RemoveIntegrationIDs - removeIntegrationIDs"))
+}
+
+// AddMembershipIDs is the resolver for the addMembershipIDs field.
+func (r *updateUserInputResolver) AddMembershipIDs(ctx context.Context, obj *generated.UpdateUserInput, data []string) error {
+	panic(fmt.Errorf("not implemented: AddMembershipIDs - addMembershipIDs"))
+}
+
+// RemoveMembershipIDs is the resolver for the removeMembershipIDs field.
+func (r *updateUserInputResolver) RemoveMembershipIDs(ctx context.Context, obj *generated.UpdateUserInput, data []string) error {
+	panic(fmt.Errorf("not implemented: RemoveMembershipIDs - removeMembershipIDs"))
+}
+
 // ID is the resolver for the id field.
 func (r *userWhereInputResolver) ID(ctx context.Context, obj *generated.UserWhereInput, data *string) error {
 	panic(fmt.Errorf("not implemented: ID - id"))
@@ -216,6 +311,24 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 // User returns UserResolver implementation.
 func (r *Resolver) User() UserResolver { return &userResolver{r} }
 
+// CreateIntegrationInput returns CreateIntegrationInputResolver implementation.
+func (r *Resolver) CreateIntegrationInput() CreateIntegrationInputResolver {
+	return &createIntegrationInputResolver{r}
+}
+
+// CreateMembershipInput returns CreateMembershipInputResolver implementation.
+func (r *Resolver) CreateMembershipInput() CreateMembershipInputResolver {
+	return &createMembershipInputResolver{r}
+}
+
+// CreateOrganizationInput returns CreateOrganizationInputResolver implementation.
+func (r *Resolver) CreateOrganizationInput() CreateOrganizationInputResolver {
+	return &createOrganizationInputResolver{r}
+}
+
+// CreateUserInput returns CreateUserInputResolver implementation.
+func (r *Resolver) CreateUserInput() CreateUserInputResolver { return &createUserInputResolver{r} }
+
 // IntegrationWhereInput returns IntegrationWhereInputResolver implementation.
 func (r *Resolver) IntegrationWhereInput() IntegrationWhereInputResolver {
 	return &integrationWhereInputResolver{r}
@@ -231,6 +344,24 @@ func (r *Resolver) OrganizationWhereInput() OrganizationWhereInputResolver {
 	return &organizationWhereInputResolver{r}
 }
 
+// UpdateIntegrationInput returns UpdateIntegrationInputResolver implementation.
+func (r *Resolver) UpdateIntegrationInput() UpdateIntegrationInputResolver {
+	return &updateIntegrationInputResolver{r}
+}
+
+// UpdateMembershipInput returns UpdateMembershipInputResolver implementation.
+func (r *Resolver) UpdateMembershipInput() UpdateMembershipInputResolver {
+	return &updateMembershipInputResolver{r}
+}
+
+// UpdateOrganizationInput returns UpdateOrganizationInputResolver implementation.
+func (r *Resolver) UpdateOrganizationInput() UpdateOrganizationInputResolver {
+	return &updateOrganizationInputResolver{r}
+}
+
+// UpdateUserInput returns UpdateUserInputResolver implementation.
+func (r *Resolver) UpdateUserInput() UpdateUserInputResolver { return &updateUserInputResolver{r} }
+
 // UserWhereInput returns UserWhereInputResolver implementation.
 func (r *Resolver) UserWhereInput() UserWhereInputResolver { return &userWhereInputResolver{r} }
 
@@ -239,7 +370,15 @@ type membershipResolver struct{ *Resolver }
 type organizationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type userResolver struct{ *Resolver }
+type createIntegrationInputResolver struct{ *Resolver }
+type createMembershipInputResolver struct{ *Resolver }
+type createOrganizationInputResolver struct{ *Resolver }
+type createUserInputResolver struct{ *Resolver }
 type integrationWhereInputResolver struct{ *Resolver }
 type membershipWhereInputResolver struct{ *Resolver }
 type organizationWhereInputResolver struct{ *Resolver }
+type updateIntegrationInputResolver struct{ *Resolver }
+type updateMembershipInputResolver struct{ *Resolver }
+type updateOrganizationInputResolver struct{ *Resolver }
+type updateUserInputResolver struct{ *Resolver }
 type userWhereInputResolver struct{ *Resolver }

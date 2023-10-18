@@ -1,0 +1,57 @@
+extend type Query {
+  """
+  Lookup a user by ID.
+  """
+  user(
+    """
+    The user ID.
+    """
+    id: ID!): User!
+}
+
+type Mutation {
+  """
+  Create a user
+  """
+  userCreate(input: CreateUserInput!): UserCreatePayload!
+
+  """
+  Update a user
+  """
+  userUpdate(id: ID! input: UpdateUserInput!): UserUpdatePayload!
+
+  """
+  Delete a user
+  """
+  userDelete(id: ID!): UserDeletePayload!
+}
+
+"""
+Return response from userCreate
+"""
+type UserCreatePayload {
+  """
+  The created user.
+  """
+  user: User!
+}
+
+"""
+Return response from userUpdate
+"""
+type UserUpdatePayload {
+  """
+  The updated user.
+  """
+  user: User!
+}
+
+"""
+Return response from userDelete
+"""
+type UserDeletePayload {
+  """
+  The deleted user.
+  """
+  deletedID: ID!
+}
