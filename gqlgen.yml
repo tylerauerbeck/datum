@@ -65,9 +65,9 @@ resolver:
 
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
-# autobind:
-#  - "github.com/datumforge/go-template/internal/api"
-#  - "github.com/datumforge/go-template/internal/ent/generated"
+autobind:
+ - "github.com/datumforge/datum/internal/api"
+ - "github.com/datumforge/datum/internal/ent/generated"
 
 
 # This section declares type mapping between the GraphQL and go type systems

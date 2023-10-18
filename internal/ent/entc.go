@@ -40,7 +40,7 @@ func main() {
 	if err := entc.Generate("./internal/ent/schema", &gen.Config{
 		Target:   "./internal/ent/generated",
 		Features: []gen.Feature{gen.FeatureVersionedMigration},
-		Package:  "github.com/datumforge/go-template/internal/ent/generated",
+		Package:  "github.com/datumforge/datum/internal/ent/generated",
 	}, opts...); err != nil {
 		log.Fatalf("running ent codegen: %v", err)
 	}

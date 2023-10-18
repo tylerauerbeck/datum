@@ -1,5 +1,6 @@
-# go-template
-Template repo for golang graphql apis
+# Datum Core
+
+This repo will hold the core server / handler for Datum services.
 
 ## Create Schema
 
