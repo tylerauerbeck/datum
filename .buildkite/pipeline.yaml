@@ -1,6 +1,6 @@
 env:
   APP_NAME: ${BUILDKITE_PIPELINE_SLUG}
-  IMAGE_REPO: us-docker.pkg.dev/datum/${APP_NAME}
+  IMAGE_REPO: ghcr.io/datumforge/${APP_NAME}
   IMAGE_TAG: ${BUILDKITE_BUILD_NUMBER}-${BUILDKITE_COMMIT:0:8}
 
 steps:
@@ -29,7 +29,7 @@ steps:
           - GOOS=linux
         command: ["go", "build", "-buildvcs=false", "-mod=mod", "-a", "-o", "bin/$APP_NAME"]
 
-# TODO (sfunk): Setup Secrets + gcloud cli on buildkite runners
+# TODO Setup Secrets + gcloud cli on buildkite runners
 # - label: ":docker: docker build and publish"
 #   key: "build"
 #   depends_on: ["lint", "test", "gobuild"]

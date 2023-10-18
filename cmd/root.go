@@ -54,13 +54,13 @@ func initConfig() {
 		home, err := homedir.Dir()
 		cobra.CheckErr(err)
 
-		// Search config in home directory with name ".gotemplate" (without extension).
+		// Search config in home directory with name ".datum" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".gotemplate")
+		viper.SetConfigName(".datum")
 	}
 
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
-	viper.SetEnvPrefix("gotemplate")
+	viper.SetEnvPrefix("datum")
 	viper.AutomaticEnv() // read in environment variables that match
 
 	err := viper.ReadInConfig()
