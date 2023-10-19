@@ -11,27 +11,22 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated"
 )
 
-// UserCreate is the resolver for the userCreate field.
-func (r *mutationResolver) UserCreate(ctx context.Context, input generated.CreateUserInput) (*UserCreatePayload, error) {
-	panic(fmt.Errorf("not implemented: UserCreate - userCreate"))
+// CreateUser is the resolver for the createUser field.
+func (r *mutationResolver) CreateUser(ctx context.Context, input generated.CreateUserInput) (*UserCreatePayload, error) {
+	panic(fmt.Errorf("not implemented: CreateUser - createUser"))
 }
 
-// UserUpdate is the resolver for the userUpdate field.
-func (r *mutationResolver) UserUpdate(ctx context.Context, id string, input generated.UpdateUserInput) (*UserUpdatePayload, error) {
-	panic(fmt.Errorf("not implemented: UserUpdate - userUpdate"))
+// UpdateUser is the resolver for the updateUser field.
+func (r *mutationResolver) UpdateUser(ctx context.Context, id string, input generated.UpdateUserInput) (*UserUpdatePayload, error) {
+	panic(fmt.Errorf("not implemented: UpdateUser - updateUser"))
 }
 
-// UserDelete is the resolver for the userDelete field.
-func (r *mutationResolver) UserDelete(ctx context.Context, id string) (*UserDeletePayload, error) {
-	panic(fmt.Errorf("not implemented: UserDelete - userDelete"))
+// DeleteUser is the resolver for the deleteUser field.
+func (r *mutationResolver) DeleteUser(ctx context.Context, id string) (*UserDeletePayload, error) {
+	panic(fmt.Errorf("not implemented: DeleteUser - deleteUser"))
 }
 
 // User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id string) (*generated.User, error) {
 	panic(fmt.Errorf("not implemented: User - user"))
 }
-
-// Mutation returns MutationResolver implementation.
-func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
-
-type mutationResolver struct{ *Resolver }
