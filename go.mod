@@ -29,6 +29,8 @@ require (
 	go.uber.org/zap v1.26.0
 )
 
+require github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
+
 require (
 	ariga.io/atlas v0.14.2 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
@@ -86,4 +88,5 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	lukechampine.com/frand v1.4.2
 )
