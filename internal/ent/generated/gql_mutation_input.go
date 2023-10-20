@@ -5,6 +5,7 @@ package generated
 import (
 	"time"
 
+	"github.com/datumforge/datum/internal/ent/generated/session"
 	"github.com/google/uuid"
 )
 
@@ -300,6 +301,118 @@ func (c *OrganizationUpdateOne) SetInput(i UpdateOrganizationInput) *Organizatio
 	return c
 }
 
+// CreateSessionInput represents a mutation input for creating sessions.
+type CreateSessionInput struct {
+	CreatedAt *time.Time
+	UpdatedAt *time.Time
+	CreatedBy *int
+	UpdatedBy *int
+	Type      session.Type
+	Disabled  bool
+	Token     *string
+	UserAgent *string
+	Ips       string
+	UsersID   *uuid.UUID
+}
+
+// Mutate applies the CreateSessionInput on the SessionMutation builder.
+func (i *CreateSessionInput) Mutate(m *SessionMutation) {
+	if v := i.CreatedAt; v != nil {
+		m.SetCreatedAt(*v)
+	}
+	if v := i.UpdatedAt; v != nil {
+		m.SetUpdatedAt(*v)
+	}
+	if v := i.CreatedBy; v != nil {
+		m.SetCreatedBy(*v)
+	}
+	if v := i.UpdatedBy; v != nil {
+		m.SetUpdatedBy(*v)
+	}
+	m.SetType(i.Type)
+	m.SetDisabled(i.Disabled)
+	if v := i.Token; v != nil {
+		m.SetToken(*v)
+	}
+	if v := i.UserAgent; v != nil {
+		m.SetUserAgent(*v)
+	}
+	m.SetIps(i.Ips)
+	if v := i.UsersID; v != nil {
+		m.SetUsersID(*v)
+	}
+}
+
+// SetInput applies the change-set in the CreateSessionInput on the SessionCreate builder.
+func (c *SessionCreate) SetInput(i CreateSessionInput) *SessionCreate {
+	i.Mutate(c.Mutation())
+	return c
+}
+
+// UpdateSessionInput represents a mutation input for updating sessions.
+type UpdateSessionInput struct {
+	UpdatedAt      *time.Time
+	ClearCreatedBy bool
+	CreatedBy      *int
+	ClearUpdatedBy bool
+	UpdatedBy      *int
+	Disabled       *bool
+	ClearUserAgent bool
+	UserAgent      *string
+	Ips            *string
+	ClearUsers     bool
+	UsersID        *uuid.UUID
+}
+
+// Mutate applies the UpdateSessionInput on the SessionMutation builder.
+func (i *UpdateSessionInput) Mutate(m *SessionMutation) {
+	if v := i.UpdatedAt; v != nil {
+		m.SetUpdatedAt(*v)
+	}
+	if i.ClearCreatedBy {
+		m.ClearCreatedBy()
+	}
+	if v := i.CreatedBy; v != nil {
+		m.SetCreatedBy(*v)
+	}
+	if i.ClearUpdatedBy {
+		m.ClearUpdatedBy()
+	}
+	if v := i.UpdatedBy; v != nil {
+		m.SetUpdatedBy(*v)
+	}
+	if v := i.Disabled; v != nil {
+		m.SetDisabled(*v)
+	}
+	if i.ClearUserAgent {
+		m.ClearUserAgent()
+	}
+	if v := i.UserAgent; v != nil {
+		m.SetUserAgent(*v)
+	}
+	if v := i.Ips; v != nil {
+		m.SetIps(*v)
+	}
+	if i.ClearUsers {
+		m.ClearUsers()
+	}
+	if v := i.UsersID; v != nil {
+		m.SetUsersID(*v)
+	}
+}
+
+// SetInput applies the change-set in the UpdateSessionInput on the SessionUpdate builder.
+func (c *SessionUpdate) SetInput(i UpdateSessionInput) *SessionUpdate {
+	i.Mutate(c.Mutation())
+	return c
+}
+
+// SetInput applies the change-set in the UpdateSessionInput on the SessionUpdateOne builder.
+func (c *SessionUpdateOne) SetInput(i UpdateSessionInput) *SessionUpdateOne {
+	i.Mutate(c.Mutation())
+	return c
+}
+
 // CreateUserInput represents a mutation input for creating users.
 type CreateUserInput struct {
 	CreatedAt       *time.Time
@@ -307,6 +420,8 @@ type CreateUserInput struct {
 	CreatedBy       *int
 	UpdatedBy       *int
 	Email           string
+	FirstName       string
+	LastName        string
 	DisplayName     *string
 	Locked          *bool
 	AvatarRemoteURL *string
@@ -334,6 +449,8 @@ func (i *CreateUserInput) Mutate(m *UserMutation) {
 		m.SetUpdatedBy(*v)
 	}
 	m.SetEmail(i.Email)
+	m.SetFirstName(i.FirstName)
+	m.SetLastName(i.LastName)
 	if v := i.DisplayName; v != nil {
 		m.SetDisplayName(*v)
 	}
@@ -380,6 +497,8 @@ type UpdateUserInput struct {
 	ClearUpdatedBy       bool
 	UpdatedBy            *int
 	Email                *string
+	FirstName            *string
+	LastName             *string
 	DisplayName          *string
 	Locked               *bool
 	ClearAvatarRemoteURL bool
@@ -421,6 +540,12 @@ func (i *UpdateUserInput) Mutate(m *UserMutation) {
 	}
 	if v := i.Email; v != nil {
 		m.SetEmail(*v)
+	}
+	if v := i.FirstName; v != nil {
+		m.SetFirstName(*v)
+	}
+	if v := i.LastName; v != nil {
+		m.SetLastName(*v)
 	}
 	if v := i.DisplayName; v != nil {
 		m.SetDisplayName(*v)
