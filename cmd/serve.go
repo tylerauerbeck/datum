@@ -14,7 +14,7 @@ import (
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"github.com/brpaz/echozap"
-	echojwt "github.com/labstack/echo-jwt"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	_ "github.com/mattn/go-sqlite3" // sqlite3 driver
@@ -24,6 +24,7 @@ import (
 
 	"github.com/datumforge/datum/internal/api"
 	ent "github.com/datumforge/datum/internal/ent/generated"
+	"github.com/datumforge/datum/internal/fga"
 )
 
 const (
@@ -143,17 +144,30 @@ func serve(ctx context.Context) error {
 		jwtConfig := createJwtMiddleware([]byte("secret"))
 
 		mw = append(mw, jwtConfig)
-	}
 
-	// setup FGA client
-	// fgaClient, err := fga.NewClient(
-	// 	viper.GetString("fga.host"),
-	// 	fga.WithScheme(viper.GetString("fga.scheme")),
-	// 	fga.WithStoreID(viper.GetString("fga.storeID")),
-	// )
-	// if err != nil {
-	// 	return err
-	// }
+		// setup FGA client
+		logger.Infow(
+			"Setting up FGA Client",
+			"host",
+			viper.GetString("fga.host"),
+			"scheme",
+			viper.GetString("fga.scheme"),
+			"store_id",
+			viper.GetString("fga.storeID"),
+		)
+		fgaClient, err := fga.NewClient(
+			viper.GetString("fga.host"),
+			fga.WithScheme(viper.GetString("fga.scheme")),
+			fga.WithStoreID(viper.GetString("fga.storeID")),
+			fga.WithLogger(logger),
+		)
+		if err != nil {
+			return err
+		}
+
+		authzMiddlware := fga.New(logger, fgaClient)
+		mw = append(mw, authzMiddlware.Middleware())
+	}
 
 	r := api.NewResolver(client, logger.Named("resolvers"))
 	handler := r.Handler(enablePlayground, mw...)
