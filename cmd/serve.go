@@ -243,5 +243,6 @@ func createJwtMiddleware(secret []byte) echo.MiddlewareFunc {
 	config := echojwt.Config{
 		SigningKey: secret,
 	}
+
 	return echojwt.WithConfig(config)
 }
