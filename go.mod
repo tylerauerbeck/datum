@@ -1,6 +1,8 @@
 module github.com/datumforge/datum
 
-go 1.21
+go 1.21.1
+
+toolchain go1.21.3
 
 require (
 	entgo.io/contrib v0.4.5
@@ -12,10 +14,12 @@ require (
 	github.com/go-faster/jx v1.1.0
 	github.com/google/uuid v1.4.0
 	github.com/hashicorp/go-multierror v1.1.1
+	github.com/labstack/echo-jwt v0.0.0-20221127215225-c84d41a71003
 	github.com/labstack/echo/v4 v4.11.2
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/ogen-go/ogen v0.77.0
+	github.com/ogen-go/ogen v0.76.0
+	github.com/openfga/go-sdk v0.2.3
 	github.com/pressly/goose/v3 v3.15.1
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/pflag v1.0.5
@@ -29,7 +33,10 @@ require (
 	go.uber.org/zap v1.26.0
 )
 
-require github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
+require (
+	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
+)
 
 require (
 	ariga.io/atlas v0.14.2 // indirect

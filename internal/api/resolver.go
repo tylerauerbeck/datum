@@ -84,6 +84,7 @@ func (h *Handler) Routes(e *echo.Group) {
 
 	e.POST("/"+graphPath, func(c echo.Context) error {
 		h.graphqlHandler.ServeHTTP(c.Response(), c.Request())
+
 		return nil
 	})
 

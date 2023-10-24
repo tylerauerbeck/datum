@@ -14,7 +14,15 @@ import (
 
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input generated.CreateUserInput) (*UserCreatePayload, error) {
-	// TODO - add permissions checks
+	// // TODO - add permissions checks
+	// token, ok := ctx.Get("user").(*jwt.Token) // by default token is stored under `user` key
+	// if !ok {
+	// 	return errors.New("JWT token missing or invalid")
+	// }
+	// claims, ok := token.Claims.(jwt.MapClaims) // by default claims is of type `jwt.MapClaims`
+	// if !ok {
+	// 	return errors.New("failed to cast claims as jwt.MapClaims")
+	// }
 	user, err := r.client.User.Create().SetInput(input).Save(ctx)
 	if err != nil {
 		if generated.IsValidationError(err) {
