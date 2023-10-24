@@ -2,6 +2,7 @@ package fga
 
 import (
 	"context"
+	"fmt"
 
 	openfga "github.com/openfga/go-sdk"
 )
@@ -26,9 +27,10 @@ func (c *Client) CheckTuple(ctx context.Context, check Tuple) (bool, error) {
 		},
 	}
 
-	data, response, err := c.c.OpenFgaApi.Check(ctx).Body(body).Execute()
+	data, response, err := c.o.OpenFgaApi.Check(ctx).Body(body).Execute()
 	if err != nil {
-		c.logger.Debugf("GetCheck error: [%s][%v]", err.Error(), response)
+		fmt.Printf("GetCheck error: [%s][%v]", err.Error(), response)
+		c.logger.Infof("GetCheck error: [%s][%v]", err.Error(), response)
 
 		return false, err
 	}

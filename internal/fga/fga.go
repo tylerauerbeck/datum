@@ -2,14 +2,22 @@
 package fga
 
 import (
+	"strings"
+
+	"github.com/golang-jwt/jwt/v4"
+	"github.com/labstack/echo/v4"
 	ofgaclient "github.com/openfga/go-sdk/client"
 	"github.com/openfga/go-sdk/credentials"
 	"go.uber.org/zap"
 )
 
+const (
+	bearerPrefix = "Bearer "
+)
+
 // Client is an event bus client with some configuration
 type Client struct {
-	c      *ofgaclient.OpenFgaClient
+	o      *ofgaclient.OpenFgaClient
 	config ofgaclient.ClientConfiguration
 	logger *zap.SugaredLogger
 }
@@ -40,7 +48,7 @@ func NewClient(host string, opts ...Option) (*Client, error) {
 		return nil, err
 	}
 
-	client.c = fgaClient
+	client.o = fgaClient
 
 	return &client, err
 }
@@ -82,5 +90,70 @@ func WithToken(token string) Option {
 func WithLogger(l *zap.SugaredLogger) Option {
 	return func(c *Client) {
 		c.logger = l
+	}
+}
+
+// Authz handles supporting authorization checks
+type Authz struct {
+	logger *zap.SugaredLogger
+	client *Client
+}
+
+func New(l *zap.SugaredLogger, c *Client) Authz {
+	return Authz{
+		logger: l,
+		client: c,
+	}
+}
+
+// Middleware produces echo middleware to handle authorization checks
+func (a *Authz) Middleware() echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			actor := c.Get("user").(*jwt.Token)
+			if actor == nil {
+				a.logger.Infof("unauthorized access")
+
+				return echo.ErrUnauthorized
+			}
+
+			authHeader := strings.TrimSpace(c.Request().Header.Get(echo.HeaderAuthorization))
+
+			if len(authHeader) <= len(bearerPrefix) {
+				a.logger.Infof("unauthorized access")
+
+				return echo.ErrUnauthorized
+			}
+
+			if !strings.EqualFold(authHeader[:len(bearerPrefix)], bearerPrefix) {
+				a.logger.Infof("unauthorized access")
+
+				return echo.ErrUnauthorized
+			}
+
+			// testing stuff
+			tuple := Tuple{
+				Subject:  "user:sfunkhouser",
+				Relation: "member",
+				Object:   "organization:datum",
+			}
+
+			allowed, err := a.client.CheckTuple(c.Request().Context(), tuple)
+			if err != nil {
+				a.logger.Errorf("error checking access, %v", err)
+
+				return echo.ErrUnauthorized
+			}
+
+			if !allowed {
+				a.logger.Infof("unauthorized access")
+
+				return echo.ErrUnauthorized
+			}
+
+			a.logger.Infof("access granted")
+
+			return next(c)
+		}
 	}
 }
