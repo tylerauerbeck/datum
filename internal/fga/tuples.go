@@ -1,3 +1,4 @@
+// Package fga is a wrapper around openfga client
 // credit to https://github.com/canonical/ofga/blob/main/tuples.go
 // TODO: can we contribute this back once we have this in a working place
 package fga
@@ -8,6 +9,7 @@ import (
 	"regexp"
 
 	"github.com/datumforge/datum/internal/echox"
+
 	"github.com/openfga/go-sdk/client"
 )
 
@@ -44,6 +46,7 @@ func (e *Entity) String() string {
 	if e.Relation == "" {
 		return e.Kind.String() + ":" + e.ID
 	}
+
 	return e.Kind.String() + ":" + e.ID + "#" + e.Relation.String()
 }
 
@@ -56,7 +59,7 @@ func (e *Entity) String() string {
 func ParseEntity(s string) (Entity, error) {
 	match := entityRegex.FindStringSubmatch(s)
 	if match == nil {
-		return Entity{}, fmt.Errorf("invalid entity representation: %s", s)
+		return Entity{}, newInvalidEntityError(s)
 	}
 
 	// Extract and return the relevant information from the sub-matches.
@@ -67,7 +70,8 @@ func ParseEntity(s string) (Entity, error) {
 	}, nil
 }
 
-func (c *Client) createCheckTupleWithUser(ctx context.Context, relation, object string) (*client.ClientCheckRequest, error) {
+// CreateCheckTupleWithUser gets the user id (currently the jwt sub, but that will change) and creates a Check Request for openFGA
+func (c *Client) CreateCheckTupleWithUser(ctx context.Context, relation, object string) (*client.ClientCheckRequest, error) {
 	ec, err := echox.EchoContextFromContext(ctx)
 	if err != nil {
 		c.Logger.Errorw("unable to get echo context", "error", err)
@@ -89,32 +93,35 @@ func (c *Client) createCheckTupleWithUser(ctx context.Context, relation, object 
 	}, nil
 }
 
-func (c *Client) CreateRelationshipTupleWithUser(ctx context.Context, relation, object string) ([]client.ClientTupleKey, error) {
+// CreateRelationshipTupleWithUser gets the user id (currently the jwt sub, but that will change) and creates a relationship tuple
+// with the given relation and object reference
+func (c *Client) CreateRelationshipTupleWithUser(ctx context.Context, relation, object string) error {
 	ec, err := echox.EchoContextFromContext(ctx)
 	if err != nil {
 		c.Logger.Errorw("unable to get echo context", "error", err)
 
-		return nil, err
+		return err
 	}
 
 	actor, err := echox.GetActorSubject(*ec)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	// TODO: convert jwt sub --> uuid
 
-	return []client.ClientTupleKey{{
+	tuples := []client.ClientTupleKey{{
 		User:     fmt.Sprintf("user:%s", actor),
 		Relation: relation,
 		Object:   object,
-	}}, nil
+	}}
+
+	return c.createRelationshipTuple(ctx, tuples)
 }
 
 // CreateRelationshipTuple creates a relationship tuple in the openFGA store
-func (c *Client) CreateRelationshipTuple(ctx context.Context, tuples []client.ClientTupleKey) error {
-	_, err := c.O.WriteTuples(context.Background()).Body(tuples).Execute()
-	if err != nil {
+func (c *Client) createRelationshipTuple(ctx context.Context, tuples []client.ClientTupleKey) error {
+	if _, err := c.O.WriteTuples(ctx).Body(tuples).Execute(); err != nil {
 		c.Logger.Infof("CreateRelationshipTuple error: [%s][%v]", err.Error())
 
 		return err

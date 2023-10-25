@@ -7,10 +7,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const (
-	bearerPrefix = "Bearer "
-)
-
 // Client is an event bus client with some configuration
 type Client struct {
 	// O is the openFGA client
@@ -89,18 +85,5 @@ func WithToken(token string) Option {
 func WithLogger(l *zap.SugaredLogger) Option {
 	return func(c *Client) {
 		c.Logger = l
-	}
-}
-
-// Authz handles supporting authorization checks
-type Authz struct {
-	logger *zap.SugaredLogger
-	client *Client
-}
-
-func New(l *zap.SugaredLogger, c *Client) Authz {
-	return Authz{
-		logger: l,
-		client: c,
 	}
 }

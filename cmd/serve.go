@@ -164,19 +164,17 @@ func serve(ctx context.Context) error {
 		"store_id",
 		viper.GetString("fga.storeID"),
 	)
+
 	fgaClient, err := fga.NewClient(
 		viper.GetString("fga.host"),
 		fga.WithScheme(viper.GetString("fga.scheme")),
 		fga.WithStoreID(viper.GetString("fga.storeID")),
-		//fga.WithAuthorizationModelID() // TODO - we should add this
+		// fga.WithAuthorizationModelID() // TODO - we should add this
 		fga.WithLogger(logger),
 	)
 	if err != nil {
 		return err
 	}
-
-	// authzMiddlware := fga.New(logger, fgaClient)
-	// mw = append(mw, authzMiddlware.Middleware())
 
 	// TODO - add way to skip checks when oidc is disabled
 	r := api.NewResolver(client, fgaClient, logger.Named("resolvers"))
