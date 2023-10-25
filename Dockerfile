@@ -3,6 +3,7 @@ FROM golang:1.21 as builder
 WORKDIR /go/src/app
 COPY . .
 
+RUN go mod download
 RUN CGO_ENABLED=1 GOOS=linux go build -o /go/bin/datum -a -ldflags '-linkmode external -extldflags "-static"' .
 
 FROM gcr.io/distroless/static:nonroot
