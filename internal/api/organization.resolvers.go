@@ -8,12 +8,14 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/datumforge/datum/internal/echox"
 	"github.com/datumforge/datum/internal/ent/generated"
 	_ "github.com/datumforge/datum/internal/ent/generated/runtime"
 	"github.com/google/uuid"
+)
 
-	oc "github.com/openfga/go-sdk/client"
+const (
+	objectType     = "organization"
+	memberRelation = "member"
 )
 
 // CreateOrganization is the resolver for the createOrganization field.
@@ -42,14 +44,20 @@ func (r *mutationResolver) CreateOrganization(ctx context.Context, input generat
 	}
 
 	// Add relationship tuples
-	r.fgaClient.CreateRelationshipTuple(
-		ctx,
-		[]oc.ClientTupleKey{{
-			User:     "user:sfunkhouser",
-			Relation: "member",
-			Object:   fmt.Sprintf("organization:%s", org.ID),
-		}},
-	)
+	tuples, err := r.fgaClient.CreateRelationshipTupleWithUser(ctx, memberRelation, fmt.Sprintf("%s:%s", objectType, org.ID))
+	if err != nil {
+		// TODO - rollback creation if permissions fail to be created
+		r.logger.Errorw("failed to create relationship tuple", "error", err)
+
+		return nil, ErrInternalServerError
+	}
+
+	if err = r.fgaClient.CreateRelationshipTuple(ctx, tuples); err != nil {
+		// TODO - rollback creation if permissions fail to be created
+		r.logger.Errorw("failed to create permissions", "error", err)
+
+		return nil, ErrInternalServerError
+	}
 
 	return &OrganizationCreatePayload{Organization: org}, nil
 }
@@ -99,33 +107,14 @@ func (r *mutationResolver) DeleteOrganization(ctx context.Context, id uuid.UUID)
 
 // Organization is the resolver for the organization field.
 func (r *queryResolver) Organization(ctx context.Context, id uuid.UUID) (*generated.Organization, error) {
-	ec, err := echox.EchoContextFromContext(ctx)
-	if err != nil {
-		r.logger.Errorw("unable to get echo context", "error", err)
-
-		return nil, err
-	}
-
-	// Check permissions
-	actor, err := echox.GetActorSubject(*ec)
-	if err != nil {
-		return nil, err
-	}
-	r.logger.Infow("Checking permissions", "user", actor, "organization", id)
-	allow, err := r.fgaClient.CheckTuple(
-		ctx,
-		oc.ClientCheckRequest{
-			User:     fmt.Sprintf("user:%s", actor),
-			Relation: "member",
-			Object:   fmt.Sprintf("organization:%s", id),
-		},
-	)
+	allow, err := r.fgaClient.CheckDirectUser(ctx, memberRelation, fmt.Sprintf("%s:%s", objectType, id))
 	if err != nil {
 		return nil, err
 	}
 
 	if !allow {
-		r.logger.Errorw("failed to get organization", "error", err)
+		r.logger.Errorw("failed to get organization, user not authorized", "error", err)
+
 		return nil, ErrNotFound
 	}
 

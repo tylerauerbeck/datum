@@ -56,8 +56,6 @@ func EchoContextFromContext(ctx context.Context) (*echo.Context, error) {
 		return &ec, err
 	}
 
-	fmt.Printf("echo context a: %v\n", ec)
-
 	return &ec, nil
 }
 
@@ -65,7 +63,6 @@ func EchoContextFromContext(ctx context.Context) (*echo.Context, error) {
 func GetActorSubject(c echo.Context) (string, error) {
 	token, ok := c.Get("user").(*jwt.Token)
 	if !ok {
-		fmt.Printf("Here: %v\n", token)
 		return "", ErrJWTMissingInvalid
 	}
 
