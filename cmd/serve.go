@@ -23,6 +23,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/datumforge/datum/internal/api"
+	"github.com/datumforge/datum/internal/echox"
 	ent "github.com/datumforge/datum/internal/ent/generated"
 	"github.com/datumforge/datum/internal/fga"
 )
@@ -133,6 +134,9 @@ func serve(ctx context.Context) error {
 	srv.Use(middleware.RequestID())
 	srv.Use(middleware.Recover())
 
+	// TODO only for dev mode
+	srv.Use(middleware.CORS())
+
 	// add logging
 	zapLogger, _ := zap.NewProduction()
 	srv.Use(echozap.ZapLogger(zapLogger))
@@ -144,32 +148,38 @@ func serve(ctx context.Context) error {
 		jwtConfig := createJwtMiddleware([]byte("secret"))
 
 		mw = append(mw, jwtConfig)
-
-		// setup FGA client
-		logger.Infow(
-			"Setting up FGA Client",
-			"host",
-			viper.GetString("fga.host"),
-			"scheme",
-			viper.GetString("fga.scheme"),
-			"store_id",
-			viper.GetString("fga.storeID"),
-		)
-		fgaClient, err := fga.NewClient(
-			viper.GetString("fga.host"),
-			fga.WithScheme(viper.GetString("fga.scheme")),
-			fga.WithStoreID(viper.GetString("fga.storeID")),
-			fga.WithLogger(logger),
-		)
-		if err != nil {
-			return err
-		}
-
-		authzMiddlware := fga.New(logger, fgaClient)
-		mw = append(mw, authzMiddlware.Middleware())
 	}
 
-	r := api.NewResolver(client, logger.Named("resolvers"))
+	// Add echo context to middleware
+	srv.Use(echox.EchoContextToContextMiddleware())
+	mw = append(mw, echox.EchoContextToContextMiddleware())
+
+	// setup FGA client
+	logger.Infow(
+		"Setting up FGA Client",
+		"host",
+		viper.GetString("fga.host"),
+		"scheme",
+		viper.GetString("fga.scheme"),
+		"store_id",
+		viper.GetString("fga.storeID"),
+	)
+	fgaClient, err := fga.NewClient(
+		viper.GetString("fga.host"),
+		fga.WithScheme(viper.GetString("fga.scheme")),
+		fga.WithStoreID(viper.GetString("fga.storeID")),
+		//fga.WithAuthorizationModelID() // TODO - we should add this
+		fga.WithLogger(logger),
+	)
+	if err != nil {
+		return err
+	}
+
+	// authzMiddlware := fga.New(logger, fgaClient)
+	// mw = append(mw, authzMiddlware.Middleware())
+
+	// TODO - add way to skip checks when oidc is disabled
+	r := api.NewResolver(client, fgaClient, logger.Named("resolvers"))
 	handler := r.Handler(enablePlayground, mw...)
 
 	handler.Routes(srv.Group(""))
