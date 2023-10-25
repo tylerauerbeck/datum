@@ -20,7 +20,6 @@ const (
 
 // CreateOrganization is the resolver for the createOrganization field.
 func (r *mutationResolver) CreateOrganization(ctx context.Context, input generated.CreateOrganizationInput) (*OrganizationCreatePayload, error) {
-	// TODO - add permissions checks
 	org, err := r.client.Organization.Create().SetInput(input).Save(ctx)
 	if err != nil {
 		if generated.IsValidationError(err) {
@@ -44,17 +43,9 @@ func (r *mutationResolver) CreateOrganization(ctx context.Context, input generat
 	}
 
 	// Add relationship tuples
-	tuples, err := r.fgaClient.CreateRelationshipTupleWithUser(ctx, memberRelation, fmt.Sprintf("%s:%s", objectType, org.ID))
-	if err != nil {
+	if err = r.fgaClient.CreateRelationshipTupleWithUser(ctx, memberRelation, fmt.Sprintf("%s:%s", objectType, org.ID)); err != nil {
 		// TODO - rollback creation if permissions fail to be created
 		r.logger.Errorw("failed to create relationship tuple", "error", err)
-
-		return nil, ErrInternalServerError
-	}
-
-	if err = r.fgaClient.CreateRelationshipTuple(ctx, tuples); err != nil {
-		// TODO - rollback creation if permissions fail to be created
-		r.logger.Errorw("failed to create permissions", "error", err)
 
 		return nil, ErrInternalServerError
 	}

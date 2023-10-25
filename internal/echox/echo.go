@@ -3,7 +3,6 @@ package echox
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -43,17 +42,13 @@ func EchoContextFromContext(ctx context.Context) (*echo.Context, error) {
 	// retrieve echo.Context from provided context
 	echoContext := ctx.Value(EchoContextKey)
 	if echoContext == nil {
-		err := fmt.Errorf("could not retrieve echo.Context")
-
-		return nil, err
+		return nil, ErrUnableToRetrieveEchoContext
 	}
 
 	// type cast the context to ensure echo.Context
 	ec, ok := echoContext.(echo.Context)
 	if !ok {
-		err := fmt.Errorf("echo.Context has wrong type")
-
-		return &ec, err
+		return &ec, ErrUnableToRetrieveEchoContext
 	}
 
 	return &ec, nil
