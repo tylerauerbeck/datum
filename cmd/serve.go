@@ -133,6 +133,7 @@ func serve(ctx context.Context) error {
 	// dev mode settings
 	if serveDevMode {
 		enablePlayground = true
+
 		srv.Use(middleware.CORS())
 	}
 
