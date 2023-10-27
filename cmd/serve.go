@@ -132,8 +132,11 @@ func serve(ctx context.Context) error {
 
 	// dev mode settings
 	if serveDevMode {
+		// enable playground by default in dev mode
 		enablePlayground = true
 
+		// use CORS middleware, only in dev environments
+		// https://echo.labstack.com/docs/middleware/cors
 		srv.Use(middleware.CORS())
 	}
 
