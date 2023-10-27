@@ -6,6 +6,9 @@ entSchemaDir=$repoRoot/internal/ent/schema
 graphSchemaDir=schema
 schemas=$(find $entSchemaDir -name '*.go')
 
+# Track files to ignore the creation of graph schemas
+skip_schemas=( $( cat ./scripts/files_to_skip.txt |tr "\n" " ") )
+
 for file in $schemas
 do
     file=${file##*/}
@@ -14,7 +17,7 @@ do
     if [ -f "$graphSchemaDir/$schema.graphql" ]
     then
         echo "$graphSchemaDir/$schema.graphql already exists, not regenerating."
-    else
+    elif [[ ! " ${skip_schemas[*]} " =~ " ${file} " ]]; then
 
         touch $graphSchemaDir/$schema.graphql
 
