@@ -96,10 +96,6 @@ func init() {
 }
 
 func serve(ctx context.Context) error {
-	if serveDevMode {
-		enablePlayground = true
-	}
-
 	// setup db connection for server
 	db, err := newDB()
 	if err != nil {
@@ -134,8 +130,11 @@ func serve(ctx context.Context) error {
 	srv.Use(middleware.RequestID())
 	srv.Use(middleware.Recover())
 
-	// TODO only for dev mode
-	srv.Use(middleware.CORS())
+	// dev mode settings
+	if serveDevMode {
+		enablePlayground = true
+		srv.Use(middleware.CORS())
+	}
 
 	// add logging
 	zapLogger, _ := zap.NewProduction()
