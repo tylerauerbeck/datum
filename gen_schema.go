@@ -25,7 +25,7 @@ func main() {
 		service.BuiltIn = false
 	}
 
-	// Add UUId Type to schema.graphql
+	// Add UUID Type to schema.graphql
 	schema.Types["UUID"] = &ast.Definition{
 		Kind:        ast.Scalar,
 		Description: "A Universally Unique Identifier (UUID)",
