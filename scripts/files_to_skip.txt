@@ -1,3 +1,4 @@
 doc.go
 errors.go
 audit_mixin.go
+auth_mixin.go

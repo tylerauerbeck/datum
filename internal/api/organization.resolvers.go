@@ -14,8 +14,7 @@ import (
 )
 
 const (
-	objectType     = "organization"
-	memberRelation = "member"
+	objectType = "organization"
 )
 
 // CreateOrganization is the resolver for the createOrganization field.
@@ -98,16 +97,16 @@ func (r *mutationResolver) DeleteOrganization(ctx context.Context, id uuid.UUID)
 
 // Organization is the resolver for the organization field.
 func (r *queryResolver) Organization(ctx context.Context, id uuid.UUID) (*generated.Organization, error) {
-	allow, err := r.fgaClient.CheckDirectUser(ctx, memberRelation, fmt.Sprintf("%s:%s", objectType, id))
-	if err != nil {
-		return nil, err
-	}
+	// allow, err := r.fgaClient.CheckDirectUser(ctx, memberRelation, fmt.Sprintf("%s:%s", objectType, id))
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	if !allow {
-		r.logger.Errorw("failed to get organization, user not authorized", "error", err)
+	// if !allow {
+	// 	r.logger.Errorw("failed to get organization, user not authorized", "error", err)
 
-		return nil, ErrNotFound
-	}
+	// 	return nil, ErrNotFound
+	// }
 
 	org, err := r.client.Organization.Get(ctx, id)
 	if err != nil {
