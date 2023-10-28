@@ -24,6 +24,15 @@ type User struct {
 	ent.Schema
 }
 
+// Mixin of the User
+func (User) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		AuditMixin{},
+		BaseMixin{},
+		TenantMixin{},
+	}
+}
+
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
@@ -132,6 +141,7 @@ func (User) Edges() []ent.Edge {
 			Annotations(entsql.Annotation{
 				// When a user is deleted, delete the sessions
 				OnDelete: entsql.Cascade}),
+		edge.To("groups", Group.Type),
 	}
 }
 
@@ -143,9 +153,8 @@ func (User) Annotations() []schema.Annotation {
 	}
 }
 
-// Mixin of the User
-func (User) Mixin() []ent.Mixin {
-	return []ent.Mixin{
-		AuditMixin{},
-	}
+// Policy defines the privacy policy of the User.
+func (User) Policy() ent.Policy {
+	// Privacy policy defined in the BaseMixin and TenantMixin.
+	return nil
 }

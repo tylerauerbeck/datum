@@ -20,6 +20,7 @@ type CreateGroupReq struct {
 	LogoURL     string      `json:"logo_url"`
 	Setting     uuid.UUID   `json:"setting"`
 	Memberships []uuid.UUID `json:"memberships"`
+	Users       []uuid.UUID `json:"users"`
 }
 
 // GetCreatedAt returns the value of CreatedAt.
@@ -67,6 +68,11 @@ func (s *CreateGroupReq) GetMemberships() []uuid.UUID {
 	return s.Memberships
 }
 
+// GetUsers returns the value of Users.
+func (s *CreateGroupReq) GetUsers() []uuid.UUID {
+	return s.Users
+}
+
 // SetCreatedAt sets the value of CreatedAt.
 func (s *CreateGroupReq) SetCreatedAt(val time.Time) {
 	s.CreatedAt = val
@@ -110,6 +116,11 @@ func (s *CreateGroupReq) SetSetting(val uuid.UUID) {
 // SetMemberships sets the value of Memberships.
 func (s *CreateGroupReq) SetMemberships(val []uuid.UUID) {
 	s.Memberships = val
+}
+
+// SetUsers sets the value of Users.
+func (s *CreateGroupReq) SetUsers(val []uuid.UUID) {
+	s.Users = val
 }
 
 type CreateGroupSettingsReq struct {
@@ -711,6 +722,20 @@ func (s *CreateSessionReqType) UnmarshalText(data []byte) error {
 	}
 }
 
+type CreateTenantReq struct {
+	Name string `json:"name"`
+}
+
+// GetName returns the value of Name.
+func (s *CreateTenantReq) GetName() string {
+	return s.Name
+}
+
+// SetName sets the value of Name.
+func (s *CreateTenantReq) SetName(val string) {
+	s.Name = val
+}
+
 type CreateUserReq struct {
 	CreatedAt       time.Time   `json:"created_at"`
 	UpdatedAt       time.Time   `json:"updated_at"`
@@ -729,6 +754,7 @@ type CreateUserReq struct {
 	RecoveryCode    OptString   `json:"recovery_code"`
 	Memberships     []uuid.UUID `json:"memberships"`
 	Sessions        []uuid.UUID `json:"sessions"`
+	Groups          []uuid.UUID `json:"groups"`
 }
 
 // GetCreatedAt returns the value of CreatedAt.
@@ -816,6 +842,11 @@ func (s *CreateUserReq) GetSessions() []uuid.UUID {
 	return s.Sessions
 }
 
+// GetGroups returns the value of Groups.
+func (s *CreateUserReq) GetGroups() []uuid.UUID {
+	return s.Groups
+}
+
 // SetCreatedAt sets the value of CreatedAt.
 func (s *CreateUserReq) SetCreatedAt(val time.Time) {
 	s.CreatedAt = val
@@ -901,6 +932,11 @@ func (s *CreateUserReq) SetSessions(val []uuid.UUID) {
 	s.Sessions = val
 }
 
+// SetGroups sets the value of Groups.
+func (s *CreateUserReq) SetGroups(val []uuid.UUID) {
+	s.Groups = val
+}
+
 // DeleteGroupNoContent is response for DeleteGroup operation.
 type DeleteGroupNoContent struct{}
 
@@ -930,6 +966,11 @@ func (*DeleteOrganizationNoContent) deleteOrganizationRes() {}
 type DeleteSessionNoContent struct{}
 
 func (*DeleteSessionNoContent) deleteSessionRes() {}
+
+// DeleteTenantNoContent is response for DeleteTenant operation.
+type DeleteTenantNoContent struct{}
+
+func (*DeleteTenantNoContent) deleteTenantRes() {}
 
 // DeleteUserNoContent is response for DeleteUser operation.
 type DeleteUserNoContent struct{}
@@ -2367,6 +2408,175 @@ func (s *GroupUpdate) SetLogoURL(val string) {
 
 func (*GroupUpdate) updateGroupRes() {}
 
+// Ref: #/components/schemas/Group_UsersList
+type GroupUsersList struct {
+	ID              uuid.UUID   `json:"id"`
+	CreatedAt       time.Time   `json:"created_at"`
+	UpdatedAt       time.Time   `json:"updated_at"`
+	CreatedBy       OptInt      `json:"created_by"`
+	UpdatedBy       OptInt      `json:"updated_by"`
+	Email           string      `json:"email"`
+	FirstName       string      `json:"first_name"`
+	LastName        string      `json:"last_name"`
+	DisplayName     string      `json:"display_name"`
+	Locked          bool        `json:"locked"`
+	AvatarRemoteURL OptString   `json:"avatar_remote_url"`
+	AvatarLocalFile OptString   `json:"avatar_local_file"`
+	AvatarUpdatedAt OptDateTime `json:"avatar_updated_at"`
+	SilencedAt      OptDateTime `json:"silenced_at"`
+	SuspendedAt     OptDateTime `json:"suspended_at"`
+}
+
+// GetID returns the value of ID.
+func (s *GroupUsersList) GetID() uuid.UUID {
+	return s.ID
+}
+
+// GetCreatedAt returns the value of CreatedAt.
+func (s *GroupUsersList) GetCreatedAt() time.Time {
+	return s.CreatedAt
+}
+
+// GetUpdatedAt returns the value of UpdatedAt.
+func (s *GroupUsersList) GetUpdatedAt() time.Time {
+	return s.UpdatedAt
+}
+
+// GetCreatedBy returns the value of CreatedBy.
+func (s *GroupUsersList) GetCreatedBy() OptInt {
+	return s.CreatedBy
+}
+
+// GetUpdatedBy returns the value of UpdatedBy.
+func (s *GroupUsersList) GetUpdatedBy() OptInt {
+	return s.UpdatedBy
+}
+
+// GetEmail returns the value of Email.
+func (s *GroupUsersList) GetEmail() string {
+	return s.Email
+}
+
+// GetFirstName returns the value of FirstName.
+func (s *GroupUsersList) GetFirstName() string {
+	return s.FirstName
+}
+
+// GetLastName returns the value of LastName.
+func (s *GroupUsersList) GetLastName() string {
+	return s.LastName
+}
+
+// GetDisplayName returns the value of DisplayName.
+func (s *GroupUsersList) GetDisplayName() string {
+	return s.DisplayName
+}
+
+// GetLocked returns the value of Locked.
+func (s *GroupUsersList) GetLocked() bool {
+	return s.Locked
+}
+
+// GetAvatarRemoteURL returns the value of AvatarRemoteURL.
+func (s *GroupUsersList) GetAvatarRemoteURL() OptString {
+	return s.AvatarRemoteURL
+}
+
+// GetAvatarLocalFile returns the value of AvatarLocalFile.
+func (s *GroupUsersList) GetAvatarLocalFile() OptString {
+	return s.AvatarLocalFile
+}
+
+// GetAvatarUpdatedAt returns the value of AvatarUpdatedAt.
+func (s *GroupUsersList) GetAvatarUpdatedAt() OptDateTime {
+	return s.AvatarUpdatedAt
+}
+
+// GetSilencedAt returns the value of SilencedAt.
+func (s *GroupUsersList) GetSilencedAt() OptDateTime {
+	return s.SilencedAt
+}
+
+// GetSuspendedAt returns the value of SuspendedAt.
+func (s *GroupUsersList) GetSuspendedAt() OptDateTime {
+	return s.SuspendedAt
+}
+
+// SetID sets the value of ID.
+func (s *GroupUsersList) SetID(val uuid.UUID) {
+	s.ID = val
+}
+
+// SetCreatedAt sets the value of CreatedAt.
+func (s *GroupUsersList) SetCreatedAt(val time.Time) {
+	s.CreatedAt = val
+}
+
+// SetUpdatedAt sets the value of UpdatedAt.
+func (s *GroupUsersList) SetUpdatedAt(val time.Time) {
+	s.UpdatedAt = val
+}
+
+// SetCreatedBy sets the value of CreatedBy.
+func (s *GroupUsersList) SetCreatedBy(val OptInt) {
+	s.CreatedBy = val
+}
+
+// SetUpdatedBy sets the value of UpdatedBy.
+func (s *GroupUsersList) SetUpdatedBy(val OptInt) {
+	s.UpdatedBy = val
+}
+
+// SetEmail sets the value of Email.
+func (s *GroupUsersList) SetEmail(val string) {
+	s.Email = val
+}
+
+// SetFirstName sets the value of FirstName.
+func (s *GroupUsersList) SetFirstName(val string) {
+	s.FirstName = val
+}
+
+// SetLastName sets the value of LastName.
+func (s *GroupUsersList) SetLastName(val string) {
+	s.LastName = val
+}
+
+// SetDisplayName sets the value of DisplayName.
+func (s *GroupUsersList) SetDisplayName(val string) {
+	s.DisplayName = val
+}
+
+// SetLocked sets the value of Locked.
+func (s *GroupUsersList) SetLocked(val bool) {
+	s.Locked = val
+}
+
+// SetAvatarRemoteURL sets the value of AvatarRemoteURL.
+func (s *GroupUsersList) SetAvatarRemoteURL(val OptString) {
+	s.AvatarRemoteURL = val
+}
+
+// SetAvatarLocalFile sets the value of AvatarLocalFile.
+func (s *GroupUsersList) SetAvatarLocalFile(val OptString) {
+	s.AvatarLocalFile = val
+}
+
+// SetAvatarUpdatedAt sets the value of AvatarUpdatedAt.
+func (s *GroupUsersList) SetAvatarUpdatedAt(val OptDateTime) {
+	s.AvatarUpdatedAt = val
+}
+
+// SetSilencedAt sets the value of SilencedAt.
+func (s *GroupUsersList) SetSilencedAt(val OptDateTime) {
+	s.SilencedAt = val
+}
+
+// SetSuspendedAt sets the value of SuspendedAt.
+func (s *GroupUsersList) SetSuspendedAt(val OptDateTime) {
+	s.SuspendedAt = val
+}
+
 // Ref: #/components/schemas/IntegrationCreate
 type IntegrationCreate struct {
 	ID          uuid.UUID `json:"id"`
@@ -2825,6 +3035,10 @@ type ListGroupSettingsOKApplicationJSON []GroupSettingsList
 
 func (*ListGroupSettingsOKApplicationJSON) listGroupSettingsRes() {}
 
+type ListGroupUsersOKApplicationJSON []GroupUsersList
+
+func (*ListGroupUsersOKApplicationJSON) listGroupUsersRes() {}
+
 type ListIntegrationOKApplicationJSON []IntegrationList
 
 func (*ListIntegrationOKApplicationJSON) listIntegrationRes() {}
@@ -2848,6 +3062,14 @@ func (*ListOrganizationOKApplicationJSON) listOrganizationRes() {}
 type ListSessionOKApplicationJSON []SessionList
 
 func (*ListSessionOKApplicationJSON) listSessionRes() {}
+
+type ListTenantOKApplicationJSON []TenantList
+
+func (*ListTenantOKApplicationJSON) listTenantRes() {}
+
+type ListUserGroupsOKApplicationJSON []UserGroupsList
+
+func (*ListUserGroupsOKApplicationJSON) listUserGroupsRes() {}
 
 type ListUserMembershipsOKApplicationJSON []UserMembershipsList
 
@@ -4296,6 +4518,7 @@ func (*R400) createIntegrationRes()            {}
 func (*R400) createMembershipRes()             {}
 func (*R400) createOrganizationRes()           {}
 func (*R400) createSessionRes()                {}
+func (*R400) createTenantRes()                 {}
 func (*R400) createUserRes()                   {}
 func (*R400) deleteGroupRes()                  {}
 func (*R400) deleteGroupSettingsRes()          {}
@@ -4303,16 +4526,20 @@ func (*R400) deleteIntegrationRes()            {}
 func (*R400) deleteMembershipRes()             {}
 func (*R400) deleteOrganizationRes()           {}
 func (*R400) deleteSessionRes()                {}
+func (*R400) deleteTenantRes()                 {}
 func (*R400) deleteUserRes()                   {}
 func (*R400) listGroupMembershipsRes()         {}
 func (*R400) listGroupRes()                    {}
 func (*R400) listGroupSettingsRes()            {}
+func (*R400) listGroupUsersRes()               {}
 func (*R400) listIntegrationRes()              {}
 func (*R400) listMembershipRes()               {}
 func (*R400) listOrganizationIntegrationsRes() {}
 func (*R400) listOrganizationMembershipsRes()  {}
 func (*R400) listOrganizationRes()             {}
 func (*R400) listSessionRes()                  {}
+func (*R400) listTenantRes()                   {}
+func (*R400) listUserGroupsRes()               {}
 func (*R400) listUserMembershipsRes()          {}
 func (*R400) listUserRes()                     {}
 func (*R400) listUserSessionsRes()             {}
@@ -4329,6 +4556,7 @@ func (*R400) readMembershipUserRes()           {}
 func (*R400) readOrganizationRes()             {}
 func (*R400) readSessionRes()                  {}
 func (*R400) readSessionUsersRes()             {}
+func (*R400) readTenantRes()                   {}
 func (*R400) readUserRes()                     {}
 func (*R400) updateGroupRes()                  {}
 func (*R400) updateGroupSettingsRes()          {}
@@ -4336,6 +4564,7 @@ func (*R400) updateIntegrationRes()            {}
 func (*R400) updateMembershipRes()             {}
 func (*R400) updateOrganizationRes()           {}
 func (*R400) updateSessionRes()                {}
+func (*R400) updateTenantRes()                 {}
 func (*R400) updateUserRes()                   {}
 
 type R404 struct {
@@ -4380,16 +4609,20 @@ func (*R404) deleteIntegrationRes()            {}
 func (*R404) deleteMembershipRes()             {}
 func (*R404) deleteOrganizationRes()           {}
 func (*R404) deleteSessionRes()                {}
+func (*R404) deleteTenantRes()                 {}
 func (*R404) deleteUserRes()                   {}
 func (*R404) listGroupMembershipsRes()         {}
 func (*R404) listGroupRes()                    {}
 func (*R404) listGroupSettingsRes()            {}
+func (*R404) listGroupUsersRes()               {}
 func (*R404) listIntegrationRes()              {}
 func (*R404) listMembershipRes()               {}
 func (*R404) listOrganizationIntegrationsRes() {}
 func (*R404) listOrganizationMembershipsRes()  {}
 func (*R404) listOrganizationRes()             {}
 func (*R404) listSessionRes()                  {}
+func (*R404) listTenantRes()                   {}
+func (*R404) listUserGroupsRes()               {}
 func (*R404) listUserMembershipsRes()          {}
 func (*R404) listUserRes()                     {}
 func (*R404) listUserSessionsRes()             {}
@@ -4406,6 +4639,7 @@ func (*R404) readMembershipUserRes()           {}
 func (*R404) readOrganizationRes()             {}
 func (*R404) readSessionRes()                  {}
 func (*R404) readSessionUsersRes()             {}
+func (*R404) readTenantRes()                   {}
 func (*R404) readUserRes()                     {}
 func (*R404) updateGroupRes()                  {}
 func (*R404) updateGroupSettingsRes()          {}
@@ -4413,6 +4647,7 @@ func (*R404) updateIntegrationRes()            {}
 func (*R404) updateMembershipRes()             {}
 func (*R404) updateOrganizationRes()           {}
 func (*R404) updateSessionRes()                {}
+func (*R404) updateTenantRes()                 {}
 func (*R404) updateUserRes()                   {}
 
 type R409 struct {
@@ -4457,6 +4692,7 @@ func (*R409) createIntegrationRes()            {}
 func (*R409) createMembershipRes()             {}
 func (*R409) createOrganizationRes()           {}
 func (*R409) createSessionRes()                {}
+func (*R409) createTenantRes()                 {}
 func (*R409) createUserRes()                   {}
 func (*R409) deleteGroupRes()                  {}
 func (*R409) deleteGroupSettingsRes()          {}
@@ -4464,16 +4700,20 @@ func (*R409) deleteIntegrationRes()            {}
 func (*R409) deleteMembershipRes()             {}
 func (*R409) deleteOrganizationRes()           {}
 func (*R409) deleteSessionRes()                {}
+func (*R409) deleteTenantRes()                 {}
 func (*R409) deleteUserRes()                   {}
 func (*R409) listGroupMembershipsRes()         {}
 func (*R409) listGroupRes()                    {}
 func (*R409) listGroupSettingsRes()            {}
+func (*R409) listGroupUsersRes()               {}
 func (*R409) listIntegrationRes()              {}
 func (*R409) listMembershipRes()               {}
 func (*R409) listOrganizationIntegrationsRes() {}
 func (*R409) listOrganizationMembershipsRes()  {}
 func (*R409) listOrganizationRes()             {}
 func (*R409) listSessionRes()                  {}
+func (*R409) listTenantRes()                   {}
+func (*R409) listUserGroupsRes()               {}
 func (*R409) listUserMembershipsRes()          {}
 func (*R409) listUserRes()                     {}
 func (*R409) listUserSessionsRes()             {}
@@ -4490,6 +4730,7 @@ func (*R409) readMembershipUserRes()           {}
 func (*R409) readOrganizationRes()             {}
 func (*R409) readSessionRes()                  {}
 func (*R409) readSessionUsersRes()             {}
+func (*R409) readTenantRes()                   {}
 func (*R409) readUserRes()                     {}
 func (*R409) updateGroupRes()                  {}
 func (*R409) updateGroupSettingsRes()          {}
@@ -4497,6 +4738,7 @@ func (*R409) updateIntegrationRes()            {}
 func (*R409) updateMembershipRes()             {}
 func (*R409) updateOrganizationRes()           {}
 func (*R409) updateSessionRes()                {}
+func (*R409) updateTenantRes()                 {}
 func (*R409) updateUserRes()                   {}
 
 type R500 struct {
@@ -4541,6 +4783,7 @@ func (*R500) createIntegrationRes()            {}
 func (*R500) createMembershipRes()             {}
 func (*R500) createOrganizationRes()           {}
 func (*R500) createSessionRes()                {}
+func (*R500) createTenantRes()                 {}
 func (*R500) createUserRes()                   {}
 func (*R500) deleteGroupRes()                  {}
 func (*R500) deleteGroupSettingsRes()          {}
@@ -4548,16 +4791,20 @@ func (*R500) deleteIntegrationRes()            {}
 func (*R500) deleteMembershipRes()             {}
 func (*R500) deleteOrganizationRes()           {}
 func (*R500) deleteSessionRes()                {}
+func (*R500) deleteTenantRes()                 {}
 func (*R500) deleteUserRes()                   {}
 func (*R500) listGroupMembershipsRes()         {}
 func (*R500) listGroupRes()                    {}
 func (*R500) listGroupSettingsRes()            {}
+func (*R500) listGroupUsersRes()               {}
 func (*R500) listIntegrationRes()              {}
 func (*R500) listMembershipRes()               {}
 func (*R500) listOrganizationIntegrationsRes() {}
 func (*R500) listOrganizationMembershipsRes()  {}
 func (*R500) listOrganizationRes()             {}
 func (*R500) listSessionRes()                  {}
+func (*R500) listTenantRes()                   {}
+func (*R500) listUserGroupsRes()               {}
 func (*R500) listUserMembershipsRes()          {}
 func (*R500) listUserRes()                     {}
 func (*R500) listUserSessionsRes()             {}
@@ -4574,6 +4821,7 @@ func (*R500) readMembershipUserRes()           {}
 func (*R500) readOrganizationRes()             {}
 func (*R500) readSessionRes()                  {}
 func (*R500) readSessionUsersRes()             {}
+func (*R500) readTenantRes()                   {}
 func (*R500) readUserRes()                     {}
 func (*R500) updateGroupRes()                  {}
 func (*R500) updateGroupSettingsRes()          {}
@@ -4581,6 +4829,7 @@ func (*R500) updateIntegrationRes()            {}
 func (*R500) updateMembershipRes()             {}
 func (*R500) updateOrganizationRes()           {}
 func (*R500) updateSessionRes()                {}
+func (*R500) updateTenantRes()                 {}
 func (*R500) updateUserRes()                   {}
 
 // Ref: #/components/schemas/SessionCreate
@@ -5408,6 +5657,116 @@ func (s *SessionUsersRead) SetSuspendedAt(val OptDateTime) {
 
 func (*SessionUsersRead) readSessionUsersRes() {}
 
+// Ref: #/components/schemas/TenantCreate
+type TenantCreate struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+}
+
+// GetID returns the value of ID.
+func (s *TenantCreate) GetID() uuid.UUID {
+	return s.ID
+}
+
+// GetName returns the value of Name.
+func (s *TenantCreate) GetName() string {
+	return s.Name
+}
+
+// SetID sets the value of ID.
+func (s *TenantCreate) SetID(val uuid.UUID) {
+	s.ID = val
+}
+
+// SetName sets the value of Name.
+func (s *TenantCreate) SetName(val string) {
+	s.Name = val
+}
+
+func (*TenantCreate) createTenantRes() {}
+
+// Ref: #/components/schemas/TenantList
+type TenantList struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+}
+
+// GetID returns the value of ID.
+func (s *TenantList) GetID() uuid.UUID {
+	return s.ID
+}
+
+// GetName returns the value of Name.
+func (s *TenantList) GetName() string {
+	return s.Name
+}
+
+// SetID sets the value of ID.
+func (s *TenantList) SetID(val uuid.UUID) {
+	s.ID = val
+}
+
+// SetName sets the value of Name.
+func (s *TenantList) SetName(val string) {
+	s.Name = val
+}
+
+// Ref: #/components/schemas/TenantRead
+type TenantRead struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+}
+
+// GetID returns the value of ID.
+func (s *TenantRead) GetID() uuid.UUID {
+	return s.ID
+}
+
+// GetName returns the value of Name.
+func (s *TenantRead) GetName() string {
+	return s.Name
+}
+
+// SetID sets the value of ID.
+func (s *TenantRead) SetID(val uuid.UUID) {
+	s.ID = val
+}
+
+// SetName sets the value of Name.
+func (s *TenantRead) SetName(val string) {
+	s.Name = val
+}
+
+func (*TenantRead) readTenantRes() {}
+
+// Ref: #/components/schemas/TenantUpdate
+type TenantUpdate struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+}
+
+// GetID returns the value of ID.
+func (s *TenantUpdate) GetID() uuid.UUID {
+	return s.ID
+}
+
+// GetName returns the value of Name.
+func (s *TenantUpdate) GetName() string {
+	return s.Name
+}
+
+// SetID sets the value of ID.
+func (s *TenantUpdate) SetID(val uuid.UUID) {
+	s.ID = val
+}
+
+// SetName sets the value of Name.
+func (s *TenantUpdate) SetName(val string) {
+	s.Name = val
+}
+
+func (*TenantUpdate) updateTenantRes() {}
+
 type UpdateGroupReq struct {
 	UpdatedAt   OptDateTime `json:"updated_at"`
 	CreatedBy   OptInt      `json:"created_by"`
@@ -5417,6 +5776,7 @@ type UpdateGroupReq struct {
 	LogoURL     OptString   `json:"logo_url"`
 	Setting     OptUUID     `json:"setting"`
 	Memberships []uuid.UUID `json:"memberships"`
+	Users       []uuid.UUID `json:"users"`
 }
 
 // GetUpdatedAt returns the value of UpdatedAt.
@@ -5459,6 +5819,11 @@ func (s *UpdateGroupReq) GetMemberships() []uuid.UUID {
 	return s.Memberships
 }
 
+// GetUsers returns the value of Users.
+func (s *UpdateGroupReq) GetUsers() []uuid.UUID {
+	return s.Users
+}
+
 // SetUpdatedAt sets the value of UpdatedAt.
 func (s *UpdateGroupReq) SetUpdatedAt(val OptDateTime) {
 	s.UpdatedAt = val
@@ -5497,6 +5862,11 @@ func (s *UpdateGroupReq) SetSetting(val OptUUID) {
 // SetMemberships sets the value of Memberships.
 func (s *UpdateGroupReq) SetMemberships(val []uuid.UUID) {
 	s.Memberships = val
+}
+
+// SetUsers sets the value of Users.
+func (s *UpdateGroupReq) SetUsers(val []uuid.UUID) {
+	s.Users = val
 }
 
 type UpdateGroupSettingsReq struct {
@@ -5951,6 +6321,20 @@ func (s *UpdateSessionReq) SetUsers(val OptUUID) {
 	s.Users = val
 }
 
+type UpdateTenantReq struct {
+	Name OptString `json:"name"`
+}
+
+// GetName returns the value of Name.
+func (s *UpdateTenantReq) GetName() OptString {
+	return s.Name
+}
+
+// SetName sets the value of Name.
+func (s *UpdateTenantReq) SetName(val OptString) {
+	s.Name = val
+}
+
 type UpdateUserReq struct {
 	UpdatedAt       OptDateTime `json:"updated_at"`
 	CreatedBy       OptInt      `json:"created_by"`
@@ -5968,6 +6352,7 @@ type UpdateUserReq struct {
 	RecoveryCode    OptString   `json:"recovery_code"`
 	Memberships     []uuid.UUID `json:"memberships"`
 	Sessions        []uuid.UUID `json:"sessions"`
+	Groups          []uuid.UUID `json:"groups"`
 }
 
 // GetUpdatedAt returns the value of UpdatedAt.
@@ -6050,6 +6435,11 @@ func (s *UpdateUserReq) GetSessions() []uuid.UUID {
 	return s.Sessions
 }
 
+// GetGroups returns the value of Groups.
+func (s *UpdateUserReq) GetGroups() []uuid.UUID {
+	return s.Groups
+}
+
 // SetUpdatedAt sets the value of UpdatedAt.
 func (s *UpdateUserReq) SetUpdatedAt(val OptDateTime) {
 	s.UpdatedAt = val
@@ -6128,6 +6518,11 @@ func (s *UpdateUserReq) SetMemberships(val []uuid.UUID) {
 // SetSessions sets the value of Sessions.
 func (s *UpdateUserReq) SetSessions(val []uuid.UUID) {
 	s.Sessions = val
+}
+
+// SetGroups sets the value of Groups.
+func (s *UpdateUserReq) SetGroups(val []uuid.UUID) {
+	s.Groups = val
 }
 
 // Ref: #/components/schemas/UserCreate
@@ -6300,6 +6695,98 @@ func (s *UserCreate) SetSuspendedAt(val OptDateTime) {
 }
 
 func (*UserCreate) createUserRes() {}
+
+// Ref: #/components/schemas/User_GroupsList
+type UserGroupsList struct {
+	ID          uuid.UUID `json:"id"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+	CreatedBy   OptInt    `json:"created_by"`
+	UpdatedBy   OptInt    `json:"updated_by"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	LogoURL     string    `json:"logo_url"`
+}
+
+// GetID returns the value of ID.
+func (s *UserGroupsList) GetID() uuid.UUID {
+	return s.ID
+}
+
+// GetCreatedAt returns the value of CreatedAt.
+func (s *UserGroupsList) GetCreatedAt() time.Time {
+	return s.CreatedAt
+}
+
+// GetUpdatedAt returns the value of UpdatedAt.
+func (s *UserGroupsList) GetUpdatedAt() time.Time {
+	return s.UpdatedAt
+}
+
+// GetCreatedBy returns the value of CreatedBy.
+func (s *UserGroupsList) GetCreatedBy() OptInt {
+	return s.CreatedBy
+}
+
+// GetUpdatedBy returns the value of UpdatedBy.
+func (s *UserGroupsList) GetUpdatedBy() OptInt {
+	return s.UpdatedBy
+}
+
+// GetName returns the value of Name.
+func (s *UserGroupsList) GetName() string {
+	return s.Name
+}
+
+// GetDescription returns the value of Description.
+func (s *UserGroupsList) GetDescription() string {
+	return s.Description
+}
+
+// GetLogoURL returns the value of LogoURL.
+func (s *UserGroupsList) GetLogoURL() string {
+	return s.LogoURL
+}
+
+// SetID sets the value of ID.
+func (s *UserGroupsList) SetID(val uuid.UUID) {
+	s.ID = val
+}
+
+// SetCreatedAt sets the value of CreatedAt.
+func (s *UserGroupsList) SetCreatedAt(val time.Time) {
+	s.CreatedAt = val
+}
+
+// SetUpdatedAt sets the value of UpdatedAt.
+func (s *UserGroupsList) SetUpdatedAt(val time.Time) {
+	s.UpdatedAt = val
+}
+
+// SetCreatedBy sets the value of CreatedBy.
+func (s *UserGroupsList) SetCreatedBy(val OptInt) {
+	s.CreatedBy = val
+}
+
+// SetUpdatedBy sets the value of UpdatedBy.
+func (s *UserGroupsList) SetUpdatedBy(val OptInt) {
+	s.UpdatedBy = val
+}
+
+// SetName sets the value of Name.
+func (s *UserGroupsList) SetName(val string) {
+	s.Name = val
+}
+
+// SetDescription sets the value of Description.
+func (s *UserGroupsList) SetDescription(val string) {
+	s.Description = val
+}
+
+// SetLogoURL sets the value of LogoURL.
+func (s *UserGroupsList) SetLogoURL(val string) {
+	s.LogoURL = val
+}
 
 // Ref: #/components/schemas/UserList
 type UserList struct {

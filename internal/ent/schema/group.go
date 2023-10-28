@@ -7,12 +7,23 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"github.com/datumforge/datum/internal/ent/generated/privacy"
+	"github.com/datumforge/datum/privacy/rule"
 	"github.com/google/uuid"
 )
 
 // Group holds the schema definition for the Group entity.
 type Group struct {
 	ent.Schema
+}
+
+// Mixin of the Group
+func (Group) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		AuditMixin{},
+		BaseMixin{},
+		TenantMixin{},
+	}
 }
 
 // Fields of the Group.
@@ -34,6 +45,7 @@ func (Group) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("setting", GroupSettings.Type).Required().Unique(),
 		edge.To("memberships", Membership.Type).Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
+		edge.From("users", User.Type).Ref("groups"),
 	}
 }
 
@@ -46,9 +58,16 @@ func (Group) Annotations() []schema.Annotation {
 	}
 }
 
-// Mixin of the Group
-func (Group) Mixin() []ent.Mixin {
-	return []ent.Mixin{
-		AuditMixin{},
+// Policy defines the privacy policy of the Group.
+func (Group) Policy() ent.Policy {
+	return privacy.Policy{
+		Mutation: privacy.MutationPolicy{
+			// Limit DenyMismatchedTenants only for
+			// Create operations
+			privacy.OnMutationOperation(
+				rule.DenyMismatchedTenants(),
+				ent.OpCreate,
+			),
+		},
 	}
 }

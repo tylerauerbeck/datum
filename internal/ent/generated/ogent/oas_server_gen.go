@@ -44,6 +44,12 @@ type Handler interface {
 	//
 	// POST /sessions
 	CreateSession(ctx context.Context, req *CreateSessionReq) (CreateSessionRes, error)
+	// CreateTenant implements createTenant operation.
+	//
+	// Creates a new Tenant and persists it to storage.
+	//
+	// POST /tenants
+	CreateTenant(ctx context.Context, req *CreateTenantReq) (CreateTenantRes, error)
 	// CreateUser implements createUser operation.
 	//
 	// Creates a new User and persists it to storage.
@@ -86,6 +92,12 @@ type Handler interface {
 	//
 	// DELETE /sessions/{id}
 	DeleteSession(ctx context.Context, params DeleteSessionParams) (DeleteSessionRes, error)
+	// DeleteTenant implements deleteTenant operation.
+	//
+	// Deletes the Tenant with the requested ID.
+	//
+	// DELETE /tenants/{id}
+	DeleteTenant(ctx context.Context, params DeleteTenantParams) (DeleteTenantRes, error)
 	// DeleteUser implements deleteUser operation.
 	//
 	// Deletes the User with the requested ID.
@@ -110,6 +122,12 @@ type Handler interface {
 	//
 	// GET /group-settings
 	ListGroupSettings(ctx context.Context, params ListGroupSettingsParams) (ListGroupSettingsRes, error)
+	// ListGroupUsers implements listGroupUsers operation.
+	//
+	// List attached Users.
+	//
+	// GET /groups/{id}/users
+	ListGroupUsers(ctx context.Context, params ListGroupUsersParams) (ListGroupUsersRes, error)
 	// ListIntegration implements listIntegration operation.
 	//
 	// List Integrations.
@@ -146,12 +164,24 @@ type Handler interface {
 	//
 	// GET /sessions
 	ListSession(ctx context.Context, params ListSessionParams) (ListSessionRes, error)
+	// ListTenant implements listTenant operation.
+	//
+	// List Tenants.
+	//
+	// GET /tenants
+	ListTenant(ctx context.Context, params ListTenantParams) (ListTenantRes, error)
 	// ListUser implements listUser operation.
 	//
 	// List Users.
 	//
 	// GET /users
 	ListUser(ctx context.Context, params ListUserParams) (ListUserRes, error)
+	// ListUserGroups implements listUserGroups operation.
+	//
+	// List attached Groups.
+	//
+	// GET /users/{id}/groups
+	ListUserGroups(ctx context.Context, params ListUserGroupsParams) (ListUserGroupsRes, error)
 	// ListUserMemberships implements listUserMemberships operation.
 	//
 	// List attached Memberships.
@@ -242,6 +272,12 @@ type Handler interface {
 	//
 	// GET /sessions/{id}/users
 	ReadSessionUsers(ctx context.Context, params ReadSessionUsersParams) (ReadSessionUsersRes, error)
+	// ReadTenant implements readTenant operation.
+	//
+	// Finds the Tenant with the requested ID and returns it.
+	//
+	// GET /tenants/{id}
+	ReadTenant(ctx context.Context, params ReadTenantParams) (ReadTenantRes, error)
 	// ReadUser implements readUser operation.
 	//
 	// Finds the User with the requested ID and returns it.
@@ -284,6 +320,12 @@ type Handler interface {
 	//
 	// PATCH /sessions/{id}
 	UpdateSession(ctx context.Context, req *UpdateSessionReq, params UpdateSessionParams) (UpdateSessionRes, error)
+	// UpdateTenant implements updateTenant operation.
+	//
+	// Updates a Tenant and persists changes to storage.
+	//
+	// PATCH /tenants/{id}
+	UpdateTenant(ctx context.Context, req *UpdateTenantReq, params UpdateTenantParams) (UpdateTenantRes, error)
 	// UpdateUser implements updateUser operation.
 	//
 	// Updates a User and persists changes to storage.

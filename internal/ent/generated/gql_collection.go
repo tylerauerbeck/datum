@@ -13,6 +13,7 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/membership"
 	"github.com/datumforge/datum/internal/ent/generated/organization"
 	"github.com/datumforge/datum/internal/ent/generated/session"
+	"github.com/datumforge/datum/internal/ent/generated/tenant"
 	"github.com/datumforge/datum/internal/ent/generated/user"
 )
 
@@ -57,6 +58,18 @@ func (gr *GroupQuery) collectField(ctx context.Context, opCtx *graphql.Operation
 				return err
 			}
 			gr.WithNamedMemberships(alias, func(wq *MembershipQuery) {
+				*wq = *query
+			})
+		case "users":
+			var (
+				alias = field.Alias
+				path  = append(path, alias)
+				query = (&UserClient{config: gr.config}).Query()
+			)
+			if err := query.collectField(ctx, opCtx, field, path, satisfies...); err != nil {
+				return err
+			}
+			gr.WithNamedUsers(alias, func(wq *UserQuery) {
 				*wq = *query
 			})
 		case "createdAt":
@@ -680,6 +693,73 @@ func newSessionPaginateArgs(rv map[string]any) *sessionPaginateArgs {
 }
 
 // CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
+func (t *TenantQuery) CollectFields(ctx context.Context, satisfies ...string) (*TenantQuery, error) {
+	fc := graphql.GetFieldContext(ctx)
+	if fc == nil {
+		return t, nil
+	}
+	if err := t.collectField(ctx, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
+		return nil, err
+	}
+	return t, nil
+}
+
+func (t *TenantQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
+	path = append([]string(nil), path...)
+	var (
+		unknownSeen    bool
+		fieldSeen      = make(map[string]struct{}, len(tenant.Columns))
+		selectedFields = []string{tenant.FieldID}
+	)
+	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
+		switch field.Name {
+		case "name":
+			if _, ok := fieldSeen[tenant.FieldName]; !ok {
+				selectedFields = append(selectedFields, tenant.FieldName)
+				fieldSeen[tenant.FieldName] = struct{}{}
+			}
+		case "id":
+		case "__typename":
+		default:
+			unknownSeen = true
+		}
+	}
+	if !unknownSeen {
+		t.Select(selectedFields...)
+	}
+	return nil
+}
+
+type tenantPaginateArgs struct {
+	first, last   *int
+	after, before *Cursor
+	opts          []TenantPaginateOption
+}
+
+func newTenantPaginateArgs(rv map[string]any) *tenantPaginateArgs {
+	args := &tenantPaginateArgs{}
+	if rv == nil {
+		return args
+	}
+	if v := rv[firstField]; v != nil {
+		args.first = v.(*int)
+	}
+	if v := rv[lastField]; v != nil {
+		args.last = v.(*int)
+	}
+	if v := rv[afterField]; v != nil {
+		args.after = v.(*Cursor)
+	}
+	if v := rv[beforeField]; v != nil {
+		args.before = v.(*Cursor)
+	}
+	if v, ok := rv[whereField].(*TenantWhereInput); ok {
+		args.opts = append(args.opts, WithTenantFilter(v.Filter))
+	}
+	return args
+}
+
+// CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
 func (u *UserQuery) CollectFields(ctx context.Context, satisfies ...string) (*UserQuery, error) {
 	fc := graphql.GetFieldContext(ctx)
 	if fc == nil {
@@ -722,6 +802,18 @@ func (u *UserQuery) collectField(ctx context.Context, opCtx *graphql.OperationCo
 				return err
 			}
 			u.WithNamedSessions(alias, func(wq *SessionQuery) {
+				*wq = *query
+			})
+		case "groups":
+			var (
+				alias = field.Alias
+				path  = append(path, alias)
+				query = (&GroupClient{config: u.config}).Query()
+			)
+			if err := query.collectField(ctx, opCtx, field, path, satisfies...); err != nil {
+				return err
+			}
+			u.WithNamedGroups(alias, func(wq *GroupQuery) {
 				*wq = *query
 			})
 		case "createdAt":

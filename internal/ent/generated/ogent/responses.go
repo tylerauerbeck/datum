@@ -371,6 +371,62 @@ func (gs *GroupSettingRead) Elem() GroupSettingRead {
 	return *gs
 }
 
+func NewGroupUsersList(e *generated.User) *GroupUsersList {
+	if e == nil {
+		return nil
+	}
+	var ret GroupUsersList
+	ret.ID = e.ID
+	ret.CreatedAt = e.CreatedAt
+	ret.UpdatedAt = e.UpdatedAt
+	ret.CreatedBy = NewOptInt(e.CreatedBy)
+	ret.UpdatedBy = NewOptInt(e.UpdatedBy)
+	ret.Email = e.Email
+	ret.FirstName = e.FirstName
+	ret.LastName = e.LastName
+	ret.DisplayName = e.DisplayName
+	ret.Locked = e.Locked
+	ret.AvatarRemoteURL = OptString{}
+	if e.AvatarRemoteURL != nil {
+		ret.AvatarRemoteURL.SetTo(*e.AvatarRemoteURL)
+	}
+	ret.AvatarLocalFile = OptString{}
+	if e.AvatarLocalFile != nil {
+		ret.AvatarLocalFile.SetTo(*e.AvatarLocalFile)
+	}
+	ret.AvatarUpdatedAt = OptDateTime{}
+	if e.AvatarUpdatedAt != nil {
+		ret.AvatarUpdatedAt.SetTo(*e.AvatarUpdatedAt)
+	}
+	ret.SilencedAt = OptDateTime{}
+	if e.SilencedAt != nil {
+		ret.SilencedAt.SetTo(*e.SilencedAt)
+	}
+	ret.SuspendedAt = OptDateTime{}
+	if e.SuspendedAt != nil {
+		ret.SuspendedAt.SetTo(*e.SuspendedAt)
+	}
+	return &ret
+}
+
+func NewGroupUsersLists(es []*generated.User) []GroupUsersList {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]GroupUsersList, len(es))
+	for i, e := range es {
+		r[i] = NewGroupUsersList(e).Elem()
+	}
+	return r
+}
+
+func (u *GroupUsersList) Elem() GroupUsersList {
+	if u == nil {
+		return GroupUsersList{}
+	}
+	return *u
+}
+
 func NewIntegrationCreate(e *generated.Integration) *IntegrationCreate {
 	if e == nil {
 		return nil
@@ -1183,6 +1239,118 @@ func (u *SessionUsersRead) Elem() SessionUsersRead {
 	return *u
 }
 
+func NewTenantCreate(e *generated.Tenant) *TenantCreate {
+	if e == nil {
+		return nil
+	}
+	var ret TenantCreate
+	ret.ID = e.ID
+	ret.Name = e.Name
+	return &ret
+}
+
+func NewTenantCreates(es []*generated.Tenant) []TenantCreate {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]TenantCreate, len(es))
+	for i, e := range es {
+		r[i] = NewTenantCreate(e).Elem()
+	}
+	return r
+}
+
+func (t *TenantCreate) Elem() TenantCreate {
+	if t == nil {
+		return TenantCreate{}
+	}
+	return *t
+}
+
+func NewTenantList(e *generated.Tenant) *TenantList {
+	if e == nil {
+		return nil
+	}
+	var ret TenantList
+	ret.ID = e.ID
+	ret.Name = e.Name
+	return &ret
+}
+
+func NewTenantLists(es []*generated.Tenant) []TenantList {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]TenantList, len(es))
+	for i, e := range es {
+		r[i] = NewTenantList(e).Elem()
+	}
+	return r
+}
+
+func (t *TenantList) Elem() TenantList {
+	if t == nil {
+		return TenantList{}
+	}
+	return *t
+}
+
+func NewTenantRead(e *generated.Tenant) *TenantRead {
+	if e == nil {
+		return nil
+	}
+	var ret TenantRead
+	ret.ID = e.ID
+	ret.Name = e.Name
+	return &ret
+}
+
+func NewTenantReads(es []*generated.Tenant) []TenantRead {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]TenantRead, len(es))
+	for i, e := range es {
+		r[i] = NewTenantRead(e).Elem()
+	}
+	return r
+}
+
+func (t *TenantRead) Elem() TenantRead {
+	if t == nil {
+		return TenantRead{}
+	}
+	return *t
+}
+
+func NewTenantUpdate(e *generated.Tenant) *TenantUpdate {
+	if e == nil {
+		return nil
+	}
+	var ret TenantUpdate
+	ret.ID = e.ID
+	ret.Name = e.Name
+	return &ret
+}
+
+func NewTenantUpdates(es []*generated.Tenant) []TenantUpdate {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]TenantUpdate, len(es))
+	for i, e := range es {
+		r[i] = NewTenantUpdate(e).Elem()
+	}
+	return r
+}
+
+func (t *TenantUpdate) Elem() TenantUpdate {
+	if t == nil {
+		return TenantUpdate{}
+	}
+	return *t
+}
+
 func NewUserCreate(e *generated.User) *UserCreate {
 	if e == nil {
 		return nil
@@ -1405,6 +1573,40 @@ func (u *UserUpdate) Elem() UserUpdate {
 		return UserUpdate{}
 	}
 	return *u
+}
+
+func NewUserGroupsList(e *generated.Group) *UserGroupsList {
+	if e == nil {
+		return nil
+	}
+	var ret UserGroupsList
+	ret.ID = e.ID
+	ret.CreatedAt = e.CreatedAt
+	ret.UpdatedAt = e.UpdatedAt
+	ret.CreatedBy = NewOptInt(e.CreatedBy)
+	ret.UpdatedBy = NewOptInt(e.UpdatedBy)
+	ret.Name = e.Name
+	ret.Description = e.Description
+	ret.LogoURL = e.LogoURL
+	return &ret
+}
+
+func NewUserGroupsLists(es []*generated.Group) []UserGroupsList {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]UserGroupsList, len(es))
+	for i, e := range es {
+		r[i] = NewUserGroupsList(e).Elem()
+	}
+	return r
+}
+
+func (gr *UserGroupsList) Elem() UserGroupsList {
+	if gr == nil {
+		return UserGroupsList{}
+	}
+	return *gr
 }
 
 func NewUserMembershipsList(e *generated.Membership) *UserMembershipsList {

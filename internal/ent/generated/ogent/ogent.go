@@ -13,6 +13,7 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/membership"
 	"github.com/datumforge/datum/internal/ent/generated/organization"
 	"github.com/datumforge/datum/internal/ent/generated/session"
+	"github.com/datumforge/datum/internal/ent/generated/tenant"
 	"github.com/datumforge/datum/internal/ent/generated/user"
 	"github.com/go-faster/jx"
 )
@@ -50,6 +51,7 @@ func (h *OgentHandler) CreateGroup(ctx context.Context, req *CreateGroupReq) (Cr
 	// Add all edges.
 	b.SetSettingID(req.Setting)
 	b.AddMembershipIDs(req.Memberships...)
+	b.AddUserIDs(req.Users...)
 	// Persist to storage.
 	e, err := b.Save(ctx)
 	if err != nil {
@@ -135,6 +137,9 @@ func (h *OgentHandler) UpdateGroup(ctx context.Context, req *UpdateGroupReq, par
 	}
 	if req.Memberships != nil {
 		b.ClearMemberships().AddMembershipIDs(req.Memberships...)
+	}
+	if req.Users != nil {
+		b.ClearUsers().AddUserIDs(req.Users...)
 	}
 	// Persist to storage.
 	e, err := b.Save(ctx)
@@ -290,6 +295,42 @@ func (h *OgentHandler) ListGroupMemberships(ctx context.Context, params ListGrou
 	}
 	r := NewGroupMembershipsLists(es)
 	return (*ListGroupMembershipsOKApplicationJSON)(&r), nil
+}
+
+// ListGroupUsers handles GET /groups/{id}/users requests.
+func (h *OgentHandler) ListGroupUsers(ctx context.Context, params ListGroupUsersParams) (ListGroupUsersRes, error) {
+	q := h.client.Group.Query().Where(group.IDEQ(params.ID)).QueryUsers()
+	page := 1
+	if v, ok := params.Page.Get(); ok {
+		page = v
+	}
+	itemsPerPage := 30
+	if v, ok := params.ItemsPerPage.Get(); ok {
+		itemsPerPage = v
+	}
+	q.Limit(itemsPerPage).Offset((page - 1) * itemsPerPage)
+	es, err := q.All(ctx)
+	if err != nil {
+		switch {
+		case generated.IsNotFound(err):
+			return &R404{
+				Code:   http.StatusNotFound,
+				Status: http.StatusText(http.StatusNotFound),
+				Errors: rawError(err),
+			}, nil
+		case generated.IsNotSingular(err):
+			return &R409{
+				Code:   http.StatusConflict,
+				Status: http.StatusText(http.StatusConflict),
+				Errors: rawError(err),
+			}, nil
+		default:
+			// Let the server handle the error.
+			return nil, err
+		}
+	}
+	r := NewGroupUsersLists(es)
+	return (*ListGroupUsersOKApplicationJSON)(&r), nil
 }
 
 // CreateGroupSettings handles POST /group-settings-slice requests.
@@ -1486,6 +1527,171 @@ func (h *OgentHandler) ReadSessionUsers(ctx context.Context, params ReadSessionU
 	return NewSessionUsersRead(e), nil
 }
 
+// CreateTenant handles POST /tenants requests.
+func (h *OgentHandler) CreateTenant(ctx context.Context, req *CreateTenantReq) (CreateTenantRes, error) {
+	b := h.client.Tenant.Create()
+	// Add all fields.
+	b.SetName(req.Name)
+	// Add all edges.
+	// Persist to storage.
+	e, err := b.Save(ctx)
+	if err != nil {
+		switch {
+		case generated.IsNotSingular(err):
+			return &R409{
+				Code:   http.StatusConflict,
+				Status: http.StatusText(http.StatusConflict),
+				Errors: rawError(err),
+			}, nil
+		case generated.IsConstraintError(err):
+			return &R409{
+				Code:   http.StatusConflict,
+				Status: http.StatusText(http.StatusConflict),
+				Errors: rawError(err),
+			}, nil
+		default:
+			// Let the server handle the error.
+			return nil, err
+		}
+	}
+	// Reload the entity to attach all eager-loaded edges.
+	q := h.client.Tenant.Query().Where(tenant.ID(e.ID))
+	e, err = q.Only(ctx)
+	if err != nil {
+		// This should never happen.
+		return nil, err
+	}
+	return NewTenantCreate(e), nil
+}
+
+// ReadTenant handles GET /tenants/{id} requests.
+func (h *OgentHandler) ReadTenant(ctx context.Context, params ReadTenantParams) (ReadTenantRes, error) {
+	q := h.client.Tenant.Query().Where(tenant.IDEQ(params.ID))
+	e, err := q.Only(ctx)
+	if err != nil {
+		switch {
+		case generated.IsNotFound(err):
+			return &R404{
+				Code:   http.StatusNotFound,
+				Status: http.StatusText(http.StatusNotFound),
+				Errors: rawError(err),
+			}, nil
+		case generated.IsNotSingular(err):
+			return &R409{
+				Code:   http.StatusConflict,
+				Status: http.StatusText(http.StatusConflict),
+				Errors: rawError(err),
+			}, nil
+		default:
+			// Let the server handle the error.
+			return nil, err
+		}
+	}
+	return NewTenantRead(e), nil
+}
+
+// UpdateTenant handles PATCH /tenants/{id} requests.
+func (h *OgentHandler) UpdateTenant(ctx context.Context, req *UpdateTenantReq, params UpdateTenantParams) (UpdateTenantRes, error) {
+	b := h.client.Tenant.UpdateOneID(params.ID)
+	// Add all fields.
+	if v, ok := req.Name.Get(); ok {
+		b.SetName(v)
+	}
+	// Add all edges.
+	// Persist to storage.
+	e, err := b.Save(ctx)
+	if err != nil {
+		switch {
+		case generated.IsNotFound(err):
+			return &R404{
+				Code:   http.StatusNotFound,
+				Status: http.StatusText(http.StatusNotFound),
+				Errors: rawError(err),
+			}, nil
+		case generated.IsConstraintError(err):
+			return &R409{
+				Code:   http.StatusConflict,
+				Status: http.StatusText(http.StatusConflict),
+				Errors: rawError(err),
+			}, nil
+		default:
+			// Let the server handle the error.
+			return nil, err
+		}
+	}
+	// Reload the entity to attach all eager-loaded edges.
+	q := h.client.Tenant.Query().Where(tenant.ID(e.ID))
+	e, err = q.Only(ctx)
+	if err != nil {
+		// This should never happen.
+		return nil, err
+	}
+	return NewTenantUpdate(e), nil
+}
+
+// DeleteTenant handles DELETE /tenants/{id} requests.
+func (h *OgentHandler) DeleteTenant(ctx context.Context, params DeleteTenantParams) (DeleteTenantRes, error) {
+	err := h.client.Tenant.DeleteOneID(params.ID).Exec(ctx)
+	if err != nil {
+		switch {
+		case generated.IsNotFound(err):
+			return &R404{
+				Code:   http.StatusNotFound,
+				Status: http.StatusText(http.StatusNotFound),
+				Errors: rawError(err),
+			}, nil
+		case generated.IsConstraintError(err):
+			return &R409{
+				Code:   http.StatusConflict,
+				Status: http.StatusText(http.StatusConflict),
+				Errors: rawError(err),
+			}, nil
+		default:
+			// Let the server handle the error.
+			return nil, err
+		}
+	}
+	return new(DeleteTenantNoContent), nil
+
+}
+
+// ListTenant handles GET /tenants requests.
+func (h *OgentHandler) ListTenant(ctx context.Context, params ListTenantParams) (ListTenantRes, error) {
+	q := h.client.Tenant.Query()
+	page := 1
+	if v, ok := params.Page.Get(); ok {
+		page = v
+	}
+	itemsPerPage := 30
+	if v, ok := params.ItemsPerPage.Get(); ok {
+		itemsPerPage = v
+	}
+	q.Limit(itemsPerPage).Offset((page - 1) * itemsPerPage)
+
+	es, err := q.All(ctx)
+	if err != nil {
+		switch {
+		case generated.IsNotFound(err):
+			return &R404{
+				Code:   http.StatusNotFound,
+				Status: http.StatusText(http.StatusNotFound),
+				Errors: rawError(err),
+			}, nil
+		case generated.IsNotSingular(err):
+			return &R409{
+				Code:   http.StatusConflict,
+				Status: http.StatusText(http.StatusConflict),
+				Errors: rawError(err),
+			}, nil
+		default:
+			// Let the server handle the error.
+			return nil, err
+		}
+	}
+	r := NewTenantLists(es)
+	return (*ListTenantOKApplicationJSON)(&r), nil
+}
+
 // CreateUser handles POST /users requests.
 func (h *OgentHandler) CreateUser(ctx context.Context, req *CreateUserReq) (CreateUserRes, error) {
 	b := h.client.User.Create()
@@ -1524,6 +1730,7 @@ func (h *OgentHandler) CreateUser(ctx context.Context, req *CreateUserReq) (Crea
 	// Add all edges.
 	b.AddMembershipIDs(req.Memberships...)
 	b.AddSessionIDs(req.Sessions...)
+	b.AddGroupIDs(req.Groups...)
 	// Persist to storage.
 	e, err := b.Save(ctx)
 	if err != nil {
@@ -1633,6 +1840,9 @@ func (h *OgentHandler) UpdateUser(ctx context.Context, req *UpdateUserReq, param
 	}
 	if req.Sessions != nil {
 		b.ClearSessions().AddSessionIDs(req.Sessions...)
+	}
+	if req.Groups != nil {
+		b.ClearGroups().AddGroupIDs(req.Groups...)
 	}
 	// Persist to storage.
 	e, err := b.Save(ctx)
@@ -1798,4 +2008,40 @@ func (h *OgentHandler) ListUserSessions(ctx context.Context, params ListUserSess
 	}
 	r := NewUserSessionsLists(es)
 	return (*ListUserSessionsOKApplicationJSON)(&r), nil
+}
+
+// ListUserGroups handles GET /users/{id}/groups requests.
+func (h *OgentHandler) ListUserGroups(ctx context.Context, params ListUserGroupsParams) (ListUserGroupsRes, error) {
+	q := h.client.User.Query().Where(user.IDEQ(params.ID)).QueryGroups()
+	page := 1
+	if v, ok := params.Page.Get(); ok {
+		page = v
+	}
+	itemsPerPage := 30
+	if v, ok := params.ItemsPerPage.Get(); ok {
+		itemsPerPage = v
+	}
+	q.Limit(itemsPerPage).Offset((page - 1) * itemsPerPage)
+	es, err := q.All(ctx)
+	if err != nil {
+		switch {
+		case generated.IsNotFound(err):
+			return &R404{
+				Code:   http.StatusNotFound,
+				Status: http.StatusText(http.StatusNotFound),
+				Errors: rawError(err),
+			}, nil
+		case generated.IsNotSingular(err):
+			return &R409{
+				Code:   http.StatusConflict,
+				Status: http.StatusText(http.StatusConflict),
+				Errors: rawError(err),
+			}, nil
+		default:
+			// Let the server handle the error.
+			return nil, err
+		}
+	}
+	r := NewUserGroupsLists(es)
+	return (*ListUserGroupsOKApplicationJSON)(&r), nil
 }
