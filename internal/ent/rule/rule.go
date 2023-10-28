@@ -8,9 +8,10 @@ import (
 	"context"
 
 	"entgo.io/ent/entql"
+	"github.com/datumforge/datum/internal/ent/generated"
 	"github.com/datumforge/datum/internal/ent/generated/privacy"
 	"github.com/datumforge/datum/internal/ent/generated/user"
-	"github.com/datumforge/datum/privacy/viewer"
+	"github.com/datumforge/datum/internal/ent/viewer"
 )
 
 // DenyIfNoViewer is a rule that returns deny decision if the viewer is missing in the context.
@@ -64,7 +65,7 @@ func FilterTenantRule() privacy.QueryMutationRule {
 // DenyMismatchedTenants is a rule that runs only on create operations and returns a deny
 // decision if the operation tries to add users to groups that are not in the same tenant.
 func DenyMismatchedTenants() privacy.MutationRule {
-	return privacy.GroupMutationRuleFunc(func(ctx context.Context, m *ent.GroupMutation) error {
+	return privacy.GroupMutationRuleFunc(func(ctx context.Context, m *generated.GroupMutation) error {
 		tid, exists := m.TenantID()
 		if !exists {
 			return privacy.Denyf("missing tenant information in mutation")
@@ -76,7 +77,7 @@ func DenyMismatchedTenants() privacy.MutationRule {
 		}
 		// Query the tenant-ids of all attached users. Expect all users to be connected to the same tenant
 		// as the group. Note, we use privacy.DecisionContext to skip the FilterTenantRule defined above.
-		ids, err := m.Client().User.Query().Where(user.IDIn(users...)).Select(user.FieldTenantID).Ints(privacy.DecisionContext(ctx, privacy.Allow))
+		ids, err := m.Client().User.Query().Where(user.IDIn(users...)).Select(user.Field).Ints(privacy.DecisionContext(ctx, privacy.Allow))
 		if err != nil {
 			return privacy.Denyf("querying the tenant-ids %v", err)
 		}

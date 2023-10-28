@@ -6,6 +6,9 @@ package viewer
 
 import (
 	"context"
+
+	"github.com/datumforge/datum/internal/ent/generated"
+	"github.com/google/uuid"
 )
 
 // Role for viewer actions.
@@ -26,7 +29,7 @@ type Viewer interface {
 
 // UserViewer describes a user-viewer.
 type UserViewer struct {
-	T    *ent.Tenant
+	T    *generated.Tenant
 	Role Role // Attached roles.
 }
 
@@ -34,11 +37,11 @@ func (v UserViewer) Admin() bool {
 	return v.Role&Admin != 0
 }
 
-func (v UserViewer) Tenant() (int, bool) {
+func (v UserViewer) Tenant() (uuid.UUID, bool) {
 	if v.T != nil {
 		return v.T.ID, true
 	}
-	return 0, false
+	return uuid.UUID{}, false
 }
 
 type ctxKey struct{}
