@@ -17,8 +17,8 @@ import (
 type CreateGroupInput struct {
 	CreatedAt     *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt     *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy     *int64     `json:"createdBy,omitempty"`
-	UpdatedBy     *int64     `json:"updatedBy,omitempty"`
+	CreatedBy     *string    `json:"createdBy,omitempty"`
+	UpdatedBy     *string    `json:"updatedBy,omitempty"`
 	Name          string     `json:"name"`
 	Description   *string    `json:"description,omitempty"`
 	LogoURL       string     `json:"logoURL"`
@@ -31,8 +31,8 @@ type CreateGroupInput struct {
 type CreateGroupSettingsInput struct {
 	CreatedAt  *time.Time                `json:"createdAt,omitempty"`
 	UpdatedAt  *time.Time                `json:"updatedAt,omitempty"`
-	CreatedBy  *int64                    `json:"createdBy,omitempty"`
-	UpdatedBy  *int64                    `json:"updatedBy,omitempty"`
+	CreatedBy  *string                   `json:"createdBy,omitempty"`
+	UpdatedBy  *string                   `json:"updatedBy,omitempty"`
 	Visibility *groupsettings.Visibility `json:"visibility,omitempty"`
 	JoinPolicy *groupsettings.JoinPolicy `json:"joinPolicy,omitempty"`
 }
@@ -42,8 +42,8 @@ type CreateGroupSettingsInput struct {
 type CreateIntegrationInput struct {
 	CreatedAt      *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt      *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy      *int64     `json:"createdBy,omitempty"`
-	UpdatedBy      *int64     `json:"updatedBy,omitempty"`
+	CreatedBy      *string    `json:"createdBy,omitempty"`
+	UpdatedBy      *string    `json:"updatedBy,omitempty"`
 	Kind           string     `json:"kind"`
 	Description    *string    `json:"description,omitempty"`
 	SecretName     string     `json:"secretName"`
@@ -55,8 +55,8 @@ type CreateIntegrationInput struct {
 type CreateMembershipInput struct {
 	CreatedAt      *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt      *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy      *int64     `json:"createdBy,omitempty"`
-	UpdatedBy      *int64     `json:"updatedBy,omitempty"`
+	CreatedBy      *string    `json:"createdBy,omitempty"`
+	UpdatedBy      *string    `json:"updatedBy,omitempty"`
 	Current        *bool      `json:"current,omitempty"`
 	OrganizationID string     `json:"organizationID"`
 	UserID         string     `json:"userID"`
@@ -68,8 +68,8 @@ type CreateMembershipInput struct {
 type CreateOrganizationInput struct {
 	CreatedAt      *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt      *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy      *int64     `json:"createdBy,omitempty"`
-	UpdatedBy      *int64     `json:"updatedBy,omitempty"`
+	CreatedBy      *string    `json:"createdBy,omitempty"`
+	UpdatedBy      *string    `json:"updatedBy,omitempty"`
 	Name           string     `json:"name"`
 	MembershipIDs  []string   `json:"membershipIDs,omitempty"`
 	IntegrationIDs []string   `json:"integrationIDs,omitempty"`
@@ -80,8 +80,8 @@ type CreateOrganizationInput struct {
 type CreateSessionInput struct {
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy *int64     `json:"createdBy,omitempty"`
-	UpdatedBy *int64     `json:"updatedBy,omitempty"`
+	CreatedBy *string    `json:"createdBy,omitempty"`
+	UpdatedBy *string    `json:"updatedBy,omitempty"`
 	// Sessions can derrive from the local (password auth), oauth, or app_password
 	Type session.Type `json:"type"`
 	// The session may be disabled by the user or by automatic security policy
@@ -100,8 +100,8 @@ type CreateSessionInput struct {
 type CreateUserInput struct {
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy *int64     `json:"createdBy,omitempty"`
-	UpdatedBy *int64     `json:"updatedBy,omitempty"`
+	CreatedBy *string    `json:"createdBy,omitempty"`
+	UpdatedBy *string    `json:"updatedBy,omitempty"`
 	Email     string     `json:"email"`
 	FirstName string     `json:"firstName"`
 	LastName  string     `json:"lastName"`
@@ -129,8 +129,8 @@ type Group struct {
 	ID          string        `json:"id"`
 	CreatedAt   time.Time     `json:"createdAt"`
 	UpdatedAt   time.Time     `json:"updatedAt"`
-	CreatedBy   *int64        `json:"createdBy,omitempty"`
-	UpdatedBy   *int64        `json:"updatedBy,omitempty"`
+	CreatedBy   *string       `json:"createdBy,omitempty"`
+	UpdatedBy   *string       `json:"updatedBy,omitempty"`
 	Name        string        `json:"name"`
 	Description string        `json:"description"`
 	LogoURL     string        `json:"logoURL"`
@@ -174,8 +174,8 @@ type GroupSettings struct {
 	ID         string                   `json:"id"`
 	CreatedAt  time.Time                `json:"createdAt"`
 	UpdatedAt  time.Time                `json:"updatedAt"`
-	CreatedBy  *int64                   `json:"createdBy,omitempty"`
-	UpdatedBy  *int64                   `json:"updatedBy,omitempty"`
+	CreatedBy  *string                  `json:"createdBy,omitempty"`
+	UpdatedBy  *string                  `json:"updatedBy,omitempty"`
 	Visibility groupsettings.Visibility `json:"visibility"`
 	JoinPolicy groupsettings.JoinPolicy `json:"joinPolicy"`
 }
@@ -216,27 +216,27 @@ type GroupSettingsWhereInput struct {
 	UpdatedAtLt    *time.Time   `json:"updatedAtLT,omitempty"`
 	UpdatedAtLte   *time.Time   `json:"updatedAtLTE,omitempty"`
 	// created_by field predicates
-	CreatedBy       *int64  `json:"createdBy,omitempty"`
-	CreatedByNeq    *int64  `json:"createdByNEQ,omitempty"`
-	CreatedByIn     []int64 `json:"createdByIn,omitempty"`
-	CreatedByNotIn  []int64 `json:"createdByNotIn,omitempty"`
-	CreatedByGt     *int64  `json:"createdByGT,omitempty"`
-	CreatedByGte    *int64  `json:"createdByGTE,omitempty"`
-	CreatedByLt     *int64  `json:"createdByLT,omitempty"`
-	CreatedByLte    *int64  `json:"createdByLTE,omitempty"`
-	CreatedByIsNil  *bool   `json:"createdByIsNil,omitempty"`
-	CreatedByNotNil *bool   `json:"createdByNotNil,omitempty"`
+	CreatedBy       *string  `json:"createdBy,omitempty"`
+	CreatedByNeq    *string  `json:"createdByNEQ,omitempty"`
+	CreatedByIn     []string `json:"createdByIn,omitempty"`
+	CreatedByNotIn  []string `json:"createdByNotIn,omitempty"`
+	CreatedByGt     *string  `json:"createdByGT,omitempty"`
+	CreatedByGte    *string  `json:"createdByGTE,omitempty"`
+	CreatedByLt     *string  `json:"createdByLT,omitempty"`
+	CreatedByLte    *string  `json:"createdByLTE,omitempty"`
+	CreatedByIsNil  *bool    `json:"createdByIsNil,omitempty"`
+	CreatedByNotNil *bool    `json:"createdByNotNil,omitempty"`
 	// updated_by field predicates
-	UpdatedBy       *int64  `json:"updatedBy,omitempty"`
-	UpdatedByNeq    *int64  `json:"updatedByNEQ,omitempty"`
-	UpdatedByIn     []int64 `json:"updatedByIn,omitempty"`
-	UpdatedByNotIn  []int64 `json:"updatedByNotIn,omitempty"`
-	UpdatedByGt     *int64  `json:"updatedByGT,omitempty"`
-	UpdatedByGte    *int64  `json:"updatedByGTE,omitempty"`
-	UpdatedByLt     *int64  `json:"updatedByLT,omitempty"`
-	UpdatedByLte    *int64  `json:"updatedByLTE,omitempty"`
-	UpdatedByIsNil  *bool   `json:"updatedByIsNil,omitempty"`
-	UpdatedByNotNil *bool   `json:"updatedByNotNil,omitempty"`
+	UpdatedBy       *string  `json:"updatedBy,omitempty"`
+	UpdatedByNeq    *string  `json:"updatedByNEQ,omitempty"`
+	UpdatedByIn     []string `json:"updatedByIn,omitempty"`
+	UpdatedByNotIn  []string `json:"updatedByNotIn,omitempty"`
+	UpdatedByGt     *string  `json:"updatedByGT,omitempty"`
+	UpdatedByGte    *string  `json:"updatedByGTE,omitempty"`
+	UpdatedByLt     *string  `json:"updatedByLT,omitempty"`
+	UpdatedByLte    *string  `json:"updatedByLTE,omitempty"`
+	UpdatedByIsNil  *bool    `json:"updatedByIsNil,omitempty"`
+	UpdatedByNotNil *bool    `json:"updatedByNotNil,omitempty"`
 	// visibility field predicates
 	Visibility      *groupsettings.Visibility  `json:"visibility,omitempty"`
 	VisibilityNeq   *groupsettings.Visibility  `json:"visibilityNEQ,omitempty"`
@@ -289,27 +289,27 @@ type GroupWhereInput struct {
 	UpdatedAtLt    *time.Time   `json:"updatedAtLT,omitempty"`
 	UpdatedAtLte   *time.Time   `json:"updatedAtLTE,omitempty"`
 	// created_by field predicates
-	CreatedBy       *int64  `json:"createdBy,omitempty"`
-	CreatedByNeq    *int64  `json:"createdByNEQ,omitempty"`
-	CreatedByIn     []int64 `json:"createdByIn,omitempty"`
-	CreatedByNotIn  []int64 `json:"createdByNotIn,omitempty"`
-	CreatedByGt     *int64  `json:"createdByGT,omitempty"`
-	CreatedByGte    *int64  `json:"createdByGTE,omitempty"`
-	CreatedByLt     *int64  `json:"createdByLT,omitempty"`
-	CreatedByLte    *int64  `json:"createdByLTE,omitempty"`
-	CreatedByIsNil  *bool   `json:"createdByIsNil,omitempty"`
-	CreatedByNotNil *bool   `json:"createdByNotNil,omitempty"`
+	CreatedBy       *string  `json:"createdBy,omitempty"`
+	CreatedByNeq    *string  `json:"createdByNEQ,omitempty"`
+	CreatedByIn     []string `json:"createdByIn,omitempty"`
+	CreatedByNotIn  []string `json:"createdByNotIn,omitempty"`
+	CreatedByGt     *string  `json:"createdByGT,omitempty"`
+	CreatedByGte    *string  `json:"createdByGTE,omitempty"`
+	CreatedByLt     *string  `json:"createdByLT,omitempty"`
+	CreatedByLte    *string  `json:"createdByLTE,omitempty"`
+	CreatedByIsNil  *bool    `json:"createdByIsNil,omitempty"`
+	CreatedByNotNil *bool    `json:"createdByNotNil,omitempty"`
 	// updated_by field predicates
-	UpdatedBy       *int64  `json:"updatedBy,omitempty"`
-	UpdatedByNeq    *int64  `json:"updatedByNEQ,omitempty"`
-	UpdatedByIn     []int64 `json:"updatedByIn,omitempty"`
-	UpdatedByNotIn  []int64 `json:"updatedByNotIn,omitempty"`
-	UpdatedByGt     *int64  `json:"updatedByGT,omitempty"`
-	UpdatedByGte    *int64  `json:"updatedByGTE,omitempty"`
-	UpdatedByLt     *int64  `json:"updatedByLT,omitempty"`
-	UpdatedByLte    *int64  `json:"updatedByLTE,omitempty"`
-	UpdatedByIsNil  *bool   `json:"updatedByIsNil,omitempty"`
-	UpdatedByNotNil *bool   `json:"updatedByNotNil,omitempty"`
+	UpdatedBy       *string  `json:"updatedBy,omitempty"`
+	UpdatedByNeq    *string  `json:"updatedByNEQ,omitempty"`
+	UpdatedByIn     []string `json:"updatedByIn,omitempty"`
+	UpdatedByNotIn  []string `json:"updatedByNotIn,omitempty"`
+	UpdatedByGt     *string  `json:"updatedByGT,omitempty"`
+	UpdatedByGte    *string  `json:"updatedByGTE,omitempty"`
+	UpdatedByLt     *string  `json:"updatedByLT,omitempty"`
+	UpdatedByLte    *string  `json:"updatedByLTE,omitempty"`
+	UpdatedByIsNil  *bool    `json:"updatedByIsNil,omitempty"`
+	UpdatedByNotNil *bool    `json:"updatedByNotNil,omitempty"`
 	// name field predicates
 	Name             *string  `json:"name,omitempty"`
 	NameNeq          *string  `json:"nameNEQ,omitempty"`
@@ -336,8 +336,8 @@ type Integration struct {
 	ID           string       `json:"id"`
 	CreatedAt    time.Time    `json:"createdAt"`
 	UpdatedAt    time.Time    `json:"updatedAt"`
-	CreatedBy    *int64       `json:"createdBy,omitempty"`
-	UpdatedBy    *int64       `json:"updatedBy,omitempty"`
+	CreatedBy    *string      `json:"createdBy,omitempty"`
+	UpdatedBy    *string      `json:"updatedBy,omitempty"`
 	Kind         string       `json:"kind"`
 	Description  *string      `json:"description,omitempty"`
 	SecretName   string       `json:"secretName"`
@@ -398,27 +398,27 @@ type IntegrationWhereInput struct {
 	UpdatedAtLt    *time.Time   `json:"updatedAtLT,omitempty"`
 	UpdatedAtLte   *time.Time   `json:"updatedAtLTE,omitempty"`
 	// created_by field predicates
-	CreatedBy       *int64  `json:"createdBy,omitempty"`
-	CreatedByNeq    *int64  `json:"createdByNEQ,omitempty"`
-	CreatedByIn     []int64 `json:"createdByIn,omitempty"`
-	CreatedByNotIn  []int64 `json:"createdByNotIn,omitempty"`
-	CreatedByGt     *int64  `json:"createdByGT,omitempty"`
-	CreatedByGte    *int64  `json:"createdByGTE,omitempty"`
-	CreatedByLt     *int64  `json:"createdByLT,omitempty"`
-	CreatedByLte    *int64  `json:"createdByLTE,omitempty"`
-	CreatedByIsNil  *bool   `json:"createdByIsNil,omitempty"`
-	CreatedByNotNil *bool   `json:"createdByNotNil,omitempty"`
+	CreatedBy       *string  `json:"createdBy,omitempty"`
+	CreatedByNeq    *string  `json:"createdByNEQ,omitempty"`
+	CreatedByIn     []string `json:"createdByIn,omitempty"`
+	CreatedByNotIn  []string `json:"createdByNotIn,omitempty"`
+	CreatedByGt     *string  `json:"createdByGT,omitempty"`
+	CreatedByGte    *string  `json:"createdByGTE,omitempty"`
+	CreatedByLt     *string  `json:"createdByLT,omitempty"`
+	CreatedByLte    *string  `json:"createdByLTE,omitempty"`
+	CreatedByIsNil  *bool    `json:"createdByIsNil,omitempty"`
+	CreatedByNotNil *bool    `json:"createdByNotNil,omitempty"`
 	// updated_by field predicates
-	UpdatedBy       *int64  `json:"updatedBy,omitempty"`
-	UpdatedByNeq    *int64  `json:"updatedByNEQ,omitempty"`
-	UpdatedByIn     []int64 `json:"updatedByIn,omitempty"`
-	UpdatedByNotIn  []int64 `json:"updatedByNotIn,omitempty"`
-	UpdatedByGt     *int64  `json:"updatedByGT,omitempty"`
-	UpdatedByGte    *int64  `json:"updatedByGTE,omitempty"`
-	UpdatedByLt     *int64  `json:"updatedByLT,omitempty"`
-	UpdatedByLte    *int64  `json:"updatedByLTE,omitempty"`
-	UpdatedByIsNil  *bool   `json:"updatedByIsNil,omitempty"`
-	UpdatedByNotNil *bool   `json:"updatedByNotNil,omitempty"`
+	UpdatedBy       *string  `json:"updatedBy,omitempty"`
+	UpdatedByNeq    *string  `json:"updatedByNEQ,omitempty"`
+	UpdatedByIn     []string `json:"updatedByIn,omitempty"`
+	UpdatedByNotIn  []string `json:"updatedByNotIn,omitempty"`
+	UpdatedByGt     *string  `json:"updatedByGT,omitempty"`
+	UpdatedByGte    *string  `json:"updatedByGTE,omitempty"`
+	UpdatedByLt     *string  `json:"updatedByLT,omitempty"`
+	UpdatedByLte    *string  `json:"updatedByLTE,omitempty"`
+	UpdatedByIsNil  *bool    `json:"updatedByIsNil,omitempty"`
+	UpdatedByNotNil *bool    `json:"updatedByNotNil,omitempty"`
 	// kind field predicates
 	Kind             *string  `json:"kind,omitempty"`
 	KindNeq          *string  `json:"kindNEQ,omitempty"`
@@ -472,8 +472,8 @@ type Membership struct {
 	ID           string       `json:"id"`
 	CreatedAt    time.Time    `json:"createdAt"`
 	UpdatedAt    time.Time    `json:"updatedAt"`
-	CreatedBy    *int64       `json:"createdBy,omitempty"`
-	UpdatedBy    *int64       `json:"updatedBy,omitempty"`
+	CreatedBy    *string      `json:"createdBy,omitempty"`
+	UpdatedBy    *string      `json:"updatedBy,omitempty"`
 	Current      bool         `json:"current"`
 	Organization Organization `json:"organization"`
 	User         User         `json:"user"`
@@ -534,27 +534,27 @@ type MembershipWhereInput struct {
 	UpdatedAtLt    *time.Time   `json:"updatedAtLT,omitempty"`
 	UpdatedAtLte   *time.Time   `json:"updatedAtLTE,omitempty"`
 	// created_by field predicates
-	CreatedBy       *int64  `json:"createdBy,omitempty"`
-	CreatedByNeq    *int64  `json:"createdByNEQ,omitempty"`
-	CreatedByIn     []int64 `json:"createdByIn,omitempty"`
-	CreatedByNotIn  []int64 `json:"createdByNotIn,omitempty"`
-	CreatedByGt     *int64  `json:"createdByGT,omitempty"`
-	CreatedByGte    *int64  `json:"createdByGTE,omitempty"`
-	CreatedByLt     *int64  `json:"createdByLT,omitempty"`
-	CreatedByLte    *int64  `json:"createdByLTE,omitempty"`
-	CreatedByIsNil  *bool   `json:"createdByIsNil,omitempty"`
-	CreatedByNotNil *bool   `json:"createdByNotNil,omitempty"`
+	CreatedBy       *string  `json:"createdBy,omitempty"`
+	CreatedByNeq    *string  `json:"createdByNEQ,omitempty"`
+	CreatedByIn     []string `json:"createdByIn,omitempty"`
+	CreatedByNotIn  []string `json:"createdByNotIn,omitempty"`
+	CreatedByGt     *string  `json:"createdByGT,omitempty"`
+	CreatedByGte    *string  `json:"createdByGTE,omitempty"`
+	CreatedByLt     *string  `json:"createdByLT,omitempty"`
+	CreatedByLte    *string  `json:"createdByLTE,omitempty"`
+	CreatedByIsNil  *bool    `json:"createdByIsNil,omitempty"`
+	CreatedByNotNil *bool    `json:"createdByNotNil,omitempty"`
 	// updated_by field predicates
-	UpdatedBy       *int64  `json:"updatedBy,omitempty"`
-	UpdatedByNeq    *int64  `json:"updatedByNEQ,omitempty"`
-	UpdatedByIn     []int64 `json:"updatedByIn,omitempty"`
-	UpdatedByNotIn  []int64 `json:"updatedByNotIn,omitempty"`
-	UpdatedByGt     *int64  `json:"updatedByGT,omitempty"`
-	UpdatedByGte    *int64  `json:"updatedByGTE,omitempty"`
-	UpdatedByLt     *int64  `json:"updatedByLT,omitempty"`
-	UpdatedByLte    *int64  `json:"updatedByLTE,omitempty"`
-	UpdatedByIsNil  *bool   `json:"updatedByIsNil,omitempty"`
-	UpdatedByNotNil *bool   `json:"updatedByNotNil,omitempty"`
+	UpdatedBy       *string  `json:"updatedBy,omitempty"`
+	UpdatedByNeq    *string  `json:"updatedByNEQ,omitempty"`
+	UpdatedByIn     []string `json:"updatedByIn,omitempty"`
+	UpdatedByNotIn  []string `json:"updatedByNotIn,omitempty"`
+	UpdatedByGt     *string  `json:"updatedByGT,omitempty"`
+	UpdatedByGte    *string  `json:"updatedByGTE,omitempty"`
+	UpdatedByLt     *string  `json:"updatedByLT,omitempty"`
+	UpdatedByLte    *string  `json:"updatedByLTE,omitempty"`
+	UpdatedByIsNil  *bool    `json:"updatedByIsNil,omitempty"`
+	UpdatedByNotNil *bool    `json:"updatedByNotNil,omitempty"`
 	// current field predicates
 	Current    *bool `json:"current,omitempty"`
 	CurrentNeq *bool `json:"currentNEQ,omitempty"`
@@ -573,8 +573,8 @@ type Organization struct {
 	ID           string         `json:"id"`
 	CreatedAt    time.Time      `json:"createdAt"`
 	UpdatedAt    time.Time      `json:"updatedAt"`
-	CreatedBy    *int64         `json:"createdBy,omitempty"`
-	UpdatedBy    *int64         `json:"updatedBy,omitempty"`
+	CreatedBy    *string        `json:"createdBy,omitempty"`
+	UpdatedBy    *string        `json:"updatedBy,omitempty"`
 	Name         string         `json:"name"`
 	Memberships  []*Membership  `json:"memberships,omitempty"`
 	Integrations []*Integration `json:"integrations,omitempty"`
@@ -634,27 +634,27 @@ type OrganizationWhereInput struct {
 	UpdatedAtLt    *time.Time   `json:"updatedAtLT,omitempty"`
 	UpdatedAtLte   *time.Time   `json:"updatedAtLTE,omitempty"`
 	// created_by field predicates
-	CreatedBy       *int64  `json:"createdBy,omitempty"`
-	CreatedByNeq    *int64  `json:"createdByNEQ,omitempty"`
-	CreatedByIn     []int64 `json:"createdByIn,omitempty"`
-	CreatedByNotIn  []int64 `json:"createdByNotIn,omitempty"`
-	CreatedByGt     *int64  `json:"createdByGT,omitempty"`
-	CreatedByGte    *int64  `json:"createdByGTE,omitempty"`
-	CreatedByLt     *int64  `json:"createdByLT,omitempty"`
-	CreatedByLte    *int64  `json:"createdByLTE,omitempty"`
-	CreatedByIsNil  *bool   `json:"createdByIsNil,omitempty"`
-	CreatedByNotNil *bool   `json:"createdByNotNil,omitempty"`
+	CreatedBy       *string  `json:"createdBy,omitempty"`
+	CreatedByNeq    *string  `json:"createdByNEQ,omitempty"`
+	CreatedByIn     []string `json:"createdByIn,omitempty"`
+	CreatedByNotIn  []string `json:"createdByNotIn,omitempty"`
+	CreatedByGt     *string  `json:"createdByGT,omitempty"`
+	CreatedByGte    *string  `json:"createdByGTE,omitempty"`
+	CreatedByLt     *string  `json:"createdByLT,omitempty"`
+	CreatedByLte    *string  `json:"createdByLTE,omitempty"`
+	CreatedByIsNil  *bool    `json:"createdByIsNil,omitempty"`
+	CreatedByNotNil *bool    `json:"createdByNotNil,omitempty"`
 	// updated_by field predicates
-	UpdatedBy       *int64  `json:"updatedBy,omitempty"`
-	UpdatedByNeq    *int64  `json:"updatedByNEQ,omitempty"`
-	UpdatedByIn     []int64 `json:"updatedByIn,omitempty"`
-	UpdatedByNotIn  []int64 `json:"updatedByNotIn,omitempty"`
-	UpdatedByGt     *int64  `json:"updatedByGT,omitempty"`
-	UpdatedByGte    *int64  `json:"updatedByGTE,omitempty"`
-	UpdatedByLt     *int64  `json:"updatedByLT,omitempty"`
-	UpdatedByLte    *int64  `json:"updatedByLTE,omitempty"`
-	UpdatedByIsNil  *bool   `json:"updatedByIsNil,omitempty"`
-	UpdatedByNotNil *bool   `json:"updatedByNotNil,omitempty"`
+	UpdatedBy       *string  `json:"updatedBy,omitempty"`
+	UpdatedByNeq    *string  `json:"updatedByNEQ,omitempty"`
+	UpdatedByIn     []string `json:"updatedByIn,omitempty"`
+	UpdatedByNotIn  []string `json:"updatedByNotIn,omitempty"`
+	UpdatedByGt     *string  `json:"updatedByGT,omitempty"`
+	UpdatedByGte    *string  `json:"updatedByGTE,omitempty"`
+	UpdatedByLt     *string  `json:"updatedByLT,omitempty"`
+	UpdatedByLte    *string  `json:"updatedByLTE,omitempty"`
+	UpdatedByIsNil  *bool    `json:"updatedByIsNil,omitempty"`
+	UpdatedByNotNil *bool    `json:"updatedByNotNil,omitempty"`
 	// name field predicates
 	Name             *string  `json:"name,omitempty"`
 	NameNeq          *string  `json:"nameNEQ,omitempty"`
@@ -694,8 +694,8 @@ type Session struct {
 	ID        string    `json:"id"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
-	CreatedBy *int64    `json:"createdBy,omitempty"`
-	UpdatedBy *int64    `json:"updatedBy,omitempty"`
+	CreatedBy *string   `json:"createdBy,omitempty"`
+	UpdatedBy *string   `json:"updatedBy,omitempty"`
 	// Sessions can derrive from the local (password auth), oauth, or app_password
 	Type session.Type `json:"type"`
 	// The session may be disabled by the user or by automatic security policy
@@ -764,27 +764,27 @@ type SessionWhereInput struct {
 	UpdatedAtLt    *time.Time   `json:"updatedAtLT,omitempty"`
 	UpdatedAtLte   *time.Time   `json:"updatedAtLTE,omitempty"`
 	// created_by field predicates
-	CreatedBy       *int64  `json:"createdBy,omitempty"`
-	CreatedByNeq    *int64  `json:"createdByNEQ,omitempty"`
-	CreatedByIn     []int64 `json:"createdByIn,omitempty"`
-	CreatedByNotIn  []int64 `json:"createdByNotIn,omitempty"`
-	CreatedByGt     *int64  `json:"createdByGT,omitempty"`
-	CreatedByGte    *int64  `json:"createdByGTE,omitempty"`
-	CreatedByLt     *int64  `json:"createdByLT,omitempty"`
-	CreatedByLte    *int64  `json:"createdByLTE,omitempty"`
-	CreatedByIsNil  *bool   `json:"createdByIsNil,omitempty"`
-	CreatedByNotNil *bool   `json:"createdByNotNil,omitempty"`
+	CreatedBy       *string  `json:"createdBy,omitempty"`
+	CreatedByNeq    *string  `json:"createdByNEQ,omitempty"`
+	CreatedByIn     []string `json:"createdByIn,omitempty"`
+	CreatedByNotIn  []string `json:"createdByNotIn,omitempty"`
+	CreatedByGt     *string  `json:"createdByGT,omitempty"`
+	CreatedByGte    *string  `json:"createdByGTE,omitempty"`
+	CreatedByLt     *string  `json:"createdByLT,omitempty"`
+	CreatedByLte    *string  `json:"createdByLTE,omitempty"`
+	CreatedByIsNil  *bool    `json:"createdByIsNil,omitempty"`
+	CreatedByNotNil *bool    `json:"createdByNotNil,omitempty"`
 	// updated_by field predicates
-	UpdatedBy       *int64  `json:"updatedBy,omitempty"`
-	UpdatedByNeq    *int64  `json:"updatedByNEQ,omitempty"`
-	UpdatedByIn     []int64 `json:"updatedByIn,omitempty"`
-	UpdatedByNotIn  []int64 `json:"updatedByNotIn,omitempty"`
-	UpdatedByGt     *int64  `json:"updatedByGT,omitempty"`
-	UpdatedByGte    *int64  `json:"updatedByGTE,omitempty"`
-	UpdatedByLt     *int64  `json:"updatedByLT,omitempty"`
-	UpdatedByLte    *int64  `json:"updatedByLTE,omitempty"`
-	UpdatedByIsNil  *bool   `json:"updatedByIsNil,omitempty"`
-	UpdatedByNotNil *bool   `json:"updatedByNotNil,omitempty"`
+	UpdatedBy       *string  `json:"updatedBy,omitempty"`
+	UpdatedByNeq    *string  `json:"updatedByNEQ,omitempty"`
+	UpdatedByIn     []string `json:"updatedByIn,omitempty"`
+	UpdatedByNotIn  []string `json:"updatedByNotIn,omitempty"`
+	UpdatedByGt     *string  `json:"updatedByGT,omitempty"`
+	UpdatedByGte    *string  `json:"updatedByGTE,omitempty"`
+	UpdatedByLt     *string  `json:"updatedByLT,omitempty"`
+	UpdatedByLte    *string  `json:"updatedByLTE,omitempty"`
+	UpdatedByIsNil  *bool    `json:"updatedByIsNil,omitempty"`
+	UpdatedByNotNil *bool    `json:"updatedByNotNil,omitempty"`
 	// type field predicates
 	Type      *session.Type  `json:"type,omitempty"`
 	TypeNeq   *session.Type  `json:"typeNEQ,omitempty"`
@@ -846,9 +846,9 @@ type SessionWhereInput struct {
 // Input was generated by ent.
 type UpdateGroupInput struct {
 	UpdatedAt           *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy           *int64     `json:"createdBy,omitempty"`
+	CreatedBy           *string    `json:"createdBy,omitempty"`
 	ClearCreatedBy      *bool      `json:"clearCreatedBy,omitempty"`
-	UpdatedBy           *int64     `json:"updatedBy,omitempty"`
+	UpdatedBy           *string    `json:"updatedBy,omitempty"`
 	ClearUpdatedBy      *bool      `json:"clearUpdatedBy,omitempty"`
 	Name                *string    `json:"name,omitempty"`
 	Description         *string    `json:"description,omitempty"`
@@ -863,9 +863,9 @@ type UpdateGroupInput struct {
 // Input was generated by ent.
 type UpdateGroupSettingsInput struct {
 	UpdatedAt      *time.Time                `json:"updatedAt,omitempty"`
-	CreatedBy      *int64                    `json:"createdBy,omitempty"`
+	CreatedBy      *string                   `json:"createdBy,omitempty"`
 	ClearCreatedBy *bool                     `json:"clearCreatedBy,omitempty"`
-	UpdatedBy      *int64                    `json:"updatedBy,omitempty"`
+	UpdatedBy      *string                   `json:"updatedBy,omitempty"`
 	ClearUpdatedBy *bool                     `json:"clearUpdatedBy,omitempty"`
 	Visibility     *groupsettings.Visibility `json:"visibility,omitempty"`
 	JoinPolicy     *groupsettings.JoinPolicy `json:"joinPolicy,omitempty"`
@@ -875,9 +875,9 @@ type UpdateGroupSettingsInput struct {
 // Input was generated by ent.
 type UpdateIntegrationInput struct {
 	UpdatedAt        *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy        *int64     `json:"createdBy,omitempty"`
+	CreatedBy        *string    `json:"createdBy,omitempty"`
 	ClearCreatedBy   *bool      `json:"clearCreatedBy,omitempty"`
-	UpdatedBy        *int64     `json:"updatedBy,omitempty"`
+	UpdatedBy        *string    `json:"updatedBy,omitempty"`
 	ClearUpdatedBy   *bool      `json:"clearUpdatedBy,omitempty"`
 	Description      *string    `json:"description,omitempty"`
 	ClearDescription *bool      `json:"clearDescription,omitempty"`
@@ -888,9 +888,9 @@ type UpdateIntegrationInput struct {
 // Input was generated by ent.
 type UpdateMembershipInput struct {
 	UpdatedAt      *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy      *int64     `json:"createdBy,omitempty"`
+	CreatedBy      *string    `json:"createdBy,omitempty"`
 	ClearCreatedBy *bool      `json:"clearCreatedBy,omitempty"`
-	UpdatedBy      *int64     `json:"updatedBy,omitempty"`
+	UpdatedBy      *string    `json:"updatedBy,omitempty"`
 	ClearUpdatedBy *bool      `json:"clearUpdatedBy,omitempty"`
 	Current        *bool      `json:"current,omitempty"`
 	OrganizationID *string    `json:"organizationID,omitempty"`
@@ -902,9 +902,9 @@ type UpdateMembershipInput struct {
 // Input was generated by ent.
 type UpdateOrganizationInput struct {
 	UpdatedAt            *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy            *int64     `json:"createdBy,omitempty"`
+	CreatedBy            *string    `json:"createdBy,omitempty"`
 	ClearCreatedBy       *bool      `json:"clearCreatedBy,omitempty"`
-	UpdatedBy            *int64     `json:"updatedBy,omitempty"`
+	UpdatedBy            *string    `json:"updatedBy,omitempty"`
 	ClearUpdatedBy       *bool      `json:"clearUpdatedBy,omitempty"`
 	Name                 *string    `json:"name,omitempty"`
 	AddMembershipIDs     []string   `json:"addMembershipIDs,omitempty"`
@@ -919,9 +919,9 @@ type UpdateOrganizationInput struct {
 // Input was generated by ent.
 type UpdateSessionInput struct {
 	UpdatedAt      *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy      *int64     `json:"createdBy,omitempty"`
+	CreatedBy      *string    `json:"createdBy,omitempty"`
 	ClearCreatedBy *bool      `json:"clearCreatedBy,omitempty"`
-	UpdatedBy      *int64     `json:"updatedBy,omitempty"`
+	UpdatedBy      *string    `json:"updatedBy,omitempty"`
 	ClearUpdatedBy *bool      `json:"clearUpdatedBy,omitempty"`
 	// The session may be disabled by the user or by automatic security policy
 	Disabled *bool `json:"disabled,omitempty"`
@@ -938,9 +938,9 @@ type UpdateSessionInput struct {
 // Input was generated by ent.
 type UpdateUserInput struct {
 	UpdatedAt      *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy      *int64     `json:"createdBy,omitempty"`
+	CreatedBy      *string    `json:"createdBy,omitempty"`
 	ClearCreatedBy *bool      `json:"clearCreatedBy,omitempty"`
-	UpdatedBy      *int64     `json:"updatedBy,omitempty"`
+	UpdatedBy      *string    `json:"updatedBy,omitempty"`
 	ClearUpdatedBy *bool      `json:"clearUpdatedBy,omitempty"`
 	Email          *string    `json:"email,omitempty"`
 	FirstName      *string    `json:"firstName,omitempty"`
@@ -979,8 +979,8 @@ type User struct {
 	ID        string    `json:"id"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
-	CreatedBy *int64    `json:"createdBy,omitempty"`
-	UpdatedBy *int64    `json:"updatedBy,omitempty"`
+	CreatedBy *string   `json:"createdBy,omitempty"`
+	UpdatedBy *string   `json:"updatedBy,omitempty"`
 	Email     string    `json:"email"`
 	FirstName string    `json:"firstName"`
 	LastName  string    `json:"lastName"`
@@ -1056,27 +1056,27 @@ type UserWhereInput struct {
 	UpdatedAtLt    *time.Time   `json:"updatedAtLT,omitempty"`
 	UpdatedAtLte   *time.Time   `json:"updatedAtLTE,omitempty"`
 	// created_by field predicates
-	CreatedBy       *int64  `json:"createdBy,omitempty"`
-	CreatedByNeq    *int64  `json:"createdByNEQ,omitempty"`
-	CreatedByIn     []int64 `json:"createdByIn,omitempty"`
-	CreatedByNotIn  []int64 `json:"createdByNotIn,omitempty"`
-	CreatedByGt     *int64  `json:"createdByGT,omitempty"`
-	CreatedByGte    *int64  `json:"createdByGTE,omitempty"`
-	CreatedByLt     *int64  `json:"createdByLT,omitempty"`
-	CreatedByLte    *int64  `json:"createdByLTE,omitempty"`
-	CreatedByIsNil  *bool   `json:"createdByIsNil,omitempty"`
-	CreatedByNotNil *bool   `json:"createdByNotNil,omitempty"`
+	CreatedBy       *string  `json:"createdBy,omitempty"`
+	CreatedByNeq    *string  `json:"createdByNEQ,omitempty"`
+	CreatedByIn     []string `json:"createdByIn,omitempty"`
+	CreatedByNotIn  []string `json:"createdByNotIn,omitempty"`
+	CreatedByGt     *string  `json:"createdByGT,omitempty"`
+	CreatedByGte    *string  `json:"createdByGTE,omitempty"`
+	CreatedByLt     *string  `json:"createdByLT,omitempty"`
+	CreatedByLte    *string  `json:"createdByLTE,omitempty"`
+	CreatedByIsNil  *bool    `json:"createdByIsNil,omitempty"`
+	CreatedByNotNil *bool    `json:"createdByNotNil,omitempty"`
 	// updated_by field predicates
-	UpdatedBy       *int64  `json:"updatedBy,omitempty"`
-	UpdatedByNeq    *int64  `json:"updatedByNEQ,omitempty"`
-	UpdatedByIn     []int64 `json:"updatedByIn,omitempty"`
-	UpdatedByNotIn  []int64 `json:"updatedByNotIn,omitempty"`
-	UpdatedByGt     *int64  `json:"updatedByGT,omitempty"`
-	UpdatedByGte    *int64  `json:"updatedByGTE,omitempty"`
-	UpdatedByLt     *int64  `json:"updatedByLT,omitempty"`
-	UpdatedByLte    *int64  `json:"updatedByLTE,omitempty"`
-	UpdatedByIsNil  *bool   `json:"updatedByIsNil,omitempty"`
-	UpdatedByNotNil *bool   `json:"updatedByNotNil,omitempty"`
+	UpdatedBy       *string  `json:"updatedBy,omitempty"`
+	UpdatedByNeq    *string  `json:"updatedByNEQ,omitempty"`
+	UpdatedByIn     []string `json:"updatedByIn,omitempty"`
+	UpdatedByNotIn  []string `json:"updatedByNotIn,omitempty"`
+	UpdatedByGt     *string  `json:"updatedByGT,omitempty"`
+	UpdatedByGte    *string  `json:"updatedByGTE,omitempty"`
+	UpdatedByLt     *string  `json:"updatedByLT,omitempty"`
+	UpdatedByLte    *string  `json:"updatedByLTE,omitempty"`
+	UpdatedByIsNil  *bool    `json:"updatedByIsNil,omitempty"`
+	UpdatedByNotNil *bool    `json:"updatedByNotNil,omitempty"`
 	// email field predicates
 	Email             *string  `json:"email,omitempty"`
 	EmailNeq          *string  `json:"emailNEQ,omitempty"`
