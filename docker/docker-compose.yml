@@ -9,6 +9,8 @@ services:
       - --debug
       - --pretty
       - --dev
+      - --jwt-secretkey=mysupersecretkey
+      # - --oidc=false # uncomment to bypass auth checks
     ports:
       - "17608:17608"
     restart: unless-stopped
