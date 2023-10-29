@@ -258,6 +258,26 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+							case 'u': // Prefix: "users"
+								if l := len("users"); len(elem) >= l && elem[0:l] == "users" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "GET":
+										s.handleListGroupUsersRequest([1]string{
+											args[0],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "GET")
+									}
+
+									return
+								}
 							}
 						}
 					}
@@ -730,6 +750,26 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							break
 						}
 						switch elem[0] {
+						case 'g': // Prefix: "groups"
+							if l := len("groups"); len(elem) >= l && elem[0:l] == "groups" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch r.Method {
+								case "GET":
+									s.handleListUserGroupsRequest([1]string{
+										args[0],
+									}, elemIsEscaped, w, r)
+								default:
+									s.notAllowed(w, r, "GET")
+								}
+
+								return
+							}
 						case 'm': // Prefix: "memberships"
 							if l := len("memberships"); len(elem) >= l && elem[0:l] == "memberships" {
 								elem = elem[l:]
@@ -1102,6 +1142,28 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										r.summary = "Find the attached GroupSettings"
 										r.operationID = "readGroupSetting"
 										r.pathPattern = "/groups/{id}/setting"
+										r.args = args
+										r.count = 1
+										return r, true
+									default:
+										return
+									}
+								}
+							case 'u': // Prefix: "users"
+								if l := len("users"); len(elem) >= l && elem[0:l] == "users" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									switch method {
+									case "GET":
+										// Leaf: ListGroupUsers
+										r.name = "ListGroupUsers"
+										r.summary = "List attached Users"
+										r.operationID = "listGroupUsers"
+										r.pathPattern = "/groups/{id}/users"
 										r.args = args
 										r.count = 1
 										return r, true
@@ -1695,6 +1757,28 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							break
 						}
 						switch elem[0] {
+						case 'g': // Prefix: "groups"
+							if l := len("groups"); len(elem) >= l && elem[0:l] == "groups" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								switch method {
+								case "GET":
+									// Leaf: ListUserGroups
+									r.name = "ListUserGroups"
+									r.summary = "List attached Groups"
+									r.operationID = "listUserGroups"
+									r.pathPattern = "/users/{id}/groups"
+									r.args = args
+									r.count = 1
+									return r, true
+								default:
+									return
+								}
+							}
 						case 'm': // Prefix: "memberships"
 							if l := len("memberships"); len(elem) >= l && elem[0:l] == "memberships" {
 								elem = elem[l:]

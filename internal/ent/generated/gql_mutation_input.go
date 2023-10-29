@@ -21,6 +21,7 @@ type CreateGroupInput struct {
 	LogoURL       string
 	SettingID     uuid.UUID
 	MembershipIDs []uuid.UUID
+	UserIDs       []uuid.UUID
 }
 
 // Mutate applies the CreateGroupInput on the GroupMutation builder.
@@ -46,6 +47,9 @@ func (i *CreateGroupInput) Mutate(m *GroupMutation) {
 	if v := i.MembershipIDs; len(v) > 0 {
 		m.AddMembershipIDs(v...)
 	}
+	if v := i.UserIDs; len(v) > 0 {
+		m.AddUserIDs(v...)
+	}
 }
 
 // SetInput applies the change-set in the CreateGroupInput on the GroupCreate builder.
@@ -68,6 +72,9 @@ type UpdateGroupInput struct {
 	ClearMemberships    bool
 	AddMembershipIDs    []uuid.UUID
 	RemoveMembershipIDs []uuid.UUID
+	ClearUsers          bool
+	AddUserIDs          []uuid.UUID
+	RemoveUserIDs       []uuid.UUID
 }
 
 // Mutate applies the UpdateGroupInput on the GroupMutation builder.
@@ -107,6 +114,15 @@ func (i *UpdateGroupInput) Mutate(m *GroupMutation) {
 	}
 	if v := i.RemoveMembershipIDs; len(v) > 0 {
 		m.RemoveMembershipIDs(v...)
+	}
+	if i.ClearUsers {
+		m.ClearUsers()
+	}
+	if v := i.AddUserIDs; len(v) > 0 {
+		m.AddUserIDs(v...)
+	}
+	if v := i.RemoveUserIDs; len(v) > 0 {
+		m.RemoveUserIDs(v...)
 	}
 }
 
@@ -635,6 +651,7 @@ type CreateUserInput struct {
 	RecoveryCode    *string
 	MembershipIDs   []uuid.UUID
 	SessionIDs      []uuid.UUID
+	GroupIDs        []uuid.UUID
 }
 
 // Mutate applies the CreateUserInput on the UserMutation builder.
@@ -684,6 +701,9 @@ func (i *CreateUserInput) Mutate(m *UserMutation) {
 	if v := i.SessionIDs; len(v) > 0 {
 		m.AddSessionIDs(v...)
 	}
+	if v := i.GroupIDs; len(v) > 0 {
+		m.AddGroupIDs(v...)
+	}
 }
 
 // SetInput applies the change-set in the CreateUserInput on the UserCreate builder.
@@ -722,6 +742,9 @@ type UpdateUserInput struct {
 	ClearSessions        bool
 	AddSessionIDs        []uuid.UUID
 	RemoveSessionIDs     []uuid.UUID
+	ClearGroups          bool
+	AddGroupIDs          []uuid.UUID
+	RemoveGroupIDs       []uuid.UUID
 }
 
 // Mutate applies the UpdateUserInput on the UserMutation builder.
@@ -809,6 +832,15 @@ func (i *UpdateUserInput) Mutate(m *UserMutation) {
 	}
 	if v := i.RemoveSessionIDs; len(v) > 0 {
 		m.RemoveSessionIDs(v...)
+	}
+	if i.ClearGroups {
+		m.ClearGroups()
+	}
+	if v := i.AddGroupIDs; len(v) > 0 {
+		m.AddGroupIDs(v...)
+	}
+	if v := i.RemoveGroupIDs; len(v) > 0 {
+		m.RemoveGroupIDs(v...)
 	}
 }
 

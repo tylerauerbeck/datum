@@ -166,6 +166,15 @@ func (UnimplementedHandler) ListGroupSettings(ctx context.Context, params ListGr
 	return r, ht.ErrNotImplemented
 }
 
+// ListGroupUsers implements listGroupUsers operation.
+//
+// List attached Users.
+//
+// GET /groups/{id}/users
+func (UnimplementedHandler) ListGroupUsers(ctx context.Context, params ListGroupUsersParams) (r ListGroupUsersRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // ListIntegration implements listIntegration operation.
 //
 // List Integrations.
@@ -226,6 +235,15 @@ func (UnimplementedHandler) ListSession(ctx context.Context, params ListSessionP
 //
 // GET /users
 func (UnimplementedHandler) ListUser(ctx context.Context, params ListUserParams) (r ListUserRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// ListUserGroups implements listUserGroups operation.
+//
+// List attached Groups.
+//
+// GET /users/{id}/groups
+func (UnimplementedHandler) ListUserGroups(ctx context.Context, params ListUserGroupsParams) (r ListUserGroupsRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

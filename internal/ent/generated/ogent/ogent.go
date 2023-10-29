@@ -50,6 +50,7 @@ func (h *OgentHandler) CreateGroup(ctx context.Context, req *CreateGroupReq) (Cr
 	// Add all edges.
 	b.SetSettingID(req.Setting)
 	b.AddMembershipIDs(req.Memberships...)
+	b.AddUserIDs(req.Users...)
 	// Persist to storage.
 	e, err := b.Save(ctx)
 	if err != nil {
@@ -135,6 +136,9 @@ func (h *OgentHandler) UpdateGroup(ctx context.Context, req *UpdateGroupReq, par
 	}
 	if req.Memberships != nil {
 		b.ClearMemberships().AddMembershipIDs(req.Memberships...)
+	}
+	if req.Users != nil {
+		b.ClearUsers().AddUserIDs(req.Users...)
 	}
 	// Persist to storage.
 	e, err := b.Save(ctx)
@@ -290,6 +294,42 @@ func (h *OgentHandler) ListGroupMemberships(ctx context.Context, params ListGrou
 	}
 	r := NewGroupMembershipsLists(es)
 	return (*ListGroupMembershipsOKApplicationJSON)(&r), nil
+}
+
+// ListGroupUsers handles GET /groups/{id}/users requests.
+func (h *OgentHandler) ListGroupUsers(ctx context.Context, params ListGroupUsersParams) (ListGroupUsersRes, error) {
+	q := h.client.Group.Query().Where(group.IDEQ(params.ID)).QueryUsers()
+	page := 1
+	if v, ok := params.Page.Get(); ok {
+		page = v
+	}
+	itemsPerPage := 30
+	if v, ok := params.ItemsPerPage.Get(); ok {
+		itemsPerPage = v
+	}
+	q.Limit(itemsPerPage).Offset((page - 1) * itemsPerPage)
+	es, err := q.All(ctx)
+	if err != nil {
+		switch {
+		case generated.IsNotFound(err):
+			return &R404{
+				Code:   http.StatusNotFound,
+				Status: http.StatusText(http.StatusNotFound),
+				Errors: rawError(err),
+			}, nil
+		case generated.IsNotSingular(err):
+			return &R409{
+				Code:   http.StatusConflict,
+				Status: http.StatusText(http.StatusConflict),
+				Errors: rawError(err),
+			}, nil
+		default:
+			// Let the server handle the error.
+			return nil, err
+		}
+	}
+	r := NewGroupUsersLists(es)
+	return (*ListGroupUsersOKApplicationJSON)(&r), nil
 }
 
 // CreateGroupSettings handles POST /group-settings-slice requests.
@@ -1524,6 +1564,7 @@ func (h *OgentHandler) CreateUser(ctx context.Context, req *CreateUserReq) (Crea
 	// Add all edges.
 	b.AddMembershipIDs(req.Memberships...)
 	b.AddSessionIDs(req.Sessions...)
+	b.AddGroupIDs(req.Groups...)
 	// Persist to storage.
 	e, err := b.Save(ctx)
 	if err != nil {
@@ -1633,6 +1674,9 @@ func (h *OgentHandler) UpdateUser(ctx context.Context, req *UpdateUserReq, param
 	}
 	if req.Sessions != nil {
 		b.ClearSessions().AddSessionIDs(req.Sessions...)
+	}
+	if req.Groups != nil {
+		b.ClearGroups().AddGroupIDs(req.Groups...)
 	}
 	// Persist to storage.
 	e, err := b.Save(ctx)
@@ -1798,4 +1842,40 @@ func (h *OgentHandler) ListUserSessions(ctx context.Context, params ListUserSess
 	}
 	r := NewUserSessionsLists(es)
 	return (*ListUserSessionsOKApplicationJSON)(&r), nil
+}
+
+// ListUserGroups handles GET /users/{id}/groups requests.
+func (h *OgentHandler) ListUserGroups(ctx context.Context, params ListUserGroupsParams) (ListUserGroupsRes, error) {
+	q := h.client.User.Query().Where(user.IDEQ(params.ID)).QueryGroups()
+	page := 1
+	if v, ok := params.Page.Get(); ok {
+		page = v
+	}
+	itemsPerPage := 30
+	if v, ok := params.ItemsPerPage.Get(); ok {
+		itemsPerPage = v
+	}
+	q.Limit(itemsPerPage).Offset((page - 1) * itemsPerPage)
+	es, err := q.All(ctx)
+	if err != nil {
+		switch {
+		case generated.IsNotFound(err):
+			return &R404{
+				Code:   http.StatusNotFound,
+				Status: http.StatusText(http.StatusNotFound),
+				Errors: rawError(err),
+			}, nil
+		case generated.IsNotSingular(err):
+			return &R409{
+				Code:   http.StatusConflict,
+				Status: http.StatusText(http.StatusConflict),
+				Errors: rawError(err),
+			}, nil
+		default:
+			// Let the server handle the error.
+			return nil, err
+		}
+	}
+	r := NewUserGroupsLists(es)
+	return (*ListUserGroupsOKApplicationJSON)(&r), nil
 }

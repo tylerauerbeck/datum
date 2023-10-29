@@ -11,6 +11,9 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+
+	"github.com/datumforge/datum/internal/ent/mixin"
+
 	"github.com/google/uuid"
 )
 
@@ -24,6 +27,14 @@ type User struct {
 	ent.Schema
 }
 
+// Mixin of the User
+func (User) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		mixin.AuditMixin{},
+		mixin.BaseMixin{},
+	}
+}
+
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
@@ -34,7 +45,7 @@ func (User) Fields() []ent.Field {
 				_, err := mail.ParseAddress(email)
 				return err
 			}),
-		field.UUID("id", uuid.UUID{}).Default(uuid.New).Unique(),
+		field.UUID("id", uuid.UUID{}).Default(uuid.New).Unique().Immutable(),
 		field.String("first_name").NotEmpty().MaxLen(nameMaxLen),
 		field.String("last_name").NotEmpty().MaxLen(nameMaxLen),
 		field.String("display_name").
@@ -132,6 +143,7 @@ func (User) Edges() []ent.Edge {
 			Annotations(entsql.Annotation{
 				// When a user is deleted, delete the sessions
 				OnDelete: entsql.Cascade}),
+		edge.To("groups", Group.Type),
 	}
 }
 
@@ -143,9 +155,8 @@ func (User) Annotations() []schema.Annotation {
 	}
 }
 
-// Mixin of the User
-func (User) Mixin() []ent.Mixin {
-	return []ent.Mixin{
-		AuditMixin{},
-	}
+// Policy defines the privacy policy of the User.
+func (User) Policy() ent.Policy {
+	// Privacy policy defined in the BaseMixin and TenantMixin.
+	return nil
 }

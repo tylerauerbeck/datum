@@ -24,6 +24,7 @@ type CreateGroupInput struct {
 	LogoURL       string     `json:"logoURL"`
 	SettingID     string     `json:"settingID"`
 	MembershipIDs []string   `json:"membershipIDs,omitempty"`
+	UserIDs       []string   `json:"userIDs,omitempty"`
 }
 
 // CreateGroupSettingsInput is used for create GroupSettings object.
@@ -123,6 +124,7 @@ type CreateUserInput struct {
 	RecoveryCode  *string  `json:"recoveryCode,omitempty"`
 	MembershipIDs []string `json:"membershipIDs,omitempty"`
 	SessionIDs    []string `json:"sessionIDs,omitempty"`
+	GroupIDs      []string `json:"groupIDs,omitempty"`
 }
 
 type Group struct {
@@ -136,6 +138,7 @@ type Group struct {
 	LogoURL     string        `json:"logoURL"`
 	Setting     GroupSettings `json:"setting"`
 	Memberships []*Membership `json:"memberships,omitempty"`
+	Users       []*User       `json:"users,omitempty"`
 }
 
 func (Group) IsNode() {}
@@ -330,6 +333,9 @@ type GroupWhereInput struct {
 	// memberships edge predicates
 	HasMemberships     *bool                   `json:"hasMemberships,omitempty"`
 	HasMembershipsWith []*MembershipWhereInput `json:"hasMembershipsWith,omitempty"`
+	// users edge predicates
+	HasUsers     *bool             `json:"hasUsers,omitempty"`
+	HasUsersWith []*UserWhereInput `json:"hasUsersWith,omitempty"`
 }
 
 type Integration struct {
@@ -857,6 +863,9 @@ type UpdateGroupInput struct {
 	AddMembershipIDs    []string   `json:"addMembershipIDs,omitempty"`
 	RemoveMembershipIDs []string   `json:"removeMembershipIDs,omitempty"`
 	ClearMemberships    *bool      `json:"clearMemberships,omitempty"`
+	AddUserIDs          []string   `json:"addUserIDs,omitempty"`
+	RemoveUserIDs       []string   `json:"removeUserIDs,omitempty"`
+	ClearUsers          *bool      `json:"clearUsers,omitempty"`
 }
 
 // UpdateGroupSettingsInput is used for update GroupSettings object.
@@ -973,6 +982,9 @@ type UpdateUserInput struct {
 	AddSessionIDs       []string `json:"addSessionIDs,omitempty"`
 	RemoveSessionIDs    []string `json:"removeSessionIDs,omitempty"`
 	ClearSessions       *bool    `json:"clearSessions,omitempty"`
+	AddGroupIDs         []string `json:"addGroupIDs,omitempty"`
+	RemoveGroupIDs      []string `json:"removeGroupIDs,omitempty"`
+	ClearGroups         *bool    `json:"clearGroups,omitempty"`
 }
 
 type User struct {
@@ -1000,6 +1012,7 @@ type User struct {
 	SuspendedAt *time.Time    `json:"suspendedAt,omitempty"`
 	Memberships []*Membership `json:"memberships,omitempty"`
 	Sessions    []*Session    `json:"sessions,omitempty"`
+	Groups      []*Group      `json:"groups,omitempty"`
 }
 
 func (User) IsNode() {}
@@ -1207,6 +1220,9 @@ type UserWhereInput struct {
 	// sessions edge predicates
 	HasSessions     *bool                `json:"hasSessions,omitempty"`
 	HasSessionsWith []*SessionWhereInput `json:"hasSessionsWith,omitempty"`
+	// groups edge predicates
+	HasGroups     *bool              `json:"hasGroups,omitempty"`
+	HasGroupsWith []*GroupWhereInput `json:"hasGroupsWith,omitempty"`
 }
 
 type Service struct {

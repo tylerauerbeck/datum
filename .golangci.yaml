@@ -4,6 +4,10 @@ linters-settings:
   gofumpt:
     extra-rules: true
 
+run:
+  skip-files:
+    - internal/entclean/main.go
+
 linters:
   enable:
     # default linters

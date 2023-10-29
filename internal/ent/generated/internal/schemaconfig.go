@@ -14,6 +14,7 @@ type SchemaConfig struct {
 	Organization  string // Organization table.
 	Session       string // Session table.
 	User          string // User table.
+	UserGroups    string // User-groups->Group table.
 }
 
 type schemaCtxKey struct{}

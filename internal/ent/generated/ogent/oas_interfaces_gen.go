@@ -69,6 +69,10 @@ type ListGroupSettingsRes interface {
 	listGroupSettingsRes()
 }
 
+type ListGroupUsersRes interface {
+	listGroupUsersRes()
+}
+
 type ListIntegrationRes interface {
 	listIntegrationRes()
 }
@@ -91,6 +95,10 @@ type ListOrganizationRes interface {
 
 type ListSessionRes interface {
 	listSessionRes()
+}
+
+type ListUserGroupsRes interface {
+	listUserGroupsRes()
 }
 
 type ListUserMembershipsRes interface {

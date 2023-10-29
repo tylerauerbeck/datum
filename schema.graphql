@@ -14,6 +14,7 @@ input CreateGroupInput {
 	logoURL: String!
 	settingID: ID!
 	membershipIDs: [ID!]
+	userIDs: [ID!]
 }
 """
 CreateGroupSettingsInput is used for create GroupSettings object.
@@ -119,6 +120,7 @@ input CreateUserInput {
 	recoveryCode: String
 	membershipIDs: [ID!]
 	sessionIDs: [ID!]
+	groupIDs: [ID!]
 }
 """
 Define a Relay Cursor type:
@@ -136,6 +138,7 @@ type Group implements Node {
 	logoURL: String!
 	setting: GroupSettings!
 	memberships: [Membership!]
+	users: [User!]
 }
 """A connection to a list of items."""
 type GroupConnection {
@@ -334,6 +337,9 @@ input GroupWhereInput {
 	"""memberships edge predicates"""
 	hasMemberships: Boolean
 	hasMembershipsWith: [MembershipWhereInput!]
+	"""users edge predicates"""
+	hasUsers: Boolean
+	hasUsersWith: [UserWhereInput!]
 }
 type Integration implements Node {
 	id: ID!
@@ -1041,6 +1047,9 @@ input UpdateGroupInput {
 	addMembershipIDs: [ID!]
 	removeMembershipIDs: [ID!]
 	clearMemberships: Boolean
+	addUserIDs: [ID!]
+	removeUserIDs: [ID!]
+	clearUsers: Boolean
 }
 """
 UpdateGroupSettingsInput is used for update GroupSettings object.
@@ -1163,6 +1172,9 @@ input UpdateUserInput {
 	addSessionIDs: [ID!]
 	removeSessionIDs: [ID!]
 	clearSessions: Boolean
+	addGroupIDs: [ID!]
+	removeGroupIDs: [ID!]
+	clearGroups: Boolean
 }
 type User implements Node {
 	id: ID!
@@ -1189,6 +1201,7 @@ type User implements Node {
 	suspendedAt: Time
 	memberships: [Membership!]
 	sessions: [Session!]
+	groups: [Group!]
 }
 """Return response for createUser mutation"""
 type UserCreatePayload {
@@ -1392,6 +1405,9 @@ input UserWhereInput {
 	"""sessions edge predicates"""
 	hasSessions: Boolean
 	hasSessionsWith: [SessionWhereInput!]
+	"""groups edge predicates"""
+	hasGroups: Boolean
+	hasGroupsWith: [GroupWhereInput!]
 }
 type _Service {
 	sdl: String

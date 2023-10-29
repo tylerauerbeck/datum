@@ -7,6 +7,9 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+
+	"github.com/datumforge/datum/internal/ent/mixin"
+
 	"github.com/google/uuid"
 )
 
@@ -23,7 +26,7 @@ type Organization struct {
 func (Organization) Fields() []ent.Field {
 	return []ent.Field{
 		// NOTE: the created_at and updated_at fields are automatically created by the AuditMixin, you do not need to re-declare / add them in these fields
-		field.UUID("id", uuid.UUID{}).Default(uuid.New).Unique(),
+		field.UUID("id", uuid.UUID{}).Default(uuid.New).Unique().Immutable(),
 		field.String("name").Unique().
 			MaxLen(orgNameMaxLen).
 			NotEmpty(),
@@ -50,6 +53,6 @@ func (Organization) Annotations() []schema.Annotation {
 // Mixin of the Organization
 func (Organization) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		AuditMixin{},
+		mixin.AuditMixin{},
 	}
 }

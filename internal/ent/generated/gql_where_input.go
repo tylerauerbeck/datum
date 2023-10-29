@@ -101,6 +101,10 @@ type GroupWhereInput struct {
 	// "memberships" edge predicates.
 	HasMemberships     *bool                   `json:"hasMemberships,omitempty"`
 	HasMembershipsWith []*MembershipWhereInput `json:"hasMembershipsWith,omitempty"`
+
+	// "users" edge predicates.
+	HasUsers     *bool             `json:"hasUsers,omitempty"`
+	HasUsersWith []*UserWhereInput `json:"hasUsersWith,omitempty"`
 }
 
 // AddPredicates adds custom predicates to the where input to be used during the filtering phase.
@@ -381,6 +385,24 @@ func (i *GroupWhereInput) P() (predicate.Group, error) {
 			with = append(with, p)
 		}
 		predicates = append(predicates, group.HasMembershipsWith(with...))
+	}
+	if i.HasUsers != nil {
+		p := group.HasUsers()
+		if !*i.HasUsers {
+			p = group.Not(p)
+		}
+		predicates = append(predicates, p)
+	}
+	if len(i.HasUsersWith) > 0 {
+		with := make([]predicate.User, 0, len(i.HasUsersWith))
+		for _, w := range i.HasUsersWith {
+			p, err := w.P()
+			if err != nil {
+				return nil, fmt.Errorf("%w: field 'HasUsersWith'", err)
+			}
+			with = append(with, p)
+		}
+		predicates = append(predicates, group.HasUsersWith(with...))
 	}
 	switch len(predicates) {
 	case 0:
@@ -2613,6 +2635,10 @@ type UserWhereInput struct {
 	// "sessions" edge predicates.
 	HasSessions     *bool                `json:"hasSessions,omitempty"`
 	HasSessionsWith []*SessionWhereInput `json:"hasSessionsWith,omitempty"`
+
+	// "groups" edge predicates.
+	HasGroups     *bool              `json:"hasGroups,omitempty"`
+	HasGroupsWith []*GroupWhereInput `json:"hasGroupsWith,omitempty"`
 }
 
 // AddPredicates adds custom predicates to the where input to be used during the filtering phase.
@@ -3241,6 +3267,24 @@ func (i *UserWhereInput) P() (predicate.User, error) {
 			with = append(with, p)
 		}
 		predicates = append(predicates, user.HasSessionsWith(with...))
+	}
+	if i.HasGroups != nil {
+		p := user.HasGroups()
+		if !*i.HasGroups {
+			p = user.Not(p)
+		}
+		predicates = append(predicates, p)
+	}
+	if len(i.HasGroupsWith) > 0 {
+		with := make([]predicate.Group, 0, len(i.HasGroupsWith))
+		for _, w := range i.HasGroupsWith {
+			p, err := w.P()
+			if err != nil {
+				return nil, fmt.Errorf("%w: field 'HasGroupsWith'", err)
+			}
+			with = append(with, p)
+		}
+		predicates = append(predicates, user.HasGroupsWith(with...))
 	}
 	switch len(predicates) {
 	case 0:

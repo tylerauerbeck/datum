@@ -110,6 +110,12 @@ type Handler interface {
 	//
 	// GET /group-settings
 	ListGroupSettings(ctx context.Context, params ListGroupSettingsParams) (ListGroupSettingsRes, error)
+	// ListGroupUsers implements listGroupUsers operation.
+	//
+	// List attached Users.
+	//
+	// GET /groups/{id}/users
+	ListGroupUsers(ctx context.Context, params ListGroupUsersParams) (ListGroupUsersRes, error)
 	// ListIntegration implements listIntegration operation.
 	//
 	// List Integrations.
@@ -152,6 +158,12 @@ type Handler interface {
 	//
 	// GET /users
 	ListUser(ctx context.Context, params ListUserParams) (ListUserRes, error)
+	// ListUserGroups implements listUserGroups operation.
+	//
+	// List attached Groups.
+	//
+	// GET /users/{id}/groups
+	ListUserGroups(ctx context.Context, params ListUserGroupsParams) (ListUserGroupsRes, error)
 	// ListUserMemberships implements listUserMemberships operation.
 	//
 	// List attached Memberships.

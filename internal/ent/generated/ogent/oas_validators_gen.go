@@ -419,6 +419,14 @@ func (s ListGroupSettingsOKApplicationJSON) Validate() error {
 	return nil
 }
 
+func (s ListGroupUsersOKApplicationJSON) Validate() error {
+	alias := ([]GroupUsersList)(s)
+	if alias == nil {
+		return errors.New("nil is invalid value")
+	}
+	return nil
+}
+
 func (s ListIntegrationOKApplicationJSON) Validate() error {
 	alias := ([]IntegrationList)(s)
 	if alias == nil {
@@ -480,6 +488,14 @@ func (s ListSessionOKApplicationJSON) Validate() error {
 	}
 	if len(failures) > 0 {
 		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+
+func (s ListUserGroupsOKApplicationJSON) Validate() error {
+	alias := ([]UserGroupsList)(s)
+	if alias == nil {
+		return errors.New("nil is invalid value")
 	}
 	return nil
 }

@@ -6,6 +6,9 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+
+	"github.com/datumforge/datum/internal/ent/mixin"
+
 	"github.com/google/uuid"
 )
 
@@ -17,7 +20,7 @@ type GroupSettings struct {
 // Fields of the GroupSettings.
 func (GroupSettings) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).Default(uuid.New).Unique(),
+		field.UUID("id", uuid.UUID{}).Default(uuid.New).Unique().Immutable(),
 		field.Enum("visibility").NamedValues("public", "PUBLIC", "private", "PRIVATE").Default("PUBLIC"),
 		field.Enum("join_policy").NamedValues(
 			"open", "OPEN",
@@ -48,6 +51,6 @@ func (GroupSettings) Annotations() []schema.Annotation {
 // Mixin of the GroupSettings
 func (GroupSettings) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		AuditMixin{},
+		mixin.AuditMixin{},
 	}
 }

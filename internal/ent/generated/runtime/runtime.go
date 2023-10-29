@@ -3,6 +3,7 @@
 package runtime
 
 import (
+	"context"
 	"time"
 
 	"github.com/datumforge/datum/internal/ent/generated/group"
@@ -14,6 +15,9 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/user"
 	"github.com/datumforge/datum/internal/ent/schema"
 	"github.com/google/uuid"
+
+	"entgo.io/ent"
+	"entgo.io/ent/privacy"
 )
 
 // The init function reads all schema descriptors with runtime code
@@ -21,8 +25,18 @@ import (
 // to their package variables.
 func init() {
 	groupMixin := schema.Group{}.Mixin()
+	group.Policy = privacy.NewPolicies(groupMixin[1], schema.Group{})
+	group.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := group.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
 	groupMixinHooks0 := groupMixin[0].Hooks()
-	group.Hooks[0] = groupMixinHooks0[0]
+
+	group.Hooks[1] = groupMixinHooks0[0]
 	groupMixinFields0 := groupMixin[0].Fields()
 	_ = groupMixinFields0
 	groupFields := schema.Group{}.Fields()
@@ -187,8 +201,18 @@ func init() {
 	// session.DefaultID holds the default value on creation for the id field.
 	session.DefaultID = sessionDescID.Default.(func() uuid.UUID)
 	userMixin := schema.User{}.Mixin()
+	user.Policy = privacy.NewPolicies(userMixin[1], schema.User{})
+	user.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := user.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
 	userMixinHooks0 := userMixin[0].Hooks()
-	user.Hooks[0] = userMixinHooks0[0]
+
+	user.Hooks[1] = userMixinHooks0[0]
 	userMixinFields0 := userMixin[0].Fields()
 	_ = userMixinFields0
 	userFields := schema.User{}.Fields()

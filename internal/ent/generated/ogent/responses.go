@@ -371,6 +371,62 @@ func (gs *GroupSettingRead) Elem() GroupSettingRead {
 	return *gs
 }
 
+func NewGroupUsersList(e *generated.User) *GroupUsersList {
+	if e == nil {
+		return nil
+	}
+	var ret GroupUsersList
+	ret.ID = e.ID
+	ret.CreatedAt = e.CreatedAt
+	ret.UpdatedAt = e.UpdatedAt
+	ret.CreatedBy = NewOptInt(e.CreatedBy)
+	ret.UpdatedBy = NewOptInt(e.UpdatedBy)
+	ret.Email = e.Email
+	ret.FirstName = e.FirstName
+	ret.LastName = e.LastName
+	ret.DisplayName = e.DisplayName
+	ret.Locked = e.Locked
+	ret.AvatarRemoteURL = OptString{}
+	if e.AvatarRemoteURL != nil {
+		ret.AvatarRemoteURL.SetTo(*e.AvatarRemoteURL)
+	}
+	ret.AvatarLocalFile = OptString{}
+	if e.AvatarLocalFile != nil {
+		ret.AvatarLocalFile.SetTo(*e.AvatarLocalFile)
+	}
+	ret.AvatarUpdatedAt = OptDateTime{}
+	if e.AvatarUpdatedAt != nil {
+		ret.AvatarUpdatedAt.SetTo(*e.AvatarUpdatedAt)
+	}
+	ret.SilencedAt = OptDateTime{}
+	if e.SilencedAt != nil {
+		ret.SilencedAt.SetTo(*e.SilencedAt)
+	}
+	ret.SuspendedAt = OptDateTime{}
+	if e.SuspendedAt != nil {
+		ret.SuspendedAt.SetTo(*e.SuspendedAt)
+	}
+	return &ret
+}
+
+func NewGroupUsersLists(es []*generated.User) []GroupUsersList {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]GroupUsersList, len(es))
+	for i, e := range es {
+		r[i] = NewGroupUsersList(e).Elem()
+	}
+	return r
+}
+
+func (u *GroupUsersList) Elem() GroupUsersList {
+	if u == nil {
+		return GroupUsersList{}
+	}
+	return *u
+}
+
 func NewIntegrationCreate(e *generated.Integration) *IntegrationCreate {
 	if e == nil {
 		return nil
@@ -1405,6 +1461,40 @@ func (u *UserUpdate) Elem() UserUpdate {
 		return UserUpdate{}
 	}
 	return *u
+}
+
+func NewUserGroupsList(e *generated.Group) *UserGroupsList {
+	if e == nil {
+		return nil
+	}
+	var ret UserGroupsList
+	ret.ID = e.ID
+	ret.CreatedAt = e.CreatedAt
+	ret.UpdatedAt = e.UpdatedAt
+	ret.CreatedBy = NewOptInt(e.CreatedBy)
+	ret.UpdatedBy = NewOptInt(e.UpdatedBy)
+	ret.Name = e.Name
+	ret.Description = e.Description
+	ret.LogoURL = e.LogoURL
+	return &ret
+}
+
+func NewUserGroupsLists(es []*generated.Group) []UserGroupsList {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]UserGroupsList, len(es))
+	for i, e := range es {
+		r[i] = NewUserGroupsList(e).Elem()
+	}
+	return r
+}
+
+func (gr *UserGroupsList) Elem() UserGroupsList {
+	if gr == nil {
+		return UserGroupsList{}
+	}
+	return *gr
 }
 
 func NewUserMembershipsList(e *generated.Membership) *UserMembershipsList {

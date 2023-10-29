@@ -11,6 +11,8 @@ import (
 	"entgo.io/ent/schema/index"
 	"github.com/google/uuid"
 	"lukechampine.com/frand"
+
+	"github.com/datumforge/datum/internal/ent/mixin"
 )
 
 // Session holds authentication sessions. They can either be first-party web auth sessions or OAuth sessions. Sessions should persist in the database for some time duration after expiration, but with the "disabled" boolean set to true.
@@ -22,7 +24,7 @@ type Session struct {
 func (Session) Fields() []ent.Field {
 	return []ent.Field{
 		// NOTE: the created_at and updated_at fields are automatically created by the AuditMixin, you do not need to re-declare / add them in these fields
-		field.UUID("id", uuid.UUID{}).Default(uuid.New).Unique(),
+		field.UUID("id", uuid.UUID{}).Default(uuid.New).Unique().Immutable(),
 		field.Enum("type").
 			Comment("Sessions can derrive from the local (password auth), oauth, or app_password").
 			Values(
@@ -99,6 +101,6 @@ func (Session) Annotations() []schema.Annotation {
 // Mixin of the Session
 func (Session) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		AuditMixin{},
+		mixin.AuditMixin{},
 	}
 }

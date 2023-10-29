@@ -60,14 +60,17 @@ type UserEdges struct {
 	Memberships []*Membership `json:"memberships,omitempty"`
 	// Sessions holds the value of the sessions edge.
 	Sessions []*Session `json:"sessions,omitempty"`
+	// Groups holds the value of the groups edge.
+	Groups []*Group `json:"groups,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 	// totalCount holds the count of the edges above.
-	totalCount [2]map[string]int
+	totalCount [3]map[string]int
 
 	namedMemberships map[string][]*Membership
 	namedSessions    map[string][]*Session
+	namedGroups      map[string][]*Group
 }
 
 // MembershipsOrErr returns the Memberships value or an error if the edge
@@ -86,6 +89,15 @@ func (e UserEdges) SessionsOrErr() ([]*Session, error) {
 		return e.Sessions, nil
 	}
 	return nil, &NotLoadedError{edge: "sessions"}
+}
+
+// GroupsOrErr returns the Groups value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) GroupsOrErr() ([]*Group, error) {
+	if e.loadedTypes[2] {
+		return e.Groups, nil
+	}
+	return nil, &NotLoadedError{edge: "groups"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -243,6 +255,11 @@ func (u *User) QuerySessions() *SessionQuery {
 	return NewUserClient(u.config).QuerySessions(u)
 }
 
+// QueryGroups queries the "groups" edge of the User entity.
+func (u *User) QueryGroups() *GroupQuery {
+	return NewUserClient(u.config).QueryGroups(u)
+}
+
 // Update returns a builder for updating this User.
 // Note that you need to call User.Unwrap() before calling this method if this User
 // was returned from a transaction, and the transaction was committed or rolled back.
@@ -368,6 +385,30 @@ func (u *User) appendNamedSessions(name string, edges ...*Session) {
 		u.Edges.namedSessions[name] = []*Session{}
 	} else {
 		u.Edges.namedSessions[name] = append(u.Edges.namedSessions[name], edges...)
+	}
+}
+
+// NamedGroups returns the Groups named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (u *User) NamedGroups(name string) ([]*Group, error) {
+	if u.Edges.namedGroups == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := u.Edges.namedGroups[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (u *User) appendNamedGroups(name string, edges ...*Group) {
+	if u.Edges.namedGroups == nil {
+		u.Edges.namedGroups = make(map[string][]*Group)
+	}
+	if len(edges) == 0 {
+		u.Edges.namedGroups[name] = []*Group{}
+	} else {
+		u.Edges.namedGroups[name] = append(u.Edges.namedGroups[name], edges...)
 	}
 }
 
