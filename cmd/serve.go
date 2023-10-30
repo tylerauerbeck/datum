@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"net"
 	"net/http"
@@ -12,7 +11,6 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect"
-	entsql "entgo.io/ent/dialect/sql"
 	"github.com/brpaz/echozap"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -25,12 +23,14 @@ import (
 	"github.com/datumforge/datum/internal/api"
 	"github.com/datumforge/datum/internal/echox"
 	ent "github.com/datumforge/datum/internal/ent/generated"
+	"github.com/datumforge/datum/internal/entdb"
 )
 
 const (
 	defaultListenAddr            = ":17608"
 	defaultShutdownGracePeriod   = 5 * time.Second
-	defaultDBURI                 = "datum.db?mode=memory&_fk=1"
+	defaultDBPrimaryURI          = "datum.db?mode=memory&_fk=1"
+	defaultDBSecondaryURI        = "backup.db?mode=memory&_fk=1"
 	defaultOIDCJWKSRemoteTimeout = 5 * time.Second
 )
 
@@ -61,8 +61,14 @@ func init() {
 	viperBindFlag("server.shutdown-grace-period", serveCmd.Flags().Lookup("shutdown-grace-period"))
 
 	// Database flags
-	serveCmd.Flags().String("dbURI", defaultDBURI, "db uri")
-	viperBindFlag("server.db", serveCmd.Flags().Lookup("dbURI"))
+	serveCmd.Flags().Bool("db-mutli-write", false, "write to a primary and secondary database")
+	viperBindFlag("server.db.multi-write", serveCmd.Flags().Lookup("db-mutli-write"))
+
+	serveCmd.Flags().String("db-primary", defaultDBPrimaryURI, "db primary uri")
+	viperBindFlag("server.db-primary", serveCmd.Flags().Lookup("db-primary"))
+
+	serveCmd.Flags().String("db-secondary", defaultDBSecondaryURI, "db secondary uri")
+	viperBindFlag("server.db-secondary", serveCmd.Flags().Lookup("db-secondary"))
 
 	// echo-jwt flags
 	serveCmd.Flags().String("jwt-secretkey", "", "secret key for echojwt config")
@@ -88,32 +94,32 @@ func init() {
 
 func serve(ctx context.Context) error {
 	// setup db connection for server
-	db, err := newDB()
-	if err != nil {
-		return err
+	var (
+		client *ent.Client
+		err    error
+	)
+
+	entConfig := entdb.EntClientConfig{
+		Debug:           viper.GetBool("debug"),
+		DriverName:      dialect.SQLite,
+		Logger:          *logger,
+		PrimaryDBSource: viper.GetString("server.db-primary"),
 	}
 
-	defer db.Close()
+	if viper.GetBool("server.db.multi-write") {
+		entConfig.SecondaryDBSource = viper.GetString("server.db-secondary")
 
-	entDB := entsql.OpenDB(dialect.SQLite, db)
-
-	cOpts := []ent.Option{ent.Driver(entDB)}
-
-	if viper.GetBool(("debug")) {
-		cOpts = append(cOpts,
-			ent.Log(logger.Named("ent").Debugln),
-			ent.Debug(),
-		)
+		client, err = entConfig.NewMultiDriverDBClient(ctx)
+		if err != nil {
+			return err
+		}
+	} else {
+		client, err = entConfig.NewEntDBDriver(ctx)
+		if err != nil {
+			return err
+		}
 	}
-
-	client := ent.NewClient(cOpts...)
 	defer client.Close()
-
-	// Run the automatic migration tool to create all schema resources.
-	if err := client.Schema.Create(ctx); err != nil {
-		logger.Errorf("failed creating schema resources", zap.Error(err))
-		return err
-	}
 
 	var mw []echo.MiddlewareFunc
 
@@ -209,24 +215,6 @@ func serve(ctx context.Context) error {
 	}
 
 	return nil
-}
-
-// newDB creates returns new sql db connection
-func newDB() (*sql.DB, error) {
-	dbDriverName := "sqlite3"
-
-	// setup db connection
-	db, err := sql.Open(dbDriverName, viper.GetString("server.db"))
-	if err != nil {
-		return nil, fmt.Errorf("failed connecting to database: %w", err)
-	}
-
-	// verify db connection using ping
-	if err := db.Ping(); err != nil {
-		return nil, fmt.Errorf("failed verifying database connection: %w", err)
-	}
-
-	return db, nil
 }
 
 // createJwtMiddleware, TODO expand the config settings
