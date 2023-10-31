@@ -6,12 +6,15 @@ env:
 tasks:
   clean:
     cmds:
-      - "go run ./internal/entclean/main.go --path=internal/ent {{ .CLI_ARGS }}"
+      - |
+        echo "Enter the name of the ent schema object name to clean:"
+        read clean;
+        go run ./internal/entclean/main.go --path=internal/ent ${clean};
       - "rm -rf internal/ent/generated/^doc.go"
       - "rm -rf internal/api/^resolver.go"
       - "rm -f schema/ent.graphql"
       - "rm -f schema.graphql"
-      - "rm -rf internal/testclient/"
+      - "rm -rf internal/datumclient/"
   ent:
     - go generate ./...
   install:
@@ -19,6 +22,7 @@ tasks:
       - "go install github.com/go-task/task/v3/cmd/task@latest"
       - "go install github.com/hairyhenderson/gomplate/v4/cmd/gomplate@latest"
       - "go install entgo.io/ent/cmd/ent@latest"
+      - "go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest"
       - "curl -sSf https://atlasgo.sh | sh"
       - "curl -sSL https://rover.apollo.dev/nix/latest | sh"
       - "go get -u github.com/openfga/go-sdk"
@@ -46,7 +50,7 @@ tasks:
   atlas:create:
     cmds:
       - |
-        echo "Enter the name of the migration:"
+        echo "If there is no schema to generate, this will not create a file (hint: name it your branch name if you're not sure) - enter the name of the migration:"
         read migration;
         go run db/create_migrations.go ${migration};
   atlas:lint:
