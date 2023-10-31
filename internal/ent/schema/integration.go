@@ -22,6 +22,11 @@ func (Integration) Fields() []ent.Field {
 	return []ent.Field{
 		// NOTE: the created_at and updated_at fields are automatically created by the AuditMixin, you do not need to re-declare / add them in these fields
 		field.UUID("id", uuid.UUID{}).Default(uuid.New).Unique().Immutable(),
+		field.String("name").
+			NotEmpty().
+			Annotations(
+				entgql.OrderField("name"),
+			),
 		field.String("kind").
 			Immutable().
 			Annotations(
@@ -35,7 +40,7 @@ func (Integration) Fields() []ent.Field {
 // Edges of the Integration
 func (Integration) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("organization", Organization.Type).Ref("integrations").Unique().Required(),
+		edge.From("owner", Organization.Type).Ref("integrations").Unique(),
 	}
 }
 

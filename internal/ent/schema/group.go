@@ -3,10 +3,10 @@ package schema
 import (
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
-	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 
 	"github.com/datumforge/datum/internal/ent/mixin"
 
@@ -48,8 +48,18 @@ func (Group) Fields() []ent.Field {
 func (Group) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("setting", GroupSettings.Type).Required().Unique(),
-		edge.To("memberships", Membership.Type).Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
-		edge.From("users", User.Type).Ref("groups"),
+		edge.To("users", User.Type),
+		edge.From("owner", Organization.Type).Ref("groups").Unique(),
+	}
+}
+
+// Indexes of the Group
+func (Group) Indexes() []ent.Index {
+	return []ent.Index{
+		// We have an organization with many groups, and we want to set the group name to be unique under each organization
+		index.Fields("name").
+			Edges("owner").
+			Unique(),
 	}
 }
 
