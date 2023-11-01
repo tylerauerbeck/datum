@@ -1,13 +1,14 @@
 package mixin
 
 import (
-	"context"
 	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
+	"github.com/datumforge/datum/internal/echox"
 	"github.com/google/uuid"
+	"github.com/labstack/echo"
 )
 
 // AuditMixin provides auditing for all records where enabled. The created_at, created_by, updated_at, and updated_by records are automatically populated when this mixin is enabled.
@@ -51,7 +52,7 @@ func AuditHook(next ent.Mutator) ent.Mutator {
 		UpdatedBy() (id uuid.UUID, exists bool)
 	}
 
-	return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	return ent.MutateFunc(func(c echo.Context, m ent.Mutation) (ent.Value, error) {
 		ml, ok := m.(AuditLogger)
 		if !ok {
 			return nil, newUnexpectedAuditError(m)
@@ -60,10 +61,37 @@ func AuditHook(next ent.Mutator) ent.Mutator {
 		switch op := m.Op(); {
 		case op.Is(ent.OpCreate):
 			ml.SetCreatedAt(time.Now())
+			if _, exists := ml.CreatedBy(); !exists {
+				uid, err := getUserID(c)
+				if err != nil {
+					return nil, err
+				}
+				ml.SetCreatedBy(uid)
+			}
+
 		case op.Is(ent.OpUpdateOne | ent.OpUpdate):
 			ml.SetUpdatedAt(time.Now())
+			if _, exists := ml.UpdatedBy(); !exists {
+				uid, err := getUserID(c)
+				if err != nil {
+					return nil, err
+				}
+				ml.SetUpdatedBy(uid)
+			}
 		}
-
-		return next.Mutate(ctx, m)
+		return next.Mutate(c, m)
 	})
+}
+
+// Actor retrieves the ActorKey from echo Context.
+func getUserID(c echo.Context) (string, err error) {
+	if actor, ok := c.Get(echox.ActorKey).(string); ok {
+		return actor
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return
 }
