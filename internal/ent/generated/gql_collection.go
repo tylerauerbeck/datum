@@ -16,7 +16,7 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/organization"
 	"github.com/datumforge/datum/internal/ent/generated/session"
 	"github.com/datumforge/datum/internal/ent/generated/user"
-	"github.com/google/uuid"
+	"github.com/datumforge/datum/internal/idx"
 )
 
 // CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
@@ -256,6 +256,28 @@ func newGroupSettingsPaginateArgs(rv map[string]any) *groupsettingsPaginateArgs 
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
 	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]any:
+			var (
+				err1, err2 error
+				order      = &GroupSettingsOrder{Field: &GroupSettingsOrderField{}, Direction: entgql.OrderDirectionAsc}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithGroupSettingsOrder(order))
+			}
+		case *GroupSettingsOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithGroupSettingsOrder(v))
+			}
+		}
+	}
 	if v, ok := rv[whereField].(*GroupSettingsWhereInput); ok {
 		args.opts = append(args.opts, WithGroupSettingsFilter(v.Filter))
 	}
@@ -459,8 +481,8 @@ func (o *OrganizationQuery) collectField(ctx context.Context, opCtx *graphql.Ope
 							ids[i] = nodes[i].ID
 						}
 						var v []struct {
-							NodeID uuid.UUID `sql:"parent_organization_id"`
-							Count  int       `sql:"count"`
+							NodeID idx.ID `sql:"parent_organization_id"`
+							Count  int    `sql:"count"`
 						}
 						query.Where(func(s *sql.Selector) {
 							s.Where(sql.InValues(s.C(organization.ChildrenColumn), ids...))
@@ -468,7 +490,7 @@ func (o *OrganizationQuery) collectField(ctx context.Context, opCtx *graphql.Ope
 						if err := query.GroupBy(organization.ChildrenColumn).Aggregate(Count()).Scan(ctx, &v); err != nil {
 							return err
 						}
-						m := make(map[uuid.UUID]int, len(v))
+						m := make(map[idx.ID]int, len(v))
 						for i := range v {
 							m[v[i].NodeID] = v[i].Count
 						}
@@ -754,6 +776,28 @@ func newSessionPaginateArgs(rv map[string]any) *sessionPaginateArgs {
 	}
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
+	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]any:
+			var (
+				err1, err2 error
+				order      = &SessionOrder{Field: &SessionOrderField{}, Direction: entgql.OrderDirectionAsc}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithSessionOrder(order))
+			}
+		case *SessionOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithSessionOrder(v))
+			}
+		}
 	}
 	if v, ok := rv[whereField].(*SessionWhereInput); ok {
 		args.opts = append(args.opts, WithSessionFilter(v.Filter))

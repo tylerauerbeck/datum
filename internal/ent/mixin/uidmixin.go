@@ -23,7 +23,8 @@ func (IDMixin) Fields() []ent.Field {
 		field.String("id").
 			GoType(idx.ID("")).
 			Unique().
-			Immutable(),
+			Immutable().
+			DefaultFunc(idx.MustGetNewID),
 	}
 }
 

@@ -13,6 +13,9 @@ models:
     model: github.com/99designs/gqlgen/graphql.Byte
   UUID:
     model: github.com/99designs/gqlgen/graphql.UUID
+  ID:
+    model:
+      - github.com/datumforge/datum/internal/ent/idx.ID
 schema: ["schema.graphql" ]
 query: ["query/*.graphql"]
 generate:

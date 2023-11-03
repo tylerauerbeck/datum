@@ -8,7 +8,6 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/google/uuid"
 )
 
 const (
@@ -104,7 +103,7 @@ func ValidColumn(column string) bool {
 //
 //	import _ "github.com/datumforge/datum/internal/ent/generated/runtime"
 var (
-	Hooks  [2]ent.Hook
+	Hooks  [3]ent.Hook
 	Policy ent.Policy
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
@@ -118,8 +117,6 @@ var (
 	DefaultDescription string
 	// LogoURLValidator is a validator for the "logo_url" field. It is called by the builders before save.
 	LogoURLValidator func(string) error
-	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() uuid.UUID
 )
 
 // OrderOption defines the ordering options for the Group queries.

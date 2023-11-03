@@ -14,7 +14,7 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/organization"
 	"github.com/datumforge/datum/internal/ent/generated/session"
 	"github.com/datumforge/datum/internal/ent/generated/user"
-	"github.com/google/uuid"
+	"github.com/datumforge/datum/internal/idx"
 	"github.com/hashicorp/go-multierror"
 )
 
@@ -49,7 +49,7 @@ type NodeOption func(*nodeOptions)
 // WithNodeType sets the node Type resolver function (i.e. the table to query).
 // If was not provided, the table will be derived from the universal-id
 // configuration as described in: https://entgo.io/docs/migrate/#universal-ids.
-func WithNodeType(f func(context.Context, uuid.UUID) (string, error)) NodeOption {
+func WithNodeType(f func(context.Context, idx.ID) (string, error)) NodeOption {
 	return func(o *nodeOptions) {
 		o.nodeType = f
 	}
@@ -57,13 +57,13 @@ func WithNodeType(f func(context.Context, uuid.UUID) (string, error)) NodeOption
 
 // WithFixedNodeType sets the Type of the node to a fixed value.
 func WithFixedNodeType(t string) NodeOption {
-	return WithNodeType(func(context.Context, uuid.UUID) (string, error) {
+	return WithNodeType(func(context.Context, idx.ID) (string, error) {
 		return t, nil
 	})
 }
 
 type nodeOptions struct {
-	nodeType func(context.Context, uuid.UUID) (string, error)
+	nodeType func(context.Context, idx.ID) (string, error)
 }
 
 func (c *Client) newNodeOpts(opts []NodeOption) *nodeOptions {
@@ -72,7 +72,7 @@ func (c *Client) newNodeOpts(opts []NodeOption) *nodeOptions {
 		opt(nopts)
 	}
 	if nopts.nodeType == nil {
-		nopts.nodeType = func(ctx context.Context, id uuid.UUID) (string, error) {
+		nopts.nodeType = func(ctx context.Context, id idx.ID) (string, error) {
 			return "", fmt.Errorf("cannot resolve noder (%v) without its type", id)
 		}
 	}
@@ -84,7 +84,7 @@ func (c *Client) newNodeOpts(opts []NodeOption) *nodeOptions {
 //
 //	c.Noder(ctx, id)
 //	c.Noder(ctx, id, ent.WithNodeType(typeResolver))
-func (c *Client) Noder(ctx context.Context, id uuid.UUID, opts ...NodeOption) (_ Noder, err error) {
+func (c *Client) Noder(ctx context.Context, id idx.ID, opts ...NodeOption) (_ Noder, err error) {
 	defer func() {
 		if IsNotFound(err) {
 			err = multierror.Append(err, entgql.ErrNodeNotFound(id))
@@ -97,11 +97,15 @@ func (c *Client) Noder(ctx context.Context, id uuid.UUID, opts ...NodeOption) (_
 	return c.noder(ctx, table, id)
 }
 
-func (c *Client) noder(ctx context.Context, table string, id uuid.UUID) (Noder, error) {
+func (c *Client) noder(ctx context.Context, table string, id idx.ID) (Noder, error) {
 	switch table {
 	case group.Table:
+		var uid idx.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.Group.Query().
-			Where(group.ID(id))
+			Where(group.ID(uid))
 		query, err := query.CollectFields(ctx, "Group")
 		if err != nil {
 			return nil, err
@@ -112,8 +116,12 @@ func (c *Client) noder(ctx context.Context, table string, id uuid.UUID) (Noder, 
 		}
 		return n, nil
 	case groupsettings.Table:
+		var uid idx.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.GroupSettings.Query().
-			Where(groupsettings.ID(id))
+			Where(groupsettings.ID(uid))
 		query, err := query.CollectFields(ctx, "GroupSettings")
 		if err != nil {
 			return nil, err
@@ -124,8 +132,12 @@ func (c *Client) noder(ctx context.Context, table string, id uuid.UUID) (Noder, 
 		}
 		return n, nil
 	case integration.Table:
+		var uid idx.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.Integration.Query().
-			Where(integration.ID(id))
+			Where(integration.ID(uid))
 		query, err := query.CollectFields(ctx, "Integration")
 		if err != nil {
 			return nil, err
@@ -136,8 +148,12 @@ func (c *Client) noder(ctx context.Context, table string, id uuid.UUID) (Noder, 
 		}
 		return n, nil
 	case organization.Table:
+		var uid idx.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.Organization.Query().
-			Where(organization.ID(id))
+			Where(organization.ID(uid))
 		query, err := query.CollectFields(ctx, "Organization")
 		if err != nil {
 			return nil, err
@@ -148,8 +164,12 @@ func (c *Client) noder(ctx context.Context, table string, id uuid.UUID) (Noder, 
 		}
 		return n, nil
 	case session.Table:
+		var uid idx.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.Session.Query().
-			Where(session.ID(id))
+			Where(session.ID(uid))
 		query, err := query.CollectFields(ctx, "Session")
 		if err != nil {
 			return nil, err
@@ -160,8 +180,12 @@ func (c *Client) noder(ctx context.Context, table string, id uuid.UUID) (Noder, 
 		}
 		return n, nil
 	case user.Table:
+		var uid idx.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.User.Query().
-			Where(user.ID(id))
+			Where(user.ID(uid))
 		query, err := query.CollectFields(ctx, "User")
 		if err != nil {
 			return nil, err
@@ -176,7 +200,7 @@ func (c *Client) noder(ctx context.Context, table string, id uuid.UUID) (Noder, 
 	}
 }
 
-func (c *Client) Noders(ctx context.Context, ids []uuid.UUID, opts ...NodeOption) ([]Noder, error) {
+func (c *Client) Noders(ctx context.Context, ids []idx.ID, opts ...NodeOption) ([]Noder, error) {
 	switch len(ids) {
 	case 1:
 		noder, err := c.Noder(ctx, ids[0], opts...)
@@ -190,8 +214,8 @@ func (c *Client) Noders(ctx context.Context, ids []uuid.UUID, opts ...NodeOption
 
 	noders := make([]Noder, len(ids))
 	errors := make([]error, len(ids))
-	tables := make(map[string][]uuid.UUID)
-	id2idx := make(map[uuid.UUID][]int, len(ids))
+	tables := make(map[string][]idx.ID)
+	id2idx := make(map[idx.ID][]int, len(ids))
 	nopts := c.newNodeOpts(opts)
 	for i, id := range ids {
 		table, err := nopts.nodeType(ctx, id)
@@ -237,9 +261,9 @@ func (c *Client) Noders(ctx context.Context, ids []uuid.UUID, opts ...NodeOption
 	return noders, nil
 }
 
-func (c *Client) noders(ctx context.Context, table string, ids []uuid.UUID) ([]Noder, error) {
+func (c *Client) noders(ctx context.Context, table string, ids []idx.ID) ([]Noder, error) {
 	noders := make([]Noder, len(ids))
-	idmap := make(map[uuid.UUID][]*Noder, len(ids))
+	idmap := make(map[idx.ID][]*Noder, len(ids))
 	for i, id := range ids {
 		idmap[id] = append(idmap[id], &noders[i])
 	}

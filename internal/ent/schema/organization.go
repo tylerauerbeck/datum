@@ -9,7 +9,6 @@ import (
 	"entgo.io/ent/schema/field"
 
 	"github.com/datumforge/datum/internal/ent/mixin"
-	"github.com/datumforge/datum/internal/idx"
 )
 
 const (
@@ -37,7 +36,7 @@ func (Organization) Fields() []ent.Field {
 			Annotations(
 				entgql.Skip(entgql.SkipWhereInput),
 			),
-		field.String("parent_organization_id").GoType(idx.ID("")).Optional().Immutable().
+		field.String("parent_organization_id").Optional().Immutable().
 			Comment("The ID of the parent organization for the organization.").
 			Annotations(
 				entgql.Type("ID"),

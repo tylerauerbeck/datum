@@ -13,7 +13,6 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/session"
 	"github.com/datumforge/datum/internal/ent/generated/user"
 	"github.com/datumforge/datum/internal/ent/schema"
-	"github.com/google/uuid"
 
 	"entgo.io/ent"
 	"entgo.io/ent/privacy"
@@ -34,8 +33,11 @@ func init() {
 		})
 	}
 	groupMixinHooks0 := groupMixin[0].Hooks()
+	groupMixinHooks2 := groupMixin[2].Hooks()
 
 	group.Hooks[1] = groupMixinHooks0[0]
+
+	group.Hooks[2] = groupMixinHooks2[0]
 	groupMixinFields0 := groupMixin[0].Fields()
 	_ = groupMixinFields0
 	groupFields := schema.Group{}.Fields()
@@ -51,24 +53,22 @@ func init() {
 	// group.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	group.UpdateDefaultUpdatedAt = groupDescUpdatedAt.UpdateDefault.(func() time.Time)
 	// groupDescName is the schema descriptor for name field.
-	groupDescName := groupFields[1].Descriptor()
+	groupDescName := groupFields[0].Descriptor()
 	// group.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	group.NameValidator = groupDescName.Validators[0].(func(string) error)
 	// groupDescDescription is the schema descriptor for description field.
-	groupDescDescription := groupFields[2].Descriptor()
+	groupDescDescription := groupFields[1].Descriptor()
 	// group.DefaultDescription holds the default value on creation for the description field.
 	group.DefaultDescription = groupDescDescription.Default.(string)
 	// groupDescLogoURL is the schema descriptor for logo_url field.
-	groupDescLogoURL := groupFields[3].Descriptor()
+	groupDescLogoURL := groupFields[2].Descriptor()
 	// group.LogoURLValidator is a validator for the "logo_url" field. It is called by the builders before save.
 	group.LogoURLValidator = groupDescLogoURL.Validators[0].(func(string) error)
-	// groupDescID is the schema descriptor for id field.
-	groupDescID := groupFields[0].Descriptor()
-	// group.DefaultID holds the default value on creation for the id field.
-	group.DefaultID = groupDescID.Default.(func() uuid.UUID)
 	groupsettingsMixin := schema.GroupSettings{}.Mixin()
 	groupsettingsMixinHooks0 := groupsettingsMixin[0].Hooks()
+	groupsettingsMixinHooks1 := groupsettingsMixin[1].Hooks()
 	groupsettings.Hooks[0] = groupsettingsMixinHooks0[0]
+	groupsettings.Hooks[1] = groupsettingsMixinHooks1[0]
 	groupsettingsMixinFields0 := groupsettingsMixin[0].Fields()
 	_ = groupsettingsMixinFields0
 	groupsettingsFields := schema.GroupSettings{}.Fields()
@@ -83,13 +83,11 @@ func init() {
 	groupsettings.DefaultUpdatedAt = groupsettingsDescUpdatedAt.Default.(func() time.Time)
 	// groupsettings.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	groupsettings.UpdateDefaultUpdatedAt = groupsettingsDescUpdatedAt.UpdateDefault.(func() time.Time)
-	// groupsettingsDescID is the schema descriptor for id field.
-	groupsettingsDescID := groupsettingsFields[0].Descriptor()
-	// groupsettings.DefaultID holds the default value on creation for the id field.
-	groupsettings.DefaultID = groupsettingsDescID.Default.(func() uuid.UUID)
 	integrationMixin := schema.Integration{}.Mixin()
 	integrationMixinHooks0 := integrationMixin[0].Hooks()
+	integrationMixinHooks1 := integrationMixin[1].Hooks()
 	integration.Hooks[0] = integrationMixinHooks0[0]
+	integration.Hooks[1] = integrationMixinHooks1[0]
 	integrationMixinFields0 := integrationMixin[0].Fields()
 	_ = integrationMixinFields0
 	integrationFields := schema.Integration{}.Fields()
@@ -105,16 +103,14 @@ func init() {
 	// integration.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	integration.UpdateDefaultUpdatedAt = integrationDescUpdatedAt.UpdateDefault.(func() time.Time)
 	// integrationDescName is the schema descriptor for name field.
-	integrationDescName := integrationFields[1].Descriptor()
+	integrationDescName := integrationFields[0].Descriptor()
 	// integration.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	integration.NameValidator = integrationDescName.Validators[0].(func(string) error)
-	// integrationDescID is the schema descriptor for id field.
-	integrationDescID := integrationFields[0].Descriptor()
-	// integration.DefaultID holds the default value on creation for the id field.
-	integration.DefaultID = integrationDescID.Default.(func() uuid.UUID)
 	organizationMixin := schema.Organization{}.Mixin()
 	organizationMixinHooks0 := organizationMixin[0].Hooks()
+	organizationMixinHooks1 := organizationMixin[1].Hooks()
 	organization.Hooks[0] = organizationMixinHooks0[0]
+	organization.Hooks[1] = organizationMixinHooks1[0]
 	organizationMixinFields0 := organizationMixin[0].Fields()
 	_ = organizationMixinFields0
 	organizationFields := schema.Organization{}.Fields()
@@ -130,7 +126,7 @@ func init() {
 	// organization.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	organization.UpdateDefaultUpdatedAt = organizationDescUpdatedAt.UpdateDefault.(func() time.Time)
 	// organizationDescName is the schema descriptor for name field.
-	organizationDescName := organizationFields[1].Descriptor()
+	organizationDescName := organizationFields[0].Descriptor()
 	// organization.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	organization.NameValidator = func() func(string) error {
 		validators := organizationDescName.Validators
@@ -147,13 +143,11 @@ func init() {
 			return nil
 		}
 	}()
-	// organizationDescID is the schema descriptor for id field.
-	organizationDescID := organizationFields[0].Descriptor()
-	// organization.DefaultID holds the default value on creation for the id field.
-	organization.DefaultID = organizationDescID.Default.(func() uuid.UUID)
 	sessionMixin := schema.Session{}.Mixin()
 	sessionMixinHooks0 := sessionMixin[0].Hooks()
+	sessionMixinHooks1 := sessionMixin[1].Hooks()
 	session.Hooks[0] = sessionMixinHooks0[0]
+	session.Hooks[1] = sessionMixinHooks1[0]
 	sessionMixinFields0 := sessionMixin[0].Fields()
 	_ = sessionMixinFields0
 	sessionFields := schema.Session{}.Fields()
@@ -169,15 +163,11 @@ func init() {
 	// session.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	session.UpdateDefaultUpdatedAt = sessionDescUpdatedAt.UpdateDefault.(func() time.Time)
 	// sessionDescToken is the schema descriptor for token field.
-	sessionDescToken := sessionFields[3].Descriptor()
+	sessionDescToken := sessionFields[2].Descriptor()
 	// session.DefaultToken holds the default value on creation for the token field.
 	session.DefaultToken = sessionDescToken.Default.(func() string)
 	// session.TokenValidator is a validator for the "token" field. It is called by the builders before save.
 	session.TokenValidator = sessionDescToken.Validators[0].(func(string) error)
-	// sessionDescID is the schema descriptor for id field.
-	sessionDescID := sessionFields[0].Descriptor()
-	// session.DefaultID holds the default value on creation for the id field.
-	session.DefaultID = sessionDescID.Default.(func() uuid.UUID)
 	userMixin := schema.User{}.Mixin()
 	user.Policy = privacy.NewPolicies(userMixin[1], schema.User{})
 	user.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -189,8 +179,11 @@ func init() {
 		})
 	}
 	userMixinHooks0 := userMixin[0].Hooks()
+	userMixinHooks2 := userMixin[2].Hooks()
 
 	user.Hooks[1] = userMixinHooks0[0]
+
+	user.Hooks[2] = userMixinHooks2[0]
 	userMixinFields0 := userMixin[0].Fields()
 	_ = userMixinFields0
 	userFields := schema.User{}.Fields()
@@ -210,7 +203,7 @@ func init() {
 	// user.EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	user.EmailValidator = userDescEmail.Validators[0].(func(string) error)
 	// userDescFirstName is the schema descriptor for first_name field.
-	userDescFirstName := userFields[2].Descriptor()
+	userDescFirstName := userFields[1].Descriptor()
 	// user.FirstNameValidator is a validator for the "first_name" field. It is called by the builders before save.
 	user.FirstNameValidator = func() func(string) error {
 		validators := userDescFirstName.Validators
@@ -228,7 +221,7 @@ func init() {
 		}
 	}()
 	// userDescLastName is the schema descriptor for last_name field.
-	userDescLastName := userFields[3].Descriptor()
+	userDescLastName := userFields[2].Descriptor()
 	// user.LastNameValidator is a validator for the "last_name" field. It is called by the builders before save.
 	user.LastNameValidator = func() func(string) error {
 		validators := userDescLastName.Validators
@@ -246,7 +239,7 @@ func init() {
 		}
 	}()
 	// userDescDisplayName is the schema descriptor for display_name field.
-	userDescDisplayName := userFields[4].Descriptor()
+	userDescDisplayName := userFields[3].Descriptor()
 	// user.DefaultDisplayName holds the default value on creation for the display_name field.
 	user.DefaultDisplayName = userDescDisplayName.Default.(string)
 	// user.DisplayNameValidator is a validator for the "display_name" field. It is called by the builders before save.
@@ -266,11 +259,11 @@ func init() {
 		}
 	}()
 	// userDescLocked is the schema descriptor for locked field.
-	userDescLocked := userFields[5].Descriptor()
+	userDescLocked := userFields[4].Descriptor()
 	// user.DefaultLocked holds the default value on creation for the locked field.
 	user.DefaultLocked = userDescLocked.Default.(bool)
 	// userDescAvatarRemoteURL is the schema descriptor for avatar_remote_url field.
-	userDescAvatarRemoteURL := userFields[6].Descriptor()
+	userDescAvatarRemoteURL := userFields[5].Descriptor()
 	// user.AvatarRemoteURLValidator is a validator for the "avatar_remote_url" field. It is called by the builders before save.
 	user.AvatarRemoteURLValidator = func() func(string) error {
 		validators := userDescAvatarRemoteURL.Validators
@@ -288,13 +281,9 @@ func init() {
 		}
 	}()
 	// userDescAvatarLocalFile is the schema descriptor for avatar_local_file field.
-	userDescAvatarLocalFile := userFields[7].Descriptor()
+	userDescAvatarLocalFile := userFields[6].Descriptor()
 	// user.AvatarLocalFileValidator is a validator for the "avatar_local_file" field. It is called by the builders before save.
 	user.AvatarLocalFileValidator = userDescAvatarLocalFile.Validators[0].(func(string) error)
-	// userDescID is the schema descriptor for id field.
-	userDescID := userFields[1].Descriptor()
-	// user.DefaultID holds the default value on creation for the id field.
-	user.DefaultID = userDescID.Default.(func() uuid.UUID)
 }
 
 const (

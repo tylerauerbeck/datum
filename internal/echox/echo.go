@@ -73,3 +73,10 @@ func GetActorSubject(c echo.Context) (string, error) {
 
 	return sub, nil
 }
+
+func GetUser(c echo.Context) (string, error) {
+	u := c.Get("user")
+	claims := u.(*jwt.Token).Claims.(jwt.MapClaims)
+	id := claims["id"].(string)
+	return id, nil
+}

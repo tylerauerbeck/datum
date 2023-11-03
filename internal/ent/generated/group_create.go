@@ -14,7 +14,7 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/groupsettings"
 	"github.com/datumforge/datum/internal/ent/generated/organization"
 	"github.com/datumforge/datum/internal/ent/generated/user"
-	"github.com/google/uuid"
+	"github.com/datumforge/datum/internal/idx"
 )
 
 // GroupCreate is the builder for creating a Group entity.
@@ -53,29 +53,29 @@ func (gc *GroupCreate) SetNillableUpdatedAt(t *time.Time) *GroupCreate {
 }
 
 // SetCreatedBy sets the "created_by" field.
-func (gc *GroupCreate) SetCreatedBy(u uuid.UUID) *GroupCreate {
-	gc.mutation.SetCreatedBy(u)
+func (gc *GroupCreate) SetCreatedBy(s string) *GroupCreate {
+	gc.mutation.SetCreatedBy(s)
 	return gc
 }
 
 // SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
-func (gc *GroupCreate) SetNillableCreatedBy(u *uuid.UUID) *GroupCreate {
-	if u != nil {
-		gc.SetCreatedBy(*u)
+func (gc *GroupCreate) SetNillableCreatedBy(s *string) *GroupCreate {
+	if s != nil {
+		gc.SetCreatedBy(*s)
 	}
 	return gc
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (gc *GroupCreate) SetUpdatedBy(u uuid.UUID) *GroupCreate {
-	gc.mutation.SetUpdatedBy(u)
+func (gc *GroupCreate) SetUpdatedBy(s string) *GroupCreate {
+	gc.mutation.SetUpdatedBy(s)
 	return gc
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (gc *GroupCreate) SetNillableUpdatedBy(u *uuid.UUID) *GroupCreate {
-	if u != nil {
-		gc.SetUpdatedBy(*u)
+func (gc *GroupCreate) SetNillableUpdatedBy(s *string) *GroupCreate {
+	if s != nil {
+		gc.SetUpdatedBy(*s)
 	}
 	return gc
 }
@@ -107,21 +107,13 @@ func (gc *GroupCreate) SetLogoURL(s string) *GroupCreate {
 }
 
 // SetID sets the "id" field.
-func (gc *GroupCreate) SetID(u uuid.UUID) *GroupCreate {
-	gc.mutation.SetID(u)
-	return gc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (gc *GroupCreate) SetNillableID(u *uuid.UUID) *GroupCreate {
-	if u != nil {
-		gc.SetID(*u)
-	}
+func (gc *GroupCreate) SetID(i idx.ID) *GroupCreate {
+	gc.mutation.SetID(i)
 	return gc
 }
 
 // SetSettingID sets the "setting" edge to the GroupSettings entity by ID.
-func (gc *GroupCreate) SetSettingID(id uuid.UUID) *GroupCreate {
+func (gc *GroupCreate) SetSettingID(id idx.ID) *GroupCreate {
 	gc.mutation.SetSettingID(id)
 	return gc
 }
@@ -132,14 +124,14 @@ func (gc *GroupCreate) SetSetting(g *GroupSettings) *GroupCreate {
 }
 
 // AddUserIDs adds the "users" edge to the User entity by IDs.
-func (gc *GroupCreate) AddUserIDs(ids ...uuid.UUID) *GroupCreate {
+func (gc *GroupCreate) AddUserIDs(ids ...idx.ID) *GroupCreate {
 	gc.mutation.AddUserIDs(ids...)
 	return gc
 }
 
 // AddUsers adds the "users" edges to the User entity.
 func (gc *GroupCreate) AddUsers(u ...*User) *GroupCreate {
-	ids := make([]uuid.UUID, len(u))
+	ids := make([]idx.ID, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -147,13 +139,13 @@ func (gc *GroupCreate) AddUsers(u ...*User) *GroupCreate {
 }
 
 // SetOwnerID sets the "owner" edge to the Organization entity by ID.
-func (gc *GroupCreate) SetOwnerID(id uuid.UUID) *GroupCreate {
+func (gc *GroupCreate) SetOwnerID(id idx.ID) *GroupCreate {
 	gc.mutation.SetOwnerID(id)
 	return gc
 }
 
 // SetNillableOwnerID sets the "owner" edge to the Organization entity by ID if the given value is not nil.
-func (gc *GroupCreate) SetNillableOwnerID(id *uuid.UUID) *GroupCreate {
+func (gc *GroupCreate) SetNillableOwnerID(id *idx.ID) *GroupCreate {
 	if id != nil {
 		gc = gc.SetOwnerID(*id)
 	}
@@ -220,13 +212,6 @@ func (gc *GroupCreate) defaults() error {
 		v := group.DefaultDescription
 		gc.mutation.SetDescription(v)
 	}
-	if _, ok := gc.mutation.ID(); !ok {
-		if group.DefaultID == nil {
-			return fmt.Errorf("generated: uninitialized group.DefaultID (forgotten import generated/runtime?)")
-		}
-		v := group.DefaultID()
-		gc.mutation.SetID(v)
-	}
 	return nil
 }
 
@@ -275,7 +260,7 @@ func (gc *GroupCreate) sqlSave(ctx context.Context) (*Group, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
+		if id, ok := _spec.ID.Value.(*idx.ID); ok {
 			_node.ID = *id
 		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
 			return nil, err
@@ -289,7 +274,7 @@ func (gc *GroupCreate) sqlSave(ctx context.Context) (*Group, error) {
 func (gc *GroupCreate) createSpec() (*Group, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Group{config: gc.config}
-		_spec = sqlgraph.NewCreateSpec(group.Table, sqlgraph.NewFieldSpec(group.FieldID, field.TypeUUID))
+		_spec = sqlgraph.NewCreateSpec(group.Table, sqlgraph.NewFieldSpec(group.FieldID, field.TypeString))
 	)
 	_spec.Schema = gc.schemaConfig.Group
 	if id, ok := gc.mutation.ID(); ok {
@@ -305,11 +290,11 @@ func (gc *GroupCreate) createSpec() (*Group, *sqlgraph.CreateSpec) {
 		_node.UpdatedAt = value
 	}
 	if value, ok := gc.mutation.CreatedBy(); ok {
-		_spec.SetField(group.FieldCreatedBy, field.TypeUUID, value)
+		_spec.SetField(group.FieldCreatedBy, field.TypeString, value)
 		_node.CreatedBy = value
 	}
 	if value, ok := gc.mutation.UpdatedBy(); ok {
-		_spec.SetField(group.FieldUpdatedBy, field.TypeUUID, value)
+		_spec.SetField(group.FieldUpdatedBy, field.TypeString, value)
 		_node.UpdatedBy = value
 	}
 	if value, ok := gc.mutation.Name(); ok {
@@ -332,7 +317,7 @@ func (gc *GroupCreate) createSpec() (*Group, *sqlgraph.CreateSpec) {
 			Columns: []string{group.SettingColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(groupsettings.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(groupsettings.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = gc.schemaConfig.GroupSettings
@@ -349,7 +334,7 @@ func (gc *GroupCreate) createSpec() (*Group, *sqlgraph.CreateSpec) {
 			Columns: group.UsersPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = gc.schemaConfig.GroupUsers
@@ -366,7 +351,7 @@ func (gc *GroupCreate) createSpec() (*Group, *sqlgraph.CreateSpec) {
 			Columns: []string{group.OwnerColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(organization.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(organization.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = gc.schemaConfig.Group
