@@ -56,7 +56,6 @@ func main() {
 			gen.FeatureNamedEdges,
 			gen.FeatureSchemaConfig,
 			gen.FeatureIntercept,
-			gen.
 		},
 	},
 		entc.TemplateDir("./internal/ent/templates"),

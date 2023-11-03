@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/datumforge/datum/internal/ent/generated"
+	"github.com/datumforge/datum/internal/idx"
 
 	"github.com/google/uuid"
 )
@@ -21,7 +22,7 @@ const (
 // Viewer describes the query/mutation viewer-context.
 type Viewer interface {
 	Admin() bool                     // If viewer is admin.
-	Organization() (uuid.UUID, bool) // Tenant identifier.
+	Organization() (idx.MustGetNewID(), bool) // Tenant identifier.
 }
 
 // UserViewer describes a user-viewer.

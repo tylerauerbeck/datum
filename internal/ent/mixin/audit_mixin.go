@@ -24,10 +24,8 @@ func (AuditMixin) Fields() []ent.Field {
 		field.Time("updated_at").
 			Default(time.Now).
 			UpdateDefault(time.Now),
-		field.UUID("created_by", uuid.UUID{}).
-			Optional(),
-		field.UUID("updated_by", uuid.UUID{}).
-			Optional(),
+		field.UUID("created_by", GoType(idx.ID("")).Optional().Immutable().
+		field.UUID("updated_by", GoType(idx.ID("")).Optional().Immutable().,
 	}
 }
 
@@ -45,10 +43,10 @@ func AuditHook(next ent.Mutator) ent.Mutator {
 		CreatedAt() (v time.Time, exists bool) // exists if present before this hook
 		SetUpdatedAt(time.Time)
 		UpdatedAt() (v time.Time, exists bool)
-		SetCreatedBy(uuid.UUID)
-		CreatedBy() (id uuid.UUID, exists bool)
-		SetUpdatedBy(uuid.UUID)
-		UpdatedBy() (id uuid.UUID, exists bool)
+		SetCreatedBy(idx.ID)
+		CreatedBy() (id idx.ID, exists bool)
+		SetUpdatedBy(idx.ID)
+		UpdatedBy() (id idx.ID, exists bool)
 	}
 
 	return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {

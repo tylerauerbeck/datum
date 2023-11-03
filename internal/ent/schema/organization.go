@@ -9,8 +9,7 @@ import (
 	"entgo.io/ent/schema/field"
 
 	"github.com/datumforge/datum/internal/ent/mixin"
-
-	"github.com/google/uuid"
+	"github.com/datumforge/datum/internal/idx"
 )
 
 const (
@@ -25,8 +24,6 @@ type Organization struct {
 // Fields of the Organization
 func (Organization) Fields() []ent.Field {
 	return []ent.Field{
-		// NOTE: the created_at and updated_at fields are automatically created by the AuditMixin, you do not need to re-declare / add them in these fields
-		field.UUID("id", uuid.UUID{}).Default(uuid.New).Unique().Immutable(),
 		field.String("name").Unique().
 			MaxLen(orgNameMaxLen).
 			NotEmpty().
@@ -40,7 +37,7 @@ func (Organization) Fields() []ent.Field {
 			Annotations(
 				entgql.Skip(entgql.SkipWhereInput),
 			),
-		field.UUID("parent_organization_id", uuid.UUID{}).Optional().Immutable().
+		field.String("parent_organization_id", GoType(idx.ID("")).Optional().Immutable().
 			Comment("The ID of the parent organization for the organization.").
 			Annotations(
 				entgql.Type("ID"),
@@ -81,5 +78,6 @@ func (Organization) Annotations() []schema.Annotation {
 func (Organization) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.AuditMixin{},
+		mixin.IDMixin{},
 	}
 }
