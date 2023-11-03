@@ -21,8 +21,8 @@ const (
 
 // Viewer describes the query/mutation viewer-context.
 type Viewer interface {
-	Admin() bool                     // If viewer is admin.
-	Organization() (idx.MustGetNewID(), bool) // Tenant identifier.
+	Admin() bool                  // If viewer is admin.
+	Organization() (idx.ID, bool) // Tenant identifier.
 }
 
 // UserViewer describes a user-viewer.

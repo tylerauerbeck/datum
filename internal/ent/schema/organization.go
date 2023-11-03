@@ -37,7 +37,7 @@ func (Organization) Fields() []ent.Field {
 			Annotations(
 				entgql.Skip(entgql.SkipWhereInput),
 			),
-		field.String("parent_organization_id", GoType(idx.ID("")).Optional().Immutable().
+		field.String("parent_organization_id").GoType(idx.ID("")).Optional().Immutable().
 			Comment("The ID of the parent organization for the organization.").
 			Annotations(
 				entgql.Type("ID"),

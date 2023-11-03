@@ -7,7 +7,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
-	"github.com/google/uuid"
+	"github.com/datumforge/datum/internal/idx"
 )
 
 // AuditMixin provides auditing for all records where enabled. The created_at, created_by, updated_at, and updated_by records are automatically populated when this mixin is enabled.
@@ -24,8 +24,8 @@ func (AuditMixin) Fields() []ent.Field {
 		field.Time("updated_at").
 			Default(time.Now).
 			UpdateDefault(time.Now),
-		field.UUID("created_by", GoType(idx.ID("")).Optional().Immutable().
-		field.UUID("updated_by", GoType(idx.ID("")).Optional().Immutable().,
+		field.String("created_by").GoType(idx.ID("")).Immutable().Optional(),
+		field.String("updated_by").GoType(idx.ID("")).Immutable().Optional(),
 	}
 }
 

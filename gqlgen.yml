@@ -78,11 +78,7 @@ autobind:
 models:
   ID:
     model:
-      - github.com/99designs/gqlgen/graphql.UUID
-      - github.com/99designs/gqlgen/graphql.ID
-      - github.com/99designs/gqlgen/graphql.Int
-      - github.com/99designs/gqlgen/graphql.Int64
-      - github.com/99designs/gqlgen/graphql.Int32
+      - github.com/datumforge/datum/internal/ent/idx.ID
   Int:
     model:
       - github.com/99designs/gqlgen/graphql.Int
