@@ -8,7 +8,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/google/uuid"
+	"github.com/datumforge/datum/internal/nanox"
 )
 
 const (
@@ -143,7 +143,7 @@ var (
 	// AvatarLocalFileValidator is a validator for the "avatar_local_file" field. It is called by the builders before save.
 	AvatarLocalFileValidator func(string) error
 	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() uuid.UUID
+	DefaultID func() nanox.ID
 )
 
 // OrderOption defines the ordering options for the User queries.

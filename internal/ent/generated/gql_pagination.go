@@ -20,14 +20,14 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/organization"
 	"github.com/datumforge/datum/internal/ent/generated/session"
 	"github.com/datumforge/datum/internal/ent/generated/user"
-	"github.com/google/uuid"
+	"github.com/datumforge/datum/internal/nanox"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
 // Common entgql types.
 type (
-	Cursor         = entgql.Cursor[uuid.UUID]
-	PageInfo       = entgql.PageInfo[uuid.UUID]
+	Cursor         = entgql.Cursor[nanox.ID]
+	PageInfo       = entgql.PageInfo[nanox.ID]
 	OrderDirection = entgql.OrderDirection
 )
 

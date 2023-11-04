@@ -7,21 +7,21 @@ import (
 
 	"github.com/datumforge/datum/internal/ent/generated/groupsettings"
 	"github.com/datumforge/datum/internal/ent/generated/session"
-	"github.com/google/uuid"
+	"github.com/datumforge/datum/internal/nanox"
 )
 
 // CreateGroupInput represents a mutation input for creating groups.
 type CreateGroupInput struct {
 	CreatedAt   *time.Time
 	UpdatedAt   *time.Time
-	CreatedBy   *uuid.UUID
-	UpdatedBy   *uuid.UUID
+	CreatedBy   *string
+	UpdatedBy   *string
 	Name        string
 	Description *string
 	LogoURL     string
-	SettingID   uuid.UUID
-	UserIDs     []uuid.UUID
-	OwnerID     *uuid.UUID
+	SettingID   nanox.ID
+	UserIDs     []nanox.ID
+	OwnerID     *nanox.ID
 }
 
 // Mutate applies the CreateGroupInput on the GroupMutation builder.
@@ -62,18 +62,18 @@ func (c *GroupCreate) SetInput(i CreateGroupInput) *GroupCreate {
 type UpdateGroupInput struct {
 	UpdatedAt      *time.Time
 	ClearCreatedBy bool
-	CreatedBy      *uuid.UUID
+	CreatedBy      *string
 	ClearUpdatedBy bool
-	UpdatedBy      *uuid.UUID
+	UpdatedBy      *string
 	Name           *string
 	Description    *string
 	LogoURL        *string
-	SettingID      *uuid.UUID
+	SettingID      *nanox.ID
 	ClearUsers     bool
-	AddUserIDs     []uuid.UUID
-	RemoveUserIDs  []uuid.UUID
+	AddUserIDs     []nanox.ID
+	RemoveUserIDs  []nanox.ID
 	ClearOwner     bool
-	OwnerID        *uuid.UUID
+	OwnerID        *nanox.ID
 }
 
 // Mutate applies the UpdateGroupInput on the GroupMutation builder.
@@ -138,8 +138,8 @@ func (c *GroupUpdateOne) SetInput(i UpdateGroupInput) *GroupUpdateOne {
 type CreateGroupSettingsInput struct {
 	CreatedAt  *time.Time
 	UpdatedAt  *time.Time
-	CreatedBy  *uuid.UUID
-	UpdatedBy  *uuid.UUID
+	CreatedBy  *string
+	UpdatedBy  *string
 	Visibility *groupsettings.Visibility
 	JoinPolicy *groupsettings.JoinPolicy
 }
@@ -176,9 +176,9 @@ func (c *GroupSettingsCreate) SetInput(i CreateGroupSettingsInput) *GroupSetting
 type UpdateGroupSettingsInput struct {
 	UpdatedAt      *time.Time
 	ClearCreatedBy bool
-	CreatedBy      *uuid.UUID
+	CreatedBy      *string
 	ClearUpdatedBy bool
-	UpdatedBy      *uuid.UUID
+	UpdatedBy      *string
 	Visibility     *groupsettings.Visibility
 	JoinPolicy     *groupsettings.JoinPolicy
 }
@@ -224,13 +224,13 @@ func (c *GroupSettingsUpdateOne) SetInput(i UpdateGroupSettingsInput) *GroupSett
 type CreateIntegrationInput struct {
 	CreatedAt   *time.Time
 	UpdatedAt   *time.Time
-	CreatedBy   *uuid.UUID
-	UpdatedBy   *uuid.UUID
+	CreatedBy   *string
+	UpdatedBy   *string
 	Name        string
 	Kind        string
 	Description *string
 	SecretName  string
-	OwnerID     *uuid.UUID
+	OwnerID     *nanox.ID
 }
 
 // Mutate applies the CreateIntegrationInput on the IntegrationMutation builder.
@@ -268,14 +268,14 @@ func (c *IntegrationCreate) SetInput(i CreateIntegrationInput) *IntegrationCreat
 type UpdateIntegrationInput struct {
 	UpdatedAt        *time.Time
 	ClearCreatedBy   bool
-	CreatedBy        *uuid.UUID
+	CreatedBy        *string
 	ClearUpdatedBy   bool
-	UpdatedBy        *uuid.UUID
+	UpdatedBy        *string
 	Name             *string
 	ClearDescription bool
 	Description      *string
 	ClearOwner       bool
-	OwnerID          *uuid.UUID
+	OwnerID          *nanox.ID
 }
 
 // Mutate applies the UpdateIntegrationInput on the IntegrationMutation builder.
@@ -328,14 +328,14 @@ func (c *IntegrationUpdateOne) SetInput(i UpdateIntegrationInput) *IntegrationUp
 type CreateOrganizationInput struct {
 	CreatedAt      *time.Time
 	UpdatedAt      *time.Time
-	CreatedBy      *uuid.UUID
-	UpdatedBy      *uuid.UUID
+	CreatedBy      *string
+	UpdatedBy      *string
 	Name           string
 	Description    *string
-	ParentID       *uuid.UUID
-	UserIDs        []uuid.UUID
-	GroupIDs       []uuid.UUID
-	IntegrationIDs []uuid.UUID
+	ParentID       *nanox.ID
+	UserIDs        []nanox.ID
+	GroupIDs       []nanox.ID
+	IntegrationIDs []nanox.ID
 }
 
 // Mutate applies the CreateOrganizationInput on the OrganizationMutation builder.
@@ -380,21 +380,21 @@ func (c *OrganizationCreate) SetInput(i CreateOrganizationInput) *OrganizationCr
 type UpdateOrganizationInput struct {
 	UpdatedAt            *time.Time
 	ClearCreatedBy       bool
-	CreatedBy            *uuid.UUID
+	CreatedBy            *string
 	ClearUpdatedBy       bool
-	UpdatedBy            *uuid.UUID
+	UpdatedBy            *string
 	Name                 *string
 	ClearDescription     bool
 	Description          *string
 	ClearUsers           bool
-	AddUserIDs           []uuid.UUID
-	RemoveUserIDs        []uuid.UUID
+	AddUserIDs           []nanox.ID
+	RemoveUserIDs        []nanox.ID
 	ClearGroups          bool
-	AddGroupIDs          []uuid.UUID
-	RemoveGroupIDs       []uuid.UUID
+	AddGroupIDs          []nanox.ID
+	RemoveGroupIDs       []nanox.ID
 	ClearIntegrations    bool
-	AddIntegrationIDs    []uuid.UUID
-	RemoveIntegrationIDs []uuid.UUID
+	AddIntegrationIDs    []nanox.ID
+	RemoveIntegrationIDs []nanox.ID
 }
 
 // Mutate applies the UpdateOrganizationInput on the OrganizationMutation builder.
@@ -468,14 +468,14 @@ func (c *OrganizationUpdateOne) SetInput(i UpdateOrganizationInput) *Organizatio
 type CreateSessionInput struct {
 	CreatedAt *time.Time
 	UpdatedAt *time.Time
-	CreatedBy *uuid.UUID
-	UpdatedBy *uuid.UUID
+	CreatedBy *string
+	UpdatedBy *string
 	Type      session.Type
 	Disabled  bool
 	Token     *string
 	UserAgent *string
 	Ips       string
-	UsersID   *uuid.UUID
+	UsersID   *nanox.ID
 }
 
 // Mutate applies the CreateSessionInput on the SessionMutation builder.
@@ -516,15 +516,15 @@ func (c *SessionCreate) SetInput(i CreateSessionInput) *SessionCreate {
 type UpdateSessionInput struct {
 	UpdatedAt      *time.Time
 	ClearCreatedBy bool
-	CreatedBy      *uuid.UUID
+	CreatedBy      *string
 	ClearUpdatedBy bool
-	UpdatedBy      *uuid.UUID
+	UpdatedBy      *string
 	Disabled       *bool
 	ClearUserAgent bool
 	UserAgent      *string
 	Ips            *string
 	ClearUsers     bool
-	UsersID        *uuid.UUID
+	UsersID        *nanox.ID
 }
 
 // Mutate applies the UpdateSessionInput on the SessionMutation builder.
@@ -580,8 +580,8 @@ func (c *SessionUpdateOne) SetInput(i UpdateSessionInput) *SessionUpdateOne {
 type CreateUserInput struct {
 	CreatedAt       *time.Time
 	UpdatedAt       *time.Time
-	CreatedBy       *uuid.UUID
-	UpdatedBy       *uuid.UUID
+	CreatedBy       *string
+	UpdatedBy       *string
 	Email           string
 	FirstName       string
 	LastName        string
@@ -593,9 +593,9 @@ type CreateUserInput struct {
 	SilencedAt      *time.Time
 	SuspendedAt     *time.Time
 	RecoveryCode    *string
-	OrganizationIDs []uuid.UUID
-	SessionIDs      []uuid.UUID
-	GroupIDs        []uuid.UUID
+	OrganizationIDs []nanox.ID
+	SessionIDs      []nanox.ID
+	GroupIDs        []nanox.ID
 }
 
 // Mutate applies the CreateUserInput on the UserMutation builder.
@@ -660,9 +660,9 @@ func (c *UserCreate) SetInput(i CreateUserInput) *UserCreate {
 type UpdateUserInput struct {
 	UpdatedAt             *time.Time
 	ClearCreatedBy        bool
-	CreatedBy             *uuid.UUID
+	CreatedBy             *string
 	ClearUpdatedBy        bool
-	UpdatedBy             *uuid.UUID
+	UpdatedBy             *string
 	Email                 *string
 	FirstName             *string
 	LastName              *string
@@ -681,14 +681,14 @@ type UpdateUserInput struct {
 	ClearRecoveryCode     bool
 	RecoveryCode          *string
 	ClearOrganizations    bool
-	AddOrganizationIDs    []uuid.UUID
-	RemoveOrganizationIDs []uuid.UUID
+	AddOrganizationIDs    []nanox.ID
+	RemoveOrganizationIDs []nanox.ID
 	ClearSessions         bool
-	AddSessionIDs         []uuid.UUID
-	RemoveSessionIDs      []uuid.UUID
+	AddSessionIDs         []nanox.ID
+	RemoveSessionIDs      []nanox.ID
 	ClearGroups           bool
-	AddGroupIDs           []uuid.UUID
-	RemoveGroupIDs        []uuid.UUID
+	AddGroupIDs           []nanox.ID
+	RemoveGroupIDs        []nanox.ID
 }
 
 // Mutate applies the UpdateUserInput on the UserMutation builder.

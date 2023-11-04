@@ -16,7 +16,7 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/predicate"
 	"github.com/datumforge/datum/internal/ent/generated/session"
 	"github.com/datumforge/datum/internal/ent/generated/user"
-	"github.com/google/uuid"
+	"github.com/datumforge/datum/internal/nanox"
 
 	"github.com/datumforge/datum/internal/ent/generated/internal"
 )
@@ -41,15 +41,15 @@ func (uu *UserUpdate) SetUpdatedAt(t time.Time) *UserUpdate {
 }
 
 // SetCreatedBy sets the "created_by" field.
-func (uu *UserUpdate) SetCreatedBy(u uuid.UUID) *UserUpdate {
-	uu.mutation.SetCreatedBy(u)
+func (uu *UserUpdate) SetCreatedBy(s string) *UserUpdate {
+	uu.mutation.SetCreatedBy(s)
 	return uu
 }
 
 // SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableCreatedBy(u *uuid.UUID) *UserUpdate {
-	if u != nil {
-		uu.SetCreatedBy(*u)
+func (uu *UserUpdate) SetNillableCreatedBy(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetCreatedBy(*s)
 	}
 	return uu
 }
@@ -61,15 +61,15 @@ func (uu *UserUpdate) ClearCreatedBy() *UserUpdate {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (uu *UserUpdate) SetUpdatedBy(u uuid.UUID) *UserUpdate {
-	uu.mutation.SetUpdatedBy(u)
+func (uu *UserUpdate) SetUpdatedBy(s string) *UserUpdate {
+	uu.mutation.SetUpdatedBy(s)
 	return uu
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableUpdatedBy(u *uuid.UUID) *UserUpdate {
-	if u != nil {
-		uu.SetUpdatedBy(*u)
+func (uu *UserUpdate) SetNillableUpdatedBy(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetUpdatedBy(*s)
 	}
 	return uu
 }
@@ -247,14 +247,14 @@ func (uu *UserUpdate) ClearRecoveryCode() *UserUpdate {
 }
 
 // AddOrganizationIDs adds the "organizations" edge to the Organization entity by IDs.
-func (uu *UserUpdate) AddOrganizationIDs(ids ...uuid.UUID) *UserUpdate {
+func (uu *UserUpdate) AddOrganizationIDs(ids ...nanox.ID) *UserUpdate {
 	uu.mutation.AddOrganizationIDs(ids...)
 	return uu
 }
 
 // AddOrganizations adds the "organizations" edges to the Organization entity.
 func (uu *UserUpdate) AddOrganizations(o ...*Organization) *UserUpdate {
-	ids := make([]uuid.UUID, len(o))
+	ids := make([]nanox.ID, len(o))
 	for i := range o {
 		ids[i] = o[i].ID
 	}
@@ -262,14 +262,14 @@ func (uu *UserUpdate) AddOrganizations(o ...*Organization) *UserUpdate {
 }
 
 // AddSessionIDs adds the "sessions" edge to the Session entity by IDs.
-func (uu *UserUpdate) AddSessionIDs(ids ...uuid.UUID) *UserUpdate {
+func (uu *UserUpdate) AddSessionIDs(ids ...nanox.ID) *UserUpdate {
 	uu.mutation.AddSessionIDs(ids...)
 	return uu
 }
 
 // AddSessions adds the "sessions" edges to the Session entity.
 func (uu *UserUpdate) AddSessions(s ...*Session) *UserUpdate {
-	ids := make([]uuid.UUID, len(s))
+	ids := make([]nanox.ID, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
@@ -277,14 +277,14 @@ func (uu *UserUpdate) AddSessions(s ...*Session) *UserUpdate {
 }
 
 // AddGroupIDs adds the "groups" edge to the Group entity by IDs.
-func (uu *UserUpdate) AddGroupIDs(ids ...uuid.UUID) *UserUpdate {
+func (uu *UserUpdate) AddGroupIDs(ids ...nanox.ID) *UserUpdate {
 	uu.mutation.AddGroupIDs(ids...)
 	return uu
 }
 
 // AddGroups adds the "groups" edges to the Group entity.
 func (uu *UserUpdate) AddGroups(g ...*Group) *UserUpdate {
-	ids := make([]uuid.UUID, len(g))
+	ids := make([]nanox.ID, len(g))
 	for i := range g {
 		ids[i] = g[i].ID
 	}
@@ -303,14 +303,14 @@ func (uu *UserUpdate) ClearOrganizations() *UserUpdate {
 }
 
 // RemoveOrganizationIDs removes the "organizations" edge to Organization entities by IDs.
-func (uu *UserUpdate) RemoveOrganizationIDs(ids ...uuid.UUID) *UserUpdate {
+func (uu *UserUpdate) RemoveOrganizationIDs(ids ...nanox.ID) *UserUpdate {
 	uu.mutation.RemoveOrganizationIDs(ids...)
 	return uu
 }
 
 // RemoveOrganizations removes "organizations" edges to Organization entities.
 func (uu *UserUpdate) RemoveOrganizations(o ...*Organization) *UserUpdate {
-	ids := make([]uuid.UUID, len(o))
+	ids := make([]nanox.ID, len(o))
 	for i := range o {
 		ids[i] = o[i].ID
 	}
@@ -324,14 +324,14 @@ func (uu *UserUpdate) ClearSessions() *UserUpdate {
 }
 
 // RemoveSessionIDs removes the "sessions" edge to Session entities by IDs.
-func (uu *UserUpdate) RemoveSessionIDs(ids ...uuid.UUID) *UserUpdate {
+func (uu *UserUpdate) RemoveSessionIDs(ids ...nanox.ID) *UserUpdate {
 	uu.mutation.RemoveSessionIDs(ids...)
 	return uu
 }
 
 // RemoveSessions removes "sessions" edges to Session entities.
 func (uu *UserUpdate) RemoveSessions(s ...*Session) *UserUpdate {
-	ids := make([]uuid.UUID, len(s))
+	ids := make([]nanox.ID, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
@@ -345,14 +345,14 @@ func (uu *UserUpdate) ClearGroups() *UserUpdate {
 }
 
 // RemoveGroupIDs removes the "groups" edge to Group entities by IDs.
-func (uu *UserUpdate) RemoveGroupIDs(ids ...uuid.UUID) *UserUpdate {
+func (uu *UserUpdate) RemoveGroupIDs(ids ...nanox.ID) *UserUpdate {
 	uu.mutation.RemoveGroupIDs(ids...)
 	return uu
 }
 
 // RemoveGroups removes "groups" edges to Group entities.
 func (uu *UserUpdate) RemoveGroups(g ...*Group) *UserUpdate {
-	ids := make([]uuid.UUID, len(g))
+	ids := make([]nanox.ID, len(g))
 	for i := range g {
 		ids[i] = g[i].ID
 	}
@@ -440,7 +440,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := uu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID))
+	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeString))
 	if ps := uu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -452,16 +452,16 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if value, ok := uu.mutation.CreatedBy(); ok {
-		_spec.SetField(user.FieldCreatedBy, field.TypeUUID, value)
+		_spec.SetField(user.FieldCreatedBy, field.TypeString, value)
 	}
 	if uu.mutation.CreatedByCleared() {
-		_spec.ClearField(user.FieldCreatedBy, field.TypeUUID)
+		_spec.ClearField(user.FieldCreatedBy, field.TypeString)
 	}
 	if value, ok := uu.mutation.UpdatedBy(); ok {
-		_spec.SetField(user.FieldUpdatedBy, field.TypeUUID, value)
+		_spec.SetField(user.FieldUpdatedBy, field.TypeString, value)
 	}
 	if uu.mutation.UpdatedByCleared() {
-		_spec.ClearField(user.FieldUpdatedBy, field.TypeUUID)
+		_spec.ClearField(user.FieldUpdatedBy, field.TypeString)
 	}
 	if value, ok := uu.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
@@ -522,7 +522,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: user.OrganizationsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(organization.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(organization.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uu.schemaConfig.UserOrganizations
@@ -536,7 +536,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: user.OrganizationsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(organization.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(organization.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uu.schemaConfig.UserOrganizations
@@ -553,7 +553,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: user.OrganizationsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(organization.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(organization.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uu.schemaConfig.UserOrganizations
@@ -570,7 +570,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.SessionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(session.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(session.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uu.schemaConfig.Session
@@ -584,7 +584,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.SessionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(session.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(session.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uu.schemaConfig.Session
@@ -601,7 +601,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.SessionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(session.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(session.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uu.schemaConfig.Session
@@ -618,7 +618,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: user.GroupsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(group.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(group.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uu.schemaConfig.GroupUsers
@@ -632,7 +632,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: user.GroupsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(group.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(group.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uu.schemaConfig.GroupUsers
@@ -649,7 +649,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: user.GroupsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(group.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(group.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uu.schemaConfig.GroupUsers
@@ -687,15 +687,15 @@ func (uuo *UserUpdateOne) SetUpdatedAt(t time.Time) *UserUpdateOne {
 }
 
 // SetCreatedBy sets the "created_by" field.
-func (uuo *UserUpdateOne) SetCreatedBy(u uuid.UUID) *UserUpdateOne {
-	uuo.mutation.SetCreatedBy(u)
+func (uuo *UserUpdateOne) SetCreatedBy(s string) *UserUpdateOne {
+	uuo.mutation.SetCreatedBy(s)
 	return uuo
 }
 
 // SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableCreatedBy(u *uuid.UUID) *UserUpdateOne {
-	if u != nil {
-		uuo.SetCreatedBy(*u)
+func (uuo *UserUpdateOne) SetNillableCreatedBy(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetCreatedBy(*s)
 	}
 	return uuo
 }
@@ -707,15 +707,15 @@ func (uuo *UserUpdateOne) ClearCreatedBy() *UserUpdateOne {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (uuo *UserUpdateOne) SetUpdatedBy(u uuid.UUID) *UserUpdateOne {
-	uuo.mutation.SetUpdatedBy(u)
+func (uuo *UserUpdateOne) SetUpdatedBy(s string) *UserUpdateOne {
+	uuo.mutation.SetUpdatedBy(s)
 	return uuo
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableUpdatedBy(u *uuid.UUID) *UserUpdateOne {
-	if u != nil {
-		uuo.SetUpdatedBy(*u)
+func (uuo *UserUpdateOne) SetNillableUpdatedBy(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetUpdatedBy(*s)
 	}
 	return uuo
 }
@@ -893,14 +893,14 @@ func (uuo *UserUpdateOne) ClearRecoveryCode() *UserUpdateOne {
 }
 
 // AddOrganizationIDs adds the "organizations" edge to the Organization entity by IDs.
-func (uuo *UserUpdateOne) AddOrganizationIDs(ids ...uuid.UUID) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddOrganizationIDs(ids ...nanox.ID) *UserUpdateOne {
 	uuo.mutation.AddOrganizationIDs(ids...)
 	return uuo
 }
 
 // AddOrganizations adds the "organizations" edges to the Organization entity.
 func (uuo *UserUpdateOne) AddOrganizations(o ...*Organization) *UserUpdateOne {
-	ids := make([]uuid.UUID, len(o))
+	ids := make([]nanox.ID, len(o))
 	for i := range o {
 		ids[i] = o[i].ID
 	}
@@ -908,14 +908,14 @@ func (uuo *UserUpdateOne) AddOrganizations(o ...*Organization) *UserUpdateOne {
 }
 
 // AddSessionIDs adds the "sessions" edge to the Session entity by IDs.
-func (uuo *UserUpdateOne) AddSessionIDs(ids ...uuid.UUID) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddSessionIDs(ids ...nanox.ID) *UserUpdateOne {
 	uuo.mutation.AddSessionIDs(ids...)
 	return uuo
 }
 
 // AddSessions adds the "sessions" edges to the Session entity.
 func (uuo *UserUpdateOne) AddSessions(s ...*Session) *UserUpdateOne {
-	ids := make([]uuid.UUID, len(s))
+	ids := make([]nanox.ID, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
@@ -923,14 +923,14 @@ func (uuo *UserUpdateOne) AddSessions(s ...*Session) *UserUpdateOne {
 }
 
 // AddGroupIDs adds the "groups" edge to the Group entity by IDs.
-func (uuo *UserUpdateOne) AddGroupIDs(ids ...uuid.UUID) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddGroupIDs(ids ...nanox.ID) *UserUpdateOne {
 	uuo.mutation.AddGroupIDs(ids...)
 	return uuo
 }
 
 // AddGroups adds the "groups" edges to the Group entity.
 func (uuo *UserUpdateOne) AddGroups(g ...*Group) *UserUpdateOne {
-	ids := make([]uuid.UUID, len(g))
+	ids := make([]nanox.ID, len(g))
 	for i := range g {
 		ids[i] = g[i].ID
 	}
@@ -949,14 +949,14 @@ func (uuo *UserUpdateOne) ClearOrganizations() *UserUpdateOne {
 }
 
 // RemoveOrganizationIDs removes the "organizations" edge to Organization entities by IDs.
-func (uuo *UserUpdateOne) RemoveOrganizationIDs(ids ...uuid.UUID) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveOrganizationIDs(ids ...nanox.ID) *UserUpdateOne {
 	uuo.mutation.RemoveOrganizationIDs(ids...)
 	return uuo
 }
 
 // RemoveOrganizations removes "organizations" edges to Organization entities.
 func (uuo *UserUpdateOne) RemoveOrganizations(o ...*Organization) *UserUpdateOne {
-	ids := make([]uuid.UUID, len(o))
+	ids := make([]nanox.ID, len(o))
 	for i := range o {
 		ids[i] = o[i].ID
 	}
@@ -970,14 +970,14 @@ func (uuo *UserUpdateOne) ClearSessions() *UserUpdateOne {
 }
 
 // RemoveSessionIDs removes the "sessions" edge to Session entities by IDs.
-func (uuo *UserUpdateOne) RemoveSessionIDs(ids ...uuid.UUID) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveSessionIDs(ids ...nanox.ID) *UserUpdateOne {
 	uuo.mutation.RemoveSessionIDs(ids...)
 	return uuo
 }
 
 // RemoveSessions removes "sessions" edges to Session entities.
 func (uuo *UserUpdateOne) RemoveSessions(s ...*Session) *UserUpdateOne {
-	ids := make([]uuid.UUID, len(s))
+	ids := make([]nanox.ID, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
@@ -991,14 +991,14 @@ func (uuo *UserUpdateOne) ClearGroups() *UserUpdateOne {
 }
 
 // RemoveGroupIDs removes the "groups" edge to Group entities by IDs.
-func (uuo *UserUpdateOne) RemoveGroupIDs(ids ...uuid.UUID) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveGroupIDs(ids ...nanox.ID) *UserUpdateOne {
 	uuo.mutation.RemoveGroupIDs(ids...)
 	return uuo
 }
 
 // RemoveGroups removes "groups" edges to Group entities.
 func (uuo *UserUpdateOne) RemoveGroups(g ...*Group) *UserUpdateOne {
-	ids := make([]uuid.UUID, len(g))
+	ids := make([]nanox.ID, len(g))
 	for i := range g {
 		ids[i] = g[i].ID
 	}
@@ -1099,7 +1099,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	if err := uuo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID))
+	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeString))
 	id, ok := uuo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`generated: missing "User.id" for update`)}
@@ -1128,16 +1128,16 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if value, ok := uuo.mutation.CreatedBy(); ok {
-		_spec.SetField(user.FieldCreatedBy, field.TypeUUID, value)
+		_spec.SetField(user.FieldCreatedBy, field.TypeString, value)
 	}
 	if uuo.mutation.CreatedByCleared() {
-		_spec.ClearField(user.FieldCreatedBy, field.TypeUUID)
+		_spec.ClearField(user.FieldCreatedBy, field.TypeString)
 	}
 	if value, ok := uuo.mutation.UpdatedBy(); ok {
-		_spec.SetField(user.FieldUpdatedBy, field.TypeUUID, value)
+		_spec.SetField(user.FieldUpdatedBy, field.TypeString, value)
 	}
 	if uuo.mutation.UpdatedByCleared() {
-		_spec.ClearField(user.FieldUpdatedBy, field.TypeUUID)
+		_spec.ClearField(user.FieldUpdatedBy, field.TypeString)
 	}
 	if value, ok := uuo.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
@@ -1198,7 +1198,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: user.OrganizationsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(organization.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(organization.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uuo.schemaConfig.UserOrganizations
@@ -1212,7 +1212,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: user.OrganizationsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(organization.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(organization.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uuo.schemaConfig.UserOrganizations
@@ -1229,7 +1229,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: user.OrganizationsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(organization.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(organization.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uuo.schemaConfig.UserOrganizations
@@ -1246,7 +1246,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.SessionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(session.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(session.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uuo.schemaConfig.Session
@@ -1260,7 +1260,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.SessionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(session.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(session.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uuo.schemaConfig.Session
@@ -1277,7 +1277,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.SessionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(session.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(session.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uuo.schemaConfig.Session
@@ -1294,7 +1294,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: user.GroupsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(group.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(group.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uuo.schemaConfig.GroupUsers
@@ -1308,7 +1308,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: user.GroupsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(group.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(group.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uuo.schemaConfig.GroupUsers
@@ -1325,7 +1325,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: user.GroupsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(group.FieldID, field.TypeUUID),
+				IDSpec: sqlgraph.NewFieldSpec(group.FieldID, field.TypeString),
 			},
 		}
 		edge.Schema = uuo.schemaConfig.GroupUsers
