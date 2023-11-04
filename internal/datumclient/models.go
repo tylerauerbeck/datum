@@ -10,7 +10,7 @@ import (
 
 	"github.com/datumforge/datum/internal/ent/generated/groupsettings"
 	"github.com/datumforge/datum/internal/ent/generated/session"
-	"github.com/google/uuid"
+	"github.com/datumforge/datum/internal/nanox"
 )
 
 // CreateGroupInput is used for create Group object.
@@ -18,14 +18,14 @@ import (
 type CreateGroupInput struct {
 	CreatedAt   *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt   *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy   *uuid.UUID `json:"createdBy,omitempty"`
-	UpdatedBy   *uuid.UUID `json:"updatedBy,omitempty"`
+	CreatedBy   *string    `json:"createdBy,omitempty"`
+	UpdatedBy   *string    `json:"updatedBy,omitempty"`
 	Name        string     `json:"name"`
 	Description *string    `json:"description,omitempty"`
 	LogoURL     string     `json:"logoURL"`
-	SettingID   string     `json:"settingID"`
-	UserIDs     []string   `json:"userIDs,omitempty"`
-	OwnerID     *string    `json:"ownerID,omitempty"`
+	SettingID   nanox.ID   `json:"settingID"`
+	UserIDs     []nanox.ID `json:"userIDs,omitempty"`
+	OwnerID     *nanox.ID  `json:"ownerID,omitempty"`
 }
 
 // CreateGroupSettingsInput is used for create GroupSettings object.
@@ -33,8 +33,8 @@ type CreateGroupInput struct {
 type CreateGroupSettingsInput struct {
 	CreatedAt  *time.Time                `json:"createdAt,omitempty"`
 	UpdatedAt  *time.Time                `json:"updatedAt,omitempty"`
-	CreatedBy  *uuid.UUID                `json:"createdBy,omitempty"`
-	UpdatedBy  *uuid.UUID                `json:"updatedBy,omitempty"`
+	CreatedBy  *string                   `json:"createdBy,omitempty"`
+	UpdatedBy  *string                   `json:"updatedBy,omitempty"`
 	Visibility *groupsettings.Visibility `json:"visibility,omitempty"`
 	JoinPolicy *groupsettings.JoinPolicy `json:"joinPolicy,omitempty"`
 }
@@ -44,13 +44,13 @@ type CreateGroupSettingsInput struct {
 type CreateIntegrationInput struct {
 	CreatedAt   *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt   *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy   *uuid.UUID `json:"createdBy,omitempty"`
-	UpdatedBy   *uuid.UUID `json:"updatedBy,omitempty"`
+	CreatedBy   *string    `json:"createdBy,omitempty"`
+	UpdatedBy   *string    `json:"updatedBy,omitempty"`
 	Name        string     `json:"name"`
 	Kind        string     `json:"kind"`
 	Description *string    `json:"description,omitempty"`
 	SecretName  string     `json:"secretName"`
-	OwnerID     *string    `json:"ownerID,omitempty"`
+	OwnerID     *nanox.ID  `json:"ownerID,omitempty"`
 }
 
 // CreateOrganizationInput is used for create Organization object.
@@ -58,15 +58,15 @@ type CreateIntegrationInput struct {
 type CreateOrganizationInput struct {
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy *uuid.UUID `json:"createdBy,omitempty"`
-	UpdatedBy *uuid.UUID `json:"updatedBy,omitempty"`
+	CreatedBy *string    `json:"createdBy,omitempty"`
+	UpdatedBy *string    `json:"updatedBy,omitempty"`
 	Name      string     `json:"name"`
 	// An optional description of the Organization
-	Description    *string  `json:"description,omitempty"`
-	ParentID       *string  `json:"parentID,omitempty"`
-	UserIDs        []string `json:"userIDs,omitempty"`
-	GroupIDs       []string `json:"groupIDs,omitempty"`
-	IntegrationIDs []string `json:"integrationIDs,omitempty"`
+	Description    *string    `json:"description,omitempty"`
+	ParentID       *nanox.ID  `json:"parentID,omitempty"`
+	UserIDs        []nanox.ID `json:"userIDs,omitempty"`
+	GroupIDs       []nanox.ID `json:"groupIDs,omitempty"`
+	IntegrationIDs []nanox.ID `json:"integrationIDs,omitempty"`
 }
 
 // CreateSessionInput is used for create Session object.
@@ -74,8 +74,8 @@ type CreateOrganizationInput struct {
 type CreateSessionInput struct {
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy *uuid.UUID `json:"createdBy,omitempty"`
-	UpdatedBy *uuid.UUID `json:"updatedBy,omitempty"`
+	CreatedBy *string    `json:"createdBy,omitempty"`
+	UpdatedBy *string    `json:"updatedBy,omitempty"`
 	// Sessions can derrive from the local (password auth), oauth, or app_password
 	Type session.Type `json:"type"`
 	// The session may be disabled by the user or by automatic security policy
@@ -85,8 +85,8 @@ type CreateSessionInput struct {
 	// The last known user-agent
 	UserAgent *string `json:"userAgent,omitempty"`
 	// All IPs that have been associated with this session. Reverse-chronological order. The current IP is the first item in the slice
-	Ips     string  `json:"ips"`
-	UsersID *string `json:"usersID,omitempty"`
+	Ips     string    `json:"ips"`
+	UsersID *nanox.ID `json:"usersID,omitempty"`
 }
 
 // CreateUserInput is used for create User object.
@@ -94,8 +94,8 @@ type CreateSessionInput struct {
 type CreateUserInput struct {
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy *uuid.UUID `json:"createdBy,omitempty"`
-	UpdatedBy *uuid.UUID `json:"updatedBy,omitempty"`
+	CreatedBy *string    `json:"createdBy,omitempty"`
+	UpdatedBy *string    `json:"updatedBy,omitempty"`
 	Email     string     `json:"email"`
 	FirstName string     `json:"firstName"`
 	LastName  string     `json:"lastName"`
@@ -114,18 +114,18 @@ type CreateUserInput struct {
 	// The time the user was suspended
 	SuspendedAt *time.Time `json:"suspendedAt,omitempty"`
 	// local Actor password recovery code generated during account creation
-	RecoveryCode    *string  `json:"recoveryCode,omitempty"`
-	OrganizationIDs []string `json:"organizationIDs,omitempty"`
-	SessionIDs      []string `json:"sessionIDs,omitempty"`
-	GroupIDs        []string `json:"groupIDs,omitempty"`
+	RecoveryCode    *string    `json:"recoveryCode,omitempty"`
+	OrganizationIDs []nanox.ID `json:"organizationIDs,omitempty"`
+	SessionIDs      []nanox.ID `json:"sessionIDs,omitempty"`
+	GroupIDs        []nanox.ID `json:"groupIDs,omitempty"`
 }
 
 type Group struct {
-	ID          string        `json:"id"`
+	ID          nanox.ID      `json:"id"`
 	CreatedAt   time.Time     `json:"createdAt"`
 	UpdatedAt   time.Time     `json:"updatedAt"`
-	CreatedBy   *uuid.UUID    `json:"createdBy,omitempty"`
-	UpdatedBy   *uuid.UUID    `json:"updatedBy,omitempty"`
+	CreatedBy   *string       `json:"createdBy,omitempty"`
+	UpdatedBy   *string       `json:"updatedBy,omitempty"`
 	Name        string        `json:"name"`
 	Description string        `json:"description"`
 	LogoURL     string        `json:"logoURL"`
@@ -155,7 +155,7 @@ type GroupCreatePayload struct {
 // Return response for deleteGroup mutation
 type GroupDeletePayload struct {
 	// Deleted group ID
-	DeletedID string `json:"deletedID"`
+	DeletedID nanox.ID `json:"deletedID"`
 }
 
 // An edge in a connection.
@@ -175,11 +175,11 @@ type GroupOrder struct {
 }
 
 type GroupSettings struct {
-	ID         string                   `json:"id"`
+	ID         nanox.ID                 `json:"id"`
 	CreatedAt  time.Time                `json:"createdAt"`
 	UpdatedAt  time.Time                `json:"updatedAt"`
-	CreatedBy  *uuid.UUID               `json:"createdBy,omitempty"`
-	UpdatedBy  *uuid.UUID               `json:"updatedBy,omitempty"`
+	CreatedBy  *string                  `json:"createdBy,omitempty"`
+	UpdatedBy  *string                  `json:"updatedBy,omitempty"`
 	Visibility groupsettings.Visibility `json:"visibility"`
 	JoinPolicy groupsettings.JoinPolicy `json:"joinPolicy"`
 }
@@ -211,14 +211,14 @@ type GroupSettingsWhereInput struct {
 	And []*GroupSettingsWhereInput `json:"and,omitempty"`
 	Or  []*GroupSettingsWhereInput `json:"or,omitempty"`
 	// id field predicates
-	ID      *string  `json:"id,omitempty"`
-	IDNeq   *string  `json:"idNEQ,omitempty"`
-	IDIn    []string `json:"idIn,omitempty"`
-	IDNotIn []string `json:"idNotIn,omitempty"`
-	IDGt    *string  `json:"idGT,omitempty"`
-	IDGte   *string  `json:"idGTE,omitempty"`
-	IDLt    *string  `json:"idLT,omitempty"`
-	IDLte   *string  `json:"idLTE,omitempty"`
+	ID      *nanox.ID  `json:"id,omitempty"`
+	IDNeq   *nanox.ID  `json:"idNEQ,omitempty"`
+	IDIn    []nanox.ID `json:"idIn,omitempty"`
+	IDNotIn []nanox.ID `json:"idNotIn,omitempty"`
+	IDGt    *nanox.ID  `json:"idGT,omitempty"`
+	IDGte   *nanox.ID  `json:"idGTE,omitempty"`
+	IDLt    *nanox.ID  `json:"idLT,omitempty"`
+	IDLte   *nanox.ID  `json:"idLTE,omitempty"`
 	// created_at field predicates
 	CreatedAt      *time.Time   `json:"createdAt,omitempty"`
 	CreatedAtNeq   *time.Time   `json:"createdAtNEQ,omitempty"`
@@ -238,27 +238,37 @@ type GroupSettingsWhereInput struct {
 	UpdatedAtLt    *time.Time   `json:"updatedAtLT,omitempty"`
 	UpdatedAtLte   *time.Time   `json:"updatedAtLTE,omitempty"`
 	// created_by field predicates
-	CreatedBy       *uuid.UUID  `json:"createdBy,omitempty"`
-	CreatedByNeq    *uuid.UUID  `json:"createdByNEQ,omitempty"`
-	CreatedByIn     []uuid.UUID `json:"createdByIn,omitempty"`
-	CreatedByNotIn  []uuid.UUID `json:"createdByNotIn,omitempty"`
-	CreatedByGt     *uuid.UUID  `json:"createdByGT,omitempty"`
-	CreatedByGte    *uuid.UUID  `json:"createdByGTE,omitempty"`
-	CreatedByLt     *uuid.UUID  `json:"createdByLT,omitempty"`
-	CreatedByLte    *uuid.UUID  `json:"createdByLTE,omitempty"`
-	CreatedByIsNil  *bool       `json:"createdByIsNil,omitempty"`
-	CreatedByNotNil *bool       `json:"createdByNotNil,omitempty"`
+	CreatedBy             *string  `json:"createdBy,omitempty"`
+	CreatedByNeq          *string  `json:"createdByNEQ,omitempty"`
+	CreatedByIn           []string `json:"createdByIn,omitempty"`
+	CreatedByNotIn        []string `json:"createdByNotIn,omitempty"`
+	CreatedByGt           *string  `json:"createdByGT,omitempty"`
+	CreatedByGte          *string  `json:"createdByGTE,omitempty"`
+	CreatedByLt           *string  `json:"createdByLT,omitempty"`
+	CreatedByLte          *string  `json:"createdByLTE,omitempty"`
+	CreatedByContains     *string  `json:"createdByContains,omitempty"`
+	CreatedByHasPrefix    *string  `json:"createdByHasPrefix,omitempty"`
+	CreatedByHasSuffix    *string  `json:"createdByHasSuffix,omitempty"`
+	CreatedByIsNil        *bool    `json:"createdByIsNil,omitempty"`
+	CreatedByNotNil       *bool    `json:"createdByNotNil,omitempty"`
+	CreatedByEqualFold    *string  `json:"createdByEqualFold,omitempty"`
+	CreatedByContainsFold *string  `json:"createdByContainsFold,omitempty"`
 	// updated_by field predicates
-	UpdatedBy       *uuid.UUID  `json:"updatedBy,omitempty"`
-	UpdatedByNeq    *uuid.UUID  `json:"updatedByNEQ,omitempty"`
-	UpdatedByIn     []uuid.UUID `json:"updatedByIn,omitempty"`
-	UpdatedByNotIn  []uuid.UUID `json:"updatedByNotIn,omitempty"`
-	UpdatedByGt     *uuid.UUID  `json:"updatedByGT,omitempty"`
-	UpdatedByGte    *uuid.UUID  `json:"updatedByGTE,omitempty"`
-	UpdatedByLt     *uuid.UUID  `json:"updatedByLT,omitempty"`
-	UpdatedByLte    *uuid.UUID  `json:"updatedByLTE,omitempty"`
-	UpdatedByIsNil  *bool       `json:"updatedByIsNil,omitempty"`
-	UpdatedByNotNil *bool       `json:"updatedByNotNil,omitempty"`
+	UpdatedBy             *string  `json:"updatedBy,omitempty"`
+	UpdatedByNeq          *string  `json:"updatedByNEQ,omitempty"`
+	UpdatedByIn           []string `json:"updatedByIn,omitempty"`
+	UpdatedByNotIn        []string `json:"updatedByNotIn,omitempty"`
+	UpdatedByGt           *string  `json:"updatedByGT,omitempty"`
+	UpdatedByGte          *string  `json:"updatedByGTE,omitempty"`
+	UpdatedByLt           *string  `json:"updatedByLT,omitempty"`
+	UpdatedByLte          *string  `json:"updatedByLTE,omitempty"`
+	UpdatedByContains     *string  `json:"updatedByContains,omitempty"`
+	UpdatedByHasPrefix    *string  `json:"updatedByHasPrefix,omitempty"`
+	UpdatedByHasSuffix    *string  `json:"updatedByHasSuffix,omitempty"`
+	UpdatedByIsNil        *bool    `json:"updatedByIsNil,omitempty"`
+	UpdatedByNotNil       *bool    `json:"updatedByNotNil,omitempty"`
+	UpdatedByEqualFold    *string  `json:"updatedByEqualFold,omitempty"`
+	UpdatedByContainsFold *string  `json:"updatedByContainsFold,omitempty"`
 	// visibility field predicates
 	Visibility      *groupsettings.Visibility  `json:"visibility,omitempty"`
 	VisibilityNeq   *groupsettings.Visibility  `json:"visibilityNEQ,omitempty"`
@@ -284,14 +294,14 @@ type GroupWhereInput struct {
 	And []*GroupWhereInput `json:"and,omitempty"`
 	Or  []*GroupWhereInput `json:"or,omitempty"`
 	// id field predicates
-	ID      *string  `json:"id,omitempty"`
-	IDNeq   *string  `json:"idNEQ,omitempty"`
-	IDIn    []string `json:"idIn,omitempty"`
-	IDNotIn []string `json:"idNotIn,omitempty"`
-	IDGt    *string  `json:"idGT,omitempty"`
-	IDGte   *string  `json:"idGTE,omitempty"`
-	IDLt    *string  `json:"idLT,omitempty"`
-	IDLte   *string  `json:"idLTE,omitempty"`
+	ID      *nanox.ID  `json:"id,omitempty"`
+	IDNeq   *nanox.ID  `json:"idNEQ,omitempty"`
+	IDIn    []nanox.ID `json:"idIn,omitempty"`
+	IDNotIn []nanox.ID `json:"idNotIn,omitempty"`
+	IDGt    *nanox.ID  `json:"idGT,omitempty"`
+	IDGte   *nanox.ID  `json:"idGTE,omitempty"`
+	IDLt    *nanox.ID  `json:"idLT,omitempty"`
+	IDLte   *nanox.ID  `json:"idLTE,omitempty"`
 	// created_at field predicates
 	CreatedAt      *time.Time   `json:"createdAt,omitempty"`
 	CreatedAtNeq   *time.Time   `json:"createdAtNEQ,omitempty"`
@@ -311,27 +321,37 @@ type GroupWhereInput struct {
 	UpdatedAtLt    *time.Time   `json:"updatedAtLT,omitempty"`
 	UpdatedAtLte   *time.Time   `json:"updatedAtLTE,omitempty"`
 	// created_by field predicates
-	CreatedBy       *uuid.UUID  `json:"createdBy,omitempty"`
-	CreatedByNeq    *uuid.UUID  `json:"createdByNEQ,omitempty"`
-	CreatedByIn     []uuid.UUID `json:"createdByIn,omitempty"`
-	CreatedByNotIn  []uuid.UUID `json:"createdByNotIn,omitempty"`
-	CreatedByGt     *uuid.UUID  `json:"createdByGT,omitempty"`
-	CreatedByGte    *uuid.UUID  `json:"createdByGTE,omitempty"`
-	CreatedByLt     *uuid.UUID  `json:"createdByLT,omitempty"`
-	CreatedByLte    *uuid.UUID  `json:"createdByLTE,omitempty"`
-	CreatedByIsNil  *bool       `json:"createdByIsNil,omitempty"`
-	CreatedByNotNil *bool       `json:"createdByNotNil,omitempty"`
+	CreatedBy             *string  `json:"createdBy,omitempty"`
+	CreatedByNeq          *string  `json:"createdByNEQ,omitempty"`
+	CreatedByIn           []string `json:"createdByIn,omitempty"`
+	CreatedByNotIn        []string `json:"createdByNotIn,omitempty"`
+	CreatedByGt           *string  `json:"createdByGT,omitempty"`
+	CreatedByGte          *string  `json:"createdByGTE,omitempty"`
+	CreatedByLt           *string  `json:"createdByLT,omitempty"`
+	CreatedByLte          *string  `json:"createdByLTE,omitempty"`
+	CreatedByContains     *string  `json:"createdByContains,omitempty"`
+	CreatedByHasPrefix    *string  `json:"createdByHasPrefix,omitempty"`
+	CreatedByHasSuffix    *string  `json:"createdByHasSuffix,omitempty"`
+	CreatedByIsNil        *bool    `json:"createdByIsNil,omitempty"`
+	CreatedByNotNil       *bool    `json:"createdByNotNil,omitempty"`
+	CreatedByEqualFold    *string  `json:"createdByEqualFold,omitempty"`
+	CreatedByContainsFold *string  `json:"createdByContainsFold,omitempty"`
 	// updated_by field predicates
-	UpdatedBy       *uuid.UUID  `json:"updatedBy,omitempty"`
-	UpdatedByNeq    *uuid.UUID  `json:"updatedByNEQ,omitempty"`
-	UpdatedByIn     []uuid.UUID `json:"updatedByIn,omitempty"`
-	UpdatedByNotIn  []uuid.UUID `json:"updatedByNotIn,omitempty"`
-	UpdatedByGt     *uuid.UUID  `json:"updatedByGT,omitempty"`
-	UpdatedByGte    *uuid.UUID  `json:"updatedByGTE,omitempty"`
-	UpdatedByLt     *uuid.UUID  `json:"updatedByLT,omitempty"`
-	UpdatedByLte    *uuid.UUID  `json:"updatedByLTE,omitempty"`
-	UpdatedByIsNil  *bool       `json:"updatedByIsNil,omitempty"`
-	UpdatedByNotNil *bool       `json:"updatedByNotNil,omitempty"`
+	UpdatedBy             *string  `json:"updatedBy,omitempty"`
+	UpdatedByNeq          *string  `json:"updatedByNEQ,omitempty"`
+	UpdatedByIn           []string `json:"updatedByIn,omitempty"`
+	UpdatedByNotIn        []string `json:"updatedByNotIn,omitempty"`
+	UpdatedByGt           *string  `json:"updatedByGT,omitempty"`
+	UpdatedByGte          *string  `json:"updatedByGTE,omitempty"`
+	UpdatedByLt           *string  `json:"updatedByLT,omitempty"`
+	UpdatedByLte          *string  `json:"updatedByLTE,omitempty"`
+	UpdatedByContains     *string  `json:"updatedByContains,omitempty"`
+	UpdatedByHasPrefix    *string  `json:"updatedByHasPrefix,omitempty"`
+	UpdatedByHasSuffix    *string  `json:"updatedByHasSuffix,omitempty"`
+	UpdatedByIsNil        *bool    `json:"updatedByIsNil,omitempty"`
+	UpdatedByNotNil       *bool    `json:"updatedByNotNil,omitempty"`
+	UpdatedByEqualFold    *string  `json:"updatedByEqualFold,omitempty"`
+	UpdatedByContainsFold *string  `json:"updatedByContainsFold,omitempty"`
 	// name field predicates
 	Name             *string  `json:"name,omitempty"`
 	NameNeq          *string  `json:"nameNEQ,omitempty"`
@@ -358,11 +378,11 @@ type GroupWhereInput struct {
 }
 
 type Integration struct {
-	ID          string        `json:"id"`
+	ID          nanox.ID      `json:"id"`
 	CreatedAt   time.Time     `json:"createdAt"`
 	UpdatedAt   time.Time     `json:"updatedAt"`
-	CreatedBy   *uuid.UUID    `json:"createdBy,omitempty"`
-	UpdatedBy   *uuid.UUID    `json:"updatedBy,omitempty"`
+	CreatedBy   *string       `json:"createdBy,omitempty"`
+	UpdatedBy   *string       `json:"updatedBy,omitempty"`
 	Name        string        `json:"name"`
 	Kind        string        `json:"kind"`
 	Description *string       `json:"description,omitempty"`
@@ -391,7 +411,7 @@ type IntegrationCreatePayload struct {
 // Return response for deleteIntegration mutation
 type IntegrationDeletePayload struct {
 	// Deleted integration ID
-	DeletedID string `json:"deletedID"`
+	DeletedID nanox.ID `json:"deletedID"`
 }
 
 // An edge in a connection.
@@ -423,14 +443,14 @@ type IntegrationWhereInput struct {
 	And []*IntegrationWhereInput `json:"and,omitempty"`
 	Or  []*IntegrationWhereInput `json:"or,omitempty"`
 	// id field predicates
-	ID      *string  `json:"id,omitempty"`
-	IDNeq   *string  `json:"idNEQ,omitempty"`
-	IDIn    []string `json:"idIn,omitempty"`
-	IDNotIn []string `json:"idNotIn,omitempty"`
-	IDGt    *string  `json:"idGT,omitempty"`
-	IDGte   *string  `json:"idGTE,omitempty"`
-	IDLt    *string  `json:"idLT,omitempty"`
-	IDLte   *string  `json:"idLTE,omitempty"`
+	ID      *nanox.ID  `json:"id,omitempty"`
+	IDNeq   *nanox.ID  `json:"idNEQ,omitempty"`
+	IDIn    []nanox.ID `json:"idIn,omitempty"`
+	IDNotIn []nanox.ID `json:"idNotIn,omitempty"`
+	IDGt    *nanox.ID  `json:"idGT,omitempty"`
+	IDGte   *nanox.ID  `json:"idGTE,omitempty"`
+	IDLt    *nanox.ID  `json:"idLT,omitempty"`
+	IDLte   *nanox.ID  `json:"idLTE,omitempty"`
 	// created_at field predicates
 	CreatedAt      *time.Time   `json:"createdAt,omitempty"`
 	CreatedAtNeq   *time.Time   `json:"createdAtNEQ,omitempty"`
@@ -450,27 +470,37 @@ type IntegrationWhereInput struct {
 	UpdatedAtLt    *time.Time   `json:"updatedAtLT,omitempty"`
 	UpdatedAtLte   *time.Time   `json:"updatedAtLTE,omitempty"`
 	// created_by field predicates
-	CreatedBy       *uuid.UUID  `json:"createdBy,omitempty"`
-	CreatedByNeq    *uuid.UUID  `json:"createdByNEQ,omitempty"`
-	CreatedByIn     []uuid.UUID `json:"createdByIn,omitempty"`
-	CreatedByNotIn  []uuid.UUID `json:"createdByNotIn,omitempty"`
-	CreatedByGt     *uuid.UUID  `json:"createdByGT,omitempty"`
-	CreatedByGte    *uuid.UUID  `json:"createdByGTE,omitempty"`
-	CreatedByLt     *uuid.UUID  `json:"createdByLT,omitempty"`
-	CreatedByLte    *uuid.UUID  `json:"createdByLTE,omitempty"`
-	CreatedByIsNil  *bool       `json:"createdByIsNil,omitempty"`
-	CreatedByNotNil *bool       `json:"createdByNotNil,omitempty"`
+	CreatedBy             *string  `json:"createdBy,omitempty"`
+	CreatedByNeq          *string  `json:"createdByNEQ,omitempty"`
+	CreatedByIn           []string `json:"createdByIn,omitempty"`
+	CreatedByNotIn        []string `json:"createdByNotIn,omitempty"`
+	CreatedByGt           *string  `json:"createdByGT,omitempty"`
+	CreatedByGte          *string  `json:"createdByGTE,omitempty"`
+	CreatedByLt           *string  `json:"createdByLT,omitempty"`
+	CreatedByLte          *string  `json:"createdByLTE,omitempty"`
+	CreatedByContains     *string  `json:"createdByContains,omitempty"`
+	CreatedByHasPrefix    *string  `json:"createdByHasPrefix,omitempty"`
+	CreatedByHasSuffix    *string  `json:"createdByHasSuffix,omitempty"`
+	CreatedByIsNil        *bool    `json:"createdByIsNil,omitempty"`
+	CreatedByNotNil       *bool    `json:"createdByNotNil,omitempty"`
+	CreatedByEqualFold    *string  `json:"createdByEqualFold,omitempty"`
+	CreatedByContainsFold *string  `json:"createdByContainsFold,omitempty"`
 	// updated_by field predicates
-	UpdatedBy       *uuid.UUID  `json:"updatedBy,omitempty"`
-	UpdatedByNeq    *uuid.UUID  `json:"updatedByNEQ,omitempty"`
-	UpdatedByIn     []uuid.UUID `json:"updatedByIn,omitempty"`
-	UpdatedByNotIn  []uuid.UUID `json:"updatedByNotIn,omitempty"`
-	UpdatedByGt     *uuid.UUID  `json:"updatedByGT,omitempty"`
-	UpdatedByGte    *uuid.UUID  `json:"updatedByGTE,omitempty"`
-	UpdatedByLt     *uuid.UUID  `json:"updatedByLT,omitempty"`
-	UpdatedByLte    *uuid.UUID  `json:"updatedByLTE,omitempty"`
-	UpdatedByIsNil  *bool       `json:"updatedByIsNil,omitempty"`
-	UpdatedByNotNil *bool       `json:"updatedByNotNil,omitempty"`
+	UpdatedBy             *string  `json:"updatedBy,omitempty"`
+	UpdatedByNeq          *string  `json:"updatedByNEQ,omitempty"`
+	UpdatedByIn           []string `json:"updatedByIn,omitempty"`
+	UpdatedByNotIn        []string `json:"updatedByNotIn,omitempty"`
+	UpdatedByGt           *string  `json:"updatedByGT,omitempty"`
+	UpdatedByGte          *string  `json:"updatedByGTE,omitempty"`
+	UpdatedByLt           *string  `json:"updatedByLT,omitempty"`
+	UpdatedByLte          *string  `json:"updatedByLTE,omitempty"`
+	UpdatedByContains     *string  `json:"updatedByContains,omitempty"`
+	UpdatedByHasPrefix    *string  `json:"updatedByHasPrefix,omitempty"`
+	UpdatedByHasSuffix    *string  `json:"updatedByHasSuffix,omitempty"`
+	UpdatedByIsNil        *bool    `json:"updatedByIsNil,omitempty"`
+	UpdatedByNotNil       *bool    `json:"updatedByNotNil,omitempty"`
+	UpdatedByEqualFold    *string  `json:"updatedByEqualFold,omitempty"`
+	UpdatedByContainsFold *string  `json:"updatedByContainsFold,omitempty"`
 	// name field predicates
 	Name             *string  `json:"name,omitempty"`
 	NameNeq          *string  `json:"nameNEQ,omitempty"`
@@ -535,12 +565,12 @@ type IntegrationWhereInput struct {
 }
 
 type Organization struct {
-	ID        string     `json:"id"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt time.Time  `json:"updatedAt"`
-	CreatedBy *uuid.UUID `json:"createdBy,omitempty"`
-	UpdatedBy *uuid.UUID `json:"updatedBy,omitempty"`
-	Name      string     `json:"name"`
+	ID        nanox.ID  `json:"id"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+	CreatedBy *string   `json:"createdBy,omitempty"`
+	UpdatedBy *string   `json:"updatedBy,omitempty"`
+	Name      string    `json:"name"`
 	// An optional description of the Organization
 	Description  *string                `json:"description,omitempty"`
 	Parent       *Organization          `json:"parent,omitempty"`
@@ -571,7 +601,7 @@ type OrganizationCreatePayload struct {
 // Return response for deleteOrganization mutation
 type OrganizationDeletePayload struct {
 	// Deleted organization ID
-	DeletedID string `json:"deletedID"`
+	DeletedID nanox.ID `json:"deletedID"`
 }
 
 // An edge in a connection.
@@ -603,14 +633,14 @@ type OrganizationWhereInput struct {
 	And []*OrganizationWhereInput `json:"and,omitempty"`
 	Or  []*OrganizationWhereInput `json:"or,omitempty"`
 	// id field predicates
-	ID      *string  `json:"id,omitempty"`
-	IDNeq   *string  `json:"idNEQ,omitempty"`
-	IDIn    []string `json:"idIn,omitempty"`
-	IDNotIn []string `json:"idNotIn,omitempty"`
-	IDGt    *string  `json:"idGT,omitempty"`
-	IDGte   *string  `json:"idGTE,omitempty"`
-	IDLt    *string  `json:"idLT,omitempty"`
-	IDLte   *string  `json:"idLTE,omitempty"`
+	ID      *nanox.ID  `json:"id,omitempty"`
+	IDNeq   *nanox.ID  `json:"idNEQ,omitempty"`
+	IDIn    []nanox.ID `json:"idIn,omitempty"`
+	IDNotIn []nanox.ID `json:"idNotIn,omitempty"`
+	IDGt    *nanox.ID  `json:"idGT,omitempty"`
+	IDGte   *nanox.ID  `json:"idGTE,omitempty"`
+	IDLt    *nanox.ID  `json:"idLT,omitempty"`
+	IDLte   *nanox.ID  `json:"idLTE,omitempty"`
 	// created_at field predicates
 	CreatedAt      *time.Time   `json:"createdAt,omitempty"`
 	CreatedAtNeq   *time.Time   `json:"createdAtNEQ,omitempty"`
@@ -630,34 +660,53 @@ type OrganizationWhereInput struct {
 	UpdatedAtLt    *time.Time   `json:"updatedAtLT,omitempty"`
 	UpdatedAtLte   *time.Time   `json:"updatedAtLTE,omitempty"`
 	// created_by field predicates
-	CreatedBy       *uuid.UUID  `json:"createdBy,omitempty"`
-	CreatedByNeq    *uuid.UUID  `json:"createdByNEQ,omitempty"`
-	CreatedByIn     []uuid.UUID `json:"createdByIn,omitempty"`
-	CreatedByNotIn  []uuid.UUID `json:"createdByNotIn,omitempty"`
-	CreatedByGt     *uuid.UUID  `json:"createdByGT,omitempty"`
-	CreatedByGte    *uuid.UUID  `json:"createdByGTE,omitempty"`
-	CreatedByLt     *uuid.UUID  `json:"createdByLT,omitempty"`
-	CreatedByLte    *uuid.UUID  `json:"createdByLTE,omitempty"`
-	CreatedByIsNil  *bool       `json:"createdByIsNil,omitempty"`
-	CreatedByNotNil *bool       `json:"createdByNotNil,omitempty"`
+	CreatedBy             *string  `json:"createdBy,omitempty"`
+	CreatedByNeq          *string  `json:"createdByNEQ,omitempty"`
+	CreatedByIn           []string `json:"createdByIn,omitempty"`
+	CreatedByNotIn        []string `json:"createdByNotIn,omitempty"`
+	CreatedByGt           *string  `json:"createdByGT,omitempty"`
+	CreatedByGte          *string  `json:"createdByGTE,omitempty"`
+	CreatedByLt           *string  `json:"createdByLT,omitempty"`
+	CreatedByLte          *string  `json:"createdByLTE,omitempty"`
+	CreatedByContains     *string  `json:"createdByContains,omitempty"`
+	CreatedByHasPrefix    *string  `json:"createdByHasPrefix,omitempty"`
+	CreatedByHasSuffix    *string  `json:"createdByHasSuffix,omitempty"`
+	CreatedByIsNil        *bool    `json:"createdByIsNil,omitempty"`
+	CreatedByNotNil       *bool    `json:"createdByNotNil,omitempty"`
+	CreatedByEqualFold    *string  `json:"createdByEqualFold,omitempty"`
+	CreatedByContainsFold *string  `json:"createdByContainsFold,omitempty"`
 	// updated_by field predicates
-	UpdatedBy       *uuid.UUID  `json:"updatedBy,omitempty"`
-	UpdatedByNeq    *uuid.UUID  `json:"updatedByNEQ,omitempty"`
-	UpdatedByIn     []uuid.UUID `json:"updatedByIn,omitempty"`
-	UpdatedByNotIn  []uuid.UUID `json:"updatedByNotIn,omitempty"`
-	UpdatedByGt     *uuid.UUID  `json:"updatedByGT,omitempty"`
-	UpdatedByGte    *uuid.UUID  `json:"updatedByGTE,omitempty"`
-	UpdatedByLt     *uuid.UUID  `json:"updatedByLT,omitempty"`
-	UpdatedByLte    *uuid.UUID  `json:"updatedByLTE,omitempty"`
-	UpdatedByIsNil  *bool       `json:"updatedByIsNil,omitempty"`
-	UpdatedByNotNil *bool       `json:"updatedByNotNil,omitempty"`
+	UpdatedBy             *string  `json:"updatedBy,omitempty"`
+	UpdatedByNeq          *string  `json:"updatedByNEQ,omitempty"`
+	UpdatedByIn           []string `json:"updatedByIn,omitempty"`
+	UpdatedByNotIn        []string `json:"updatedByNotIn,omitempty"`
+	UpdatedByGt           *string  `json:"updatedByGT,omitempty"`
+	UpdatedByGte          *string  `json:"updatedByGTE,omitempty"`
+	UpdatedByLt           *string  `json:"updatedByLT,omitempty"`
+	UpdatedByLte          *string  `json:"updatedByLTE,omitempty"`
+	UpdatedByContains     *string  `json:"updatedByContains,omitempty"`
+	UpdatedByHasPrefix    *string  `json:"updatedByHasPrefix,omitempty"`
+	UpdatedByHasSuffix    *string  `json:"updatedByHasSuffix,omitempty"`
+	UpdatedByIsNil        *bool    `json:"updatedByIsNil,omitempty"`
+	UpdatedByNotNil       *bool    `json:"updatedByNotNil,omitempty"`
+	UpdatedByEqualFold    *string  `json:"updatedByEqualFold,omitempty"`
+	UpdatedByContainsFold *string  `json:"updatedByContainsFold,omitempty"`
 	// parent_organization_id field predicates
-	ParentOrganizationID       *string  `json:"parentOrganizationID,omitempty"`
-	ParentOrganizationIDNeq    *string  `json:"parentOrganizationIDNEQ,omitempty"`
-	ParentOrganizationIDIn     []string `json:"parentOrganizationIDIn,omitempty"`
-	ParentOrganizationIDNotIn  []string `json:"parentOrganizationIDNotIn,omitempty"`
-	ParentOrganizationIDIsNil  *bool    `json:"parentOrganizationIDIsNil,omitempty"`
-	ParentOrganizationIDNotNil *bool    `json:"parentOrganizationIDNotNil,omitempty"`
+	ParentOrganizationID             *nanox.ID  `json:"parentOrganizationID,omitempty"`
+	ParentOrganizationIDNeq          *nanox.ID  `json:"parentOrganizationIDNEQ,omitempty"`
+	ParentOrganizationIDIn           []nanox.ID `json:"parentOrganizationIDIn,omitempty"`
+	ParentOrganizationIDNotIn        []nanox.ID `json:"parentOrganizationIDNotIn,omitempty"`
+	ParentOrganizationIDGt           *nanox.ID  `json:"parentOrganizationIDGT,omitempty"`
+	ParentOrganizationIDGte          *nanox.ID  `json:"parentOrganizationIDGTE,omitempty"`
+	ParentOrganizationIDLt           *nanox.ID  `json:"parentOrganizationIDLT,omitempty"`
+	ParentOrganizationIDLte          *nanox.ID  `json:"parentOrganizationIDLTE,omitempty"`
+	ParentOrganizationIDContains     *nanox.ID  `json:"parentOrganizationIDContains,omitempty"`
+	ParentOrganizationIDHasPrefix    *nanox.ID  `json:"parentOrganizationIDHasPrefix,omitempty"`
+	ParentOrganizationIDHasSuffix    *nanox.ID  `json:"parentOrganizationIDHasSuffix,omitempty"`
+	ParentOrganizationIDIsNil        *bool      `json:"parentOrganizationIDIsNil,omitempty"`
+	ParentOrganizationIDNotNil       *bool      `json:"parentOrganizationIDNotNil,omitempty"`
+	ParentOrganizationIDEqualFold    *nanox.ID  `json:"parentOrganizationIDEqualFold,omitempty"`
+	ParentOrganizationIDContainsFold *nanox.ID  `json:"parentOrganizationIDContainsFold,omitempty"`
 	// parent edge predicates
 	HasParent     *bool                     `json:"hasParent,omitempty"`
 	HasParentWith []*OrganizationWhereInput `json:"hasParentWith,omitempty"`
@@ -689,11 +738,11 @@ type PageInfo struct {
 }
 
 type Session struct {
-	ID        string     `json:"id"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt time.Time  `json:"updatedAt"`
-	CreatedBy *uuid.UUID `json:"createdBy,omitempty"`
-	UpdatedBy *uuid.UUID `json:"updatedBy,omitempty"`
+	ID        nanox.ID  `json:"id"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+	CreatedBy *string   `json:"createdBy,omitempty"`
+	UpdatedBy *string   `json:"updatedBy,omitempty"`
 	// Sessions can derrive from the local (password auth), oauth, or app_password
 	Type session.Type `json:"type"`
 	// The session may be disabled by the user or by automatic security policy
@@ -729,7 +778,7 @@ type SessionCreatePayload struct {
 // Return response for deleteSession mutation
 type SessionDeletePayload struct {
 	// Deleted session ID
-	DeletedID string `json:"deletedID"`
+	DeletedID nanox.ID `json:"deletedID"`
 }
 
 // An edge in a connection.
@@ -753,14 +802,14 @@ type SessionWhereInput struct {
 	And []*SessionWhereInput `json:"and,omitempty"`
 	Or  []*SessionWhereInput `json:"or,omitempty"`
 	// id field predicates
-	ID      *string  `json:"id,omitempty"`
-	IDNeq   *string  `json:"idNEQ,omitempty"`
-	IDIn    []string `json:"idIn,omitempty"`
-	IDNotIn []string `json:"idNotIn,omitempty"`
-	IDGt    *string  `json:"idGT,omitempty"`
-	IDGte   *string  `json:"idGTE,omitempty"`
-	IDLt    *string  `json:"idLT,omitempty"`
-	IDLte   *string  `json:"idLTE,omitempty"`
+	ID      *nanox.ID  `json:"id,omitempty"`
+	IDNeq   *nanox.ID  `json:"idNEQ,omitempty"`
+	IDIn    []nanox.ID `json:"idIn,omitempty"`
+	IDNotIn []nanox.ID `json:"idNotIn,omitempty"`
+	IDGt    *nanox.ID  `json:"idGT,omitempty"`
+	IDGte   *nanox.ID  `json:"idGTE,omitempty"`
+	IDLt    *nanox.ID  `json:"idLT,omitempty"`
+	IDLte   *nanox.ID  `json:"idLTE,omitempty"`
 	// created_at field predicates
 	CreatedAt      *time.Time   `json:"createdAt,omitempty"`
 	CreatedAtNeq   *time.Time   `json:"createdAtNEQ,omitempty"`
@@ -780,27 +829,37 @@ type SessionWhereInput struct {
 	UpdatedAtLt    *time.Time   `json:"updatedAtLT,omitempty"`
 	UpdatedAtLte   *time.Time   `json:"updatedAtLTE,omitempty"`
 	// created_by field predicates
-	CreatedBy       *uuid.UUID  `json:"createdBy,omitempty"`
-	CreatedByNeq    *uuid.UUID  `json:"createdByNEQ,omitempty"`
-	CreatedByIn     []uuid.UUID `json:"createdByIn,omitempty"`
-	CreatedByNotIn  []uuid.UUID `json:"createdByNotIn,omitempty"`
-	CreatedByGt     *uuid.UUID  `json:"createdByGT,omitempty"`
-	CreatedByGte    *uuid.UUID  `json:"createdByGTE,omitempty"`
-	CreatedByLt     *uuid.UUID  `json:"createdByLT,omitempty"`
-	CreatedByLte    *uuid.UUID  `json:"createdByLTE,omitempty"`
-	CreatedByIsNil  *bool       `json:"createdByIsNil,omitempty"`
-	CreatedByNotNil *bool       `json:"createdByNotNil,omitempty"`
+	CreatedBy             *string  `json:"createdBy,omitempty"`
+	CreatedByNeq          *string  `json:"createdByNEQ,omitempty"`
+	CreatedByIn           []string `json:"createdByIn,omitempty"`
+	CreatedByNotIn        []string `json:"createdByNotIn,omitempty"`
+	CreatedByGt           *string  `json:"createdByGT,omitempty"`
+	CreatedByGte          *string  `json:"createdByGTE,omitempty"`
+	CreatedByLt           *string  `json:"createdByLT,omitempty"`
+	CreatedByLte          *string  `json:"createdByLTE,omitempty"`
+	CreatedByContains     *string  `json:"createdByContains,omitempty"`
+	CreatedByHasPrefix    *string  `json:"createdByHasPrefix,omitempty"`
+	CreatedByHasSuffix    *string  `json:"createdByHasSuffix,omitempty"`
+	CreatedByIsNil        *bool    `json:"createdByIsNil,omitempty"`
+	CreatedByNotNil       *bool    `json:"createdByNotNil,omitempty"`
+	CreatedByEqualFold    *string  `json:"createdByEqualFold,omitempty"`
+	CreatedByContainsFold *string  `json:"createdByContainsFold,omitempty"`
 	// updated_by field predicates
-	UpdatedBy       *uuid.UUID  `json:"updatedBy,omitempty"`
-	UpdatedByNeq    *uuid.UUID  `json:"updatedByNEQ,omitempty"`
-	UpdatedByIn     []uuid.UUID `json:"updatedByIn,omitempty"`
-	UpdatedByNotIn  []uuid.UUID `json:"updatedByNotIn,omitempty"`
-	UpdatedByGt     *uuid.UUID  `json:"updatedByGT,omitempty"`
-	UpdatedByGte    *uuid.UUID  `json:"updatedByGTE,omitempty"`
-	UpdatedByLt     *uuid.UUID  `json:"updatedByLT,omitempty"`
-	UpdatedByLte    *uuid.UUID  `json:"updatedByLTE,omitempty"`
-	UpdatedByIsNil  *bool       `json:"updatedByIsNil,omitempty"`
-	UpdatedByNotNil *bool       `json:"updatedByNotNil,omitempty"`
+	UpdatedBy             *string  `json:"updatedBy,omitempty"`
+	UpdatedByNeq          *string  `json:"updatedByNEQ,omitempty"`
+	UpdatedByIn           []string `json:"updatedByIn,omitempty"`
+	UpdatedByNotIn        []string `json:"updatedByNotIn,omitempty"`
+	UpdatedByGt           *string  `json:"updatedByGT,omitempty"`
+	UpdatedByGte          *string  `json:"updatedByGTE,omitempty"`
+	UpdatedByLt           *string  `json:"updatedByLT,omitempty"`
+	UpdatedByLte          *string  `json:"updatedByLTE,omitempty"`
+	UpdatedByContains     *string  `json:"updatedByContains,omitempty"`
+	UpdatedByHasPrefix    *string  `json:"updatedByHasPrefix,omitempty"`
+	UpdatedByHasSuffix    *string  `json:"updatedByHasSuffix,omitempty"`
+	UpdatedByIsNil        *bool    `json:"updatedByIsNil,omitempty"`
+	UpdatedByNotNil       *bool    `json:"updatedByNotNil,omitempty"`
+	UpdatedByEqualFold    *string  `json:"updatedByEqualFold,omitempty"`
+	UpdatedByContainsFold *string  `json:"updatedByContainsFold,omitempty"`
 	// type field predicates
 	Type      *session.Type  `json:"type,omitempty"`
 	TypeNeq   *session.Type  `json:"typeNEQ,omitempty"`
@@ -862,18 +921,18 @@ type SessionWhereInput struct {
 // Input was generated by ent.
 type UpdateGroupInput struct {
 	UpdatedAt      *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy      *uuid.UUID `json:"createdBy,omitempty"`
+	CreatedBy      *string    `json:"createdBy,omitempty"`
 	ClearCreatedBy *bool      `json:"clearCreatedBy,omitempty"`
-	UpdatedBy      *uuid.UUID `json:"updatedBy,omitempty"`
+	UpdatedBy      *string    `json:"updatedBy,omitempty"`
 	ClearUpdatedBy *bool      `json:"clearUpdatedBy,omitempty"`
 	Name           *string    `json:"name,omitempty"`
 	Description    *string    `json:"description,omitempty"`
 	LogoURL        *string    `json:"logoURL,omitempty"`
-	SettingID      *string    `json:"settingID,omitempty"`
-	AddUserIDs     []string   `json:"addUserIDs,omitempty"`
-	RemoveUserIDs  []string   `json:"removeUserIDs,omitempty"`
+	SettingID      *nanox.ID  `json:"settingID,omitempty"`
+	AddUserIDs     []nanox.ID `json:"addUserIDs,omitempty"`
+	RemoveUserIDs  []nanox.ID `json:"removeUserIDs,omitempty"`
 	ClearUsers     *bool      `json:"clearUsers,omitempty"`
-	OwnerID        *string    `json:"ownerID,omitempty"`
+	OwnerID        *nanox.ID  `json:"ownerID,omitempty"`
 	ClearOwner     *bool      `json:"clearOwner,omitempty"`
 }
 
@@ -881,9 +940,9 @@ type UpdateGroupInput struct {
 // Input was generated by ent.
 type UpdateGroupSettingsInput struct {
 	UpdatedAt      *time.Time                `json:"updatedAt,omitempty"`
-	CreatedBy      *uuid.UUID                `json:"createdBy,omitempty"`
+	CreatedBy      *string                   `json:"createdBy,omitempty"`
 	ClearCreatedBy *bool                     `json:"clearCreatedBy,omitempty"`
-	UpdatedBy      *uuid.UUID                `json:"updatedBy,omitempty"`
+	UpdatedBy      *string                   `json:"updatedBy,omitempty"`
 	ClearUpdatedBy *bool                     `json:"clearUpdatedBy,omitempty"`
 	Visibility     *groupsettings.Visibility `json:"visibility,omitempty"`
 	JoinPolicy     *groupsettings.JoinPolicy `json:"joinPolicy,omitempty"`
@@ -893,14 +952,14 @@ type UpdateGroupSettingsInput struct {
 // Input was generated by ent.
 type UpdateIntegrationInput struct {
 	UpdatedAt        *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy        *uuid.UUID `json:"createdBy,omitempty"`
+	CreatedBy        *string    `json:"createdBy,omitempty"`
 	ClearCreatedBy   *bool      `json:"clearCreatedBy,omitempty"`
-	UpdatedBy        *uuid.UUID `json:"updatedBy,omitempty"`
+	UpdatedBy        *string    `json:"updatedBy,omitempty"`
 	ClearUpdatedBy   *bool      `json:"clearUpdatedBy,omitempty"`
 	Name             *string    `json:"name,omitempty"`
 	Description      *string    `json:"description,omitempty"`
 	ClearDescription *bool      `json:"clearDescription,omitempty"`
-	OwnerID          *string    `json:"ownerID,omitempty"`
+	OwnerID          *nanox.ID  `json:"ownerID,omitempty"`
 	ClearOwner       *bool      `json:"clearOwner,omitempty"`
 }
 
@@ -908,32 +967,32 @@ type UpdateIntegrationInput struct {
 // Input was generated by ent.
 type UpdateOrganizationInput struct {
 	UpdatedAt      *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy      *uuid.UUID `json:"createdBy,omitempty"`
+	CreatedBy      *string    `json:"createdBy,omitempty"`
 	ClearCreatedBy *bool      `json:"clearCreatedBy,omitempty"`
-	UpdatedBy      *uuid.UUID `json:"updatedBy,omitempty"`
+	UpdatedBy      *string    `json:"updatedBy,omitempty"`
 	ClearUpdatedBy *bool      `json:"clearUpdatedBy,omitempty"`
 	Name           *string    `json:"name,omitempty"`
 	// An optional description of the Organization
-	Description          *string  `json:"description,omitempty"`
-	ClearDescription     *bool    `json:"clearDescription,omitempty"`
-	AddUserIDs           []string `json:"addUserIDs,omitempty"`
-	RemoveUserIDs        []string `json:"removeUserIDs,omitempty"`
-	ClearUsers           *bool    `json:"clearUsers,omitempty"`
-	AddGroupIDs          []string `json:"addGroupIDs,omitempty"`
-	RemoveGroupIDs       []string `json:"removeGroupIDs,omitempty"`
-	ClearGroups          *bool    `json:"clearGroups,omitempty"`
-	AddIntegrationIDs    []string `json:"addIntegrationIDs,omitempty"`
-	RemoveIntegrationIDs []string `json:"removeIntegrationIDs,omitempty"`
-	ClearIntegrations    *bool    `json:"clearIntegrations,omitempty"`
+	Description          *string    `json:"description,omitempty"`
+	ClearDescription     *bool      `json:"clearDescription,omitempty"`
+	AddUserIDs           []nanox.ID `json:"addUserIDs,omitempty"`
+	RemoveUserIDs        []nanox.ID `json:"removeUserIDs,omitempty"`
+	ClearUsers           *bool      `json:"clearUsers,omitempty"`
+	AddGroupIDs          []nanox.ID `json:"addGroupIDs,omitempty"`
+	RemoveGroupIDs       []nanox.ID `json:"removeGroupIDs,omitempty"`
+	ClearGroups          *bool      `json:"clearGroups,omitempty"`
+	AddIntegrationIDs    []nanox.ID `json:"addIntegrationIDs,omitempty"`
+	RemoveIntegrationIDs []nanox.ID `json:"removeIntegrationIDs,omitempty"`
+	ClearIntegrations    *bool      `json:"clearIntegrations,omitempty"`
 }
 
 // UpdateSessionInput is used for update Session object.
 // Input was generated by ent.
 type UpdateSessionInput struct {
 	UpdatedAt      *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy      *uuid.UUID `json:"createdBy,omitempty"`
+	CreatedBy      *string    `json:"createdBy,omitempty"`
 	ClearCreatedBy *bool      `json:"clearCreatedBy,omitempty"`
-	UpdatedBy      *uuid.UUID `json:"updatedBy,omitempty"`
+	UpdatedBy      *string    `json:"updatedBy,omitempty"`
 	ClearUpdatedBy *bool      `json:"clearUpdatedBy,omitempty"`
 	// The session may be disabled by the user or by automatic security policy
 	Disabled *bool `json:"disabled,omitempty"`
@@ -941,18 +1000,18 @@ type UpdateSessionInput struct {
 	UserAgent      *string `json:"userAgent,omitempty"`
 	ClearUserAgent *bool   `json:"clearUserAgent,omitempty"`
 	// All IPs that have been associated with this session. Reverse-chronological order. The current IP is the first item in the slice
-	Ips        *string `json:"ips,omitempty"`
-	UsersID    *string `json:"usersID,omitempty"`
-	ClearUsers *bool   `json:"clearUsers,omitempty"`
+	Ips        *string   `json:"ips,omitempty"`
+	UsersID    *nanox.ID `json:"usersID,omitempty"`
+	ClearUsers *bool     `json:"clearUsers,omitempty"`
 }
 
 // UpdateUserInput is used for update User object.
 // Input was generated by ent.
 type UpdateUserInput struct {
 	UpdatedAt      *time.Time `json:"updatedAt,omitempty"`
-	CreatedBy      *uuid.UUID `json:"createdBy,omitempty"`
+	CreatedBy      *string    `json:"createdBy,omitempty"`
 	ClearCreatedBy *bool      `json:"clearCreatedBy,omitempty"`
-	UpdatedBy      *uuid.UUID `json:"updatedBy,omitempty"`
+	UpdatedBy      *string    `json:"updatedBy,omitempty"`
 	ClearUpdatedBy *bool      `json:"clearUpdatedBy,omitempty"`
 	Email          *string    `json:"email,omitempty"`
 	FirstName      *string    `json:"firstName,omitempty"`
@@ -977,28 +1036,28 @@ type UpdateUserInput struct {
 	SuspendedAt      *time.Time `json:"suspendedAt,omitempty"`
 	ClearSuspendedAt *bool      `json:"clearSuspendedAt,omitempty"`
 	// local Actor password recovery code generated during account creation
-	RecoveryCode          *string  `json:"recoveryCode,omitempty"`
-	ClearRecoveryCode     *bool    `json:"clearRecoveryCode,omitempty"`
-	AddOrganizationIDs    []string `json:"addOrganizationIDs,omitempty"`
-	RemoveOrganizationIDs []string `json:"removeOrganizationIDs,omitempty"`
-	ClearOrganizations    *bool    `json:"clearOrganizations,omitempty"`
-	AddSessionIDs         []string `json:"addSessionIDs,omitempty"`
-	RemoveSessionIDs      []string `json:"removeSessionIDs,omitempty"`
-	ClearSessions         *bool    `json:"clearSessions,omitempty"`
-	AddGroupIDs           []string `json:"addGroupIDs,omitempty"`
-	RemoveGroupIDs        []string `json:"removeGroupIDs,omitempty"`
-	ClearGroups           *bool    `json:"clearGroups,omitempty"`
+	RecoveryCode          *string    `json:"recoveryCode,omitempty"`
+	ClearRecoveryCode     *bool      `json:"clearRecoveryCode,omitempty"`
+	AddOrganizationIDs    []nanox.ID `json:"addOrganizationIDs,omitempty"`
+	RemoveOrganizationIDs []nanox.ID `json:"removeOrganizationIDs,omitempty"`
+	ClearOrganizations    *bool      `json:"clearOrganizations,omitempty"`
+	AddSessionIDs         []nanox.ID `json:"addSessionIDs,omitempty"`
+	RemoveSessionIDs      []nanox.ID `json:"removeSessionIDs,omitempty"`
+	ClearSessions         *bool      `json:"clearSessions,omitempty"`
+	AddGroupIDs           []nanox.ID `json:"addGroupIDs,omitempty"`
+	RemoveGroupIDs        []nanox.ID `json:"removeGroupIDs,omitempty"`
+	ClearGroups           *bool      `json:"clearGroups,omitempty"`
 }
 
 type User struct {
-	ID        string     `json:"id"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt time.Time  `json:"updatedAt"`
-	CreatedBy *uuid.UUID `json:"createdBy,omitempty"`
-	UpdatedBy *uuid.UUID `json:"updatedBy,omitempty"`
-	Email     string     `json:"email"`
-	FirstName string     `json:"firstName"`
-	LastName  string     `json:"lastName"`
+	ID        nanox.ID  `json:"id"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+	CreatedBy *string   `json:"createdBy,omitempty"`
+	UpdatedBy *string   `json:"updatedBy,omitempty"`
+	Email     string    `json:"email"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
 	// The user's displayed 'friendly' name
 	DisplayName string `json:"displayName"`
 	// user account is locked if unconfirmed or explicitly locked
@@ -1039,7 +1098,7 @@ type UserCreatePayload struct {
 // Return response for deleteUser mutation
 type UserDeletePayload struct {
 	// Deleted user ID
-	DeletedID string `json:"deletedID"`
+	DeletedID nanox.ID `json:"deletedID"`
 }
 
 // An edge in a connection.
@@ -1071,14 +1130,14 @@ type UserWhereInput struct {
 	And []*UserWhereInput `json:"and,omitempty"`
 	Or  []*UserWhereInput `json:"or,omitempty"`
 	// id field predicates
-	ID      *string  `json:"id,omitempty"`
-	IDNeq   *string  `json:"idNEQ,omitempty"`
-	IDIn    []string `json:"idIn,omitempty"`
-	IDNotIn []string `json:"idNotIn,omitempty"`
-	IDGt    *string  `json:"idGT,omitempty"`
-	IDGte   *string  `json:"idGTE,omitempty"`
-	IDLt    *string  `json:"idLT,omitempty"`
-	IDLte   *string  `json:"idLTE,omitempty"`
+	ID      *nanox.ID  `json:"id,omitempty"`
+	IDNeq   *nanox.ID  `json:"idNEQ,omitempty"`
+	IDIn    []nanox.ID `json:"idIn,omitempty"`
+	IDNotIn []nanox.ID `json:"idNotIn,omitempty"`
+	IDGt    *nanox.ID  `json:"idGT,omitempty"`
+	IDGte   *nanox.ID  `json:"idGTE,omitempty"`
+	IDLt    *nanox.ID  `json:"idLT,omitempty"`
+	IDLte   *nanox.ID  `json:"idLTE,omitempty"`
 	// created_at field predicates
 	CreatedAt      *time.Time   `json:"createdAt,omitempty"`
 	CreatedAtNeq   *time.Time   `json:"createdAtNEQ,omitempty"`
@@ -1098,27 +1157,37 @@ type UserWhereInput struct {
 	UpdatedAtLt    *time.Time   `json:"updatedAtLT,omitempty"`
 	UpdatedAtLte   *time.Time   `json:"updatedAtLTE,omitempty"`
 	// created_by field predicates
-	CreatedBy       *uuid.UUID  `json:"createdBy,omitempty"`
-	CreatedByNeq    *uuid.UUID  `json:"createdByNEQ,omitempty"`
-	CreatedByIn     []uuid.UUID `json:"createdByIn,omitempty"`
-	CreatedByNotIn  []uuid.UUID `json:"createdByNotIn,omitempty"`
-	CreatedByGt     *uuid.UUID  `json:"createdByGT,omitempty"`
-	CreatedByGte    *uuid.UUID  `json:"createdByGTE,omitempty"`
-	CreatedByLt     *uuid.UUID  `json:"createdByLT,omitempty"`
-	CreatedByLte    *uuid.UUID  `json:"createdByLTE,omitempty"`
-	CreatedByIsNil  *bool       `json:"createdByIsNil,omitempty"`
-	CreatedByNotNil *bool       `json:"createdByNotNil,omitempty"`
+	CreatedBy             *string  `json:"createdBy,omitempty"`
+	CreatedByNeq          *string  `json:"createdByNEQ,omitempty"`
+	CreatedByIn           []string `json:"createdByIn,omitempty"`
+	CreatedByNotIn        []string `json:"createdByNotIn,omitempty"`
+	CreatedByGt           *string  `json:"createdByGT,omitempty"`
+	CreatedByGte          *string  `json:"createdByGTE,omitempty"`
+	CreatedByLt           *string  `json:"createdByLT,omitempty"`
+	CreatedByLte          *string  `json:"createdByLTE,omitempty"`
+	CreatedByContains     *string  `json:"createdByContains,omitempty"`
+	CreatedByHasPrefix    *string  `json:"createdByHasPrefix,omitempty"`
+	CreatedByHasSuffix    *string  `json:"createdByHasSuffix,omitempty"`
+	CreatedByIsNil        *bool    `json:"createdByIsNil,omitempty"`
+	CreatedByNotNil       *bool    `json:"createdByNotNil,omitempty"`
+	CreatedByEqualFold    *string  `json:"createdByEqualFold,omitempty"`
+	CreatedByContainsFold *string  `json:"createdByContainsFold,omitempty"`
 	// updated_by field predicates
-	UpdatedBy       *uuid.UUID  `json:"updatedBy,omitempty"`
-	UpdatedByNeq    *uuid.UUID  `json:"updatedByNEQ,omitempty"`
-	UpdatedByIn     []uuid.UUID `json:"updatedByIn,omitempty"`
-	UpdatedByNotIn  []uuid.UUID `json:"updatedByNotIn,omitempty"`
-	UpdatedByGt     *uuid.UUID  `json:"updatedByGT,omitempty"`
-	UpdatedByGte    *uuid.UUID  `json:"updatedByGTE,omitempty"`
-	UpdatedByLt     *uuid.UUID  `json:"updatedByLT,omitempty"`
-	UpdatedByLte    *uuid.UUID  `json:"updatedByLTE,omitempty"`
-	UpdatedByIsNil  *bool       `json:"updatedByIsNil,omitempty"`
-	UpdatedByNotNil *bool       `json:"updatedByNotNil,omitempty"`
+	UpdatedBy             *string  `json:"updatedBy,omitempty"`
+	UpdatedByNeq          *string  `json:"updatedByNEQ,omitempty"`
+	UpdatedByIn           []string `json:"updatedByIn,omitempty"`
+	UpdatedByNotIn        []string `json:"updatedByNotIn,omitempty"`
+	UpdatedByGt           *string  `json:"updatedByGT,omitempty"`
+	UpdatedByGte          *string  `json:"updatedByGTE,omitempty"`
+	UpdatedByLt           *string  `json:"updatedByLT,omitempty"`
+	UpdatedByLte          *string  `json:"updatedByLTE,omitempty"`
+	UpdatedByContains     *string  `json:"updatedByContains,omitempty"`
+	UpdatedByHasPrefix    *string  `json:"updatedByHasPrefix,omitempty"`
+	UpdatedByHasSuffix    *string  `json:"updatedByHasSuffix,omitempty"`
+	UpdatedByIsNil        *bool    `json:"updatedByIsNil,omitempty"`
+	UpdatedByNotNil       *bool    `json:"updatedByNotNil,omitempty"`
+	UpdatedByEqualFold    *string  `json:"updatedByEqualFold,omitempty"`
+	UpdatedByContainsFold *string  `json:"updatedByContainsFold,omitempty"`
 	// email field predicates
 	Email             *string  `json:"email,omitempty"`
 	EmailNeq          *string  `json:"emailNEQ,omitempty"`

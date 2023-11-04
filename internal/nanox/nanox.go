@@ -7,7 +7,6 @@ import (
 	"io"
 	"strconv"
 
-	"github.com/99designs/gqlgen/graphql"
 	"github.com/jaevor/go-nanoid"
 )
 
@@ -38,15 +37,14 @@ func MustGetNewID() ID {
 	return v
 }
 
-// MarshalID implements the graphql.Marshaler interface
-func MarshalID(u ID) graphql.Marshaler {
-	return graphql.WriterFunc(func(w io.Writer) {
-		_, _ = io.WriteString(w, strconv.Quote(string(u)))
-	})
+// MarshalGQL implements the graphql.Marshaler interface
+func (u ID) MarshalGQL(w io.Writer) {
+	// graphql ID is a scalar which must be quoted
+	io.WriteString(w, strconv.Quote(string(u))) //nolint:errcheck
 }
 
-// UnmarshalID implements the graphql.Unmarshaler interface
-func (u *ID) UnmarshalID(v interface{}) error {
+// UnmarshalGQL implements the graphql.Unmarshaler interface
+func (u *ID) UnmarshalGQL(v interface{}) error {
 	return u.Scan(v)
 }
 

@@ -13,7 +13,6 @@ require (
 	github.com/go-faster/errors v0.6.1
 	github.com/go-faster/jx v1.1.0
 	github.com/golang-jwt/jwt/v5 v5.0.0
-	github.com/google/uuid v1.4.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/jaevor/go-nanoid v1.3.0
 	github.com/labstack/echo-jwt/v4 v4.2.0
@@ -35,6 +34,7 @@ require (
 
 require (
 	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
+	github.com/google/uuid v1.4.0 // indirect
 	github.com/stoewer/go-strcase v1.2.0 // indirect
 )
 

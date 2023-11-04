@@ -19,7 +19,7 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated"
 	"github.com/datumforge/datum/internal/ent/generated/groupsettings"
 	"github.com/datumforge/datum/internal/ent/generated/session"
-	"github.com/google/uuid"
+	"github.com/datumforge/datum/internal/nanox"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -152,20 +152,20 @@ type ComplexityRoot struct {
 		CreateOrganization func(childComplexity int, input generated.CreateOrganizationInput) int
 		CreateSession      func(childComplexity int, input generated.CreateSessionInput) int
 		CreateUser         func(childComplexity int, input generated.CreateUserInput) int
-		DeleteGroup        func(childComplexity int, id uuid.UUID) int
-		DeleteIntegration  func(childComplexity int, id uuid.UUID) int
-		DeleteOrganization func(childComplexity int, id uuid.UUID) int
-		DeleteSession      func(childComplexity int, id uuid.UUID) int
-		DeleteUser         func(childComplexity int, id uuid.UUID) int
-		UpdateGroup        func(childComplexity int, id uuid.UUID, input generated.UpdateGroupInput) int
-		UpdateIntegration  func(childComplexity int, id uuid.UUID, input generated.UpdateIntegrationInput) int
-		UpdateOrganization func(childComplexity int, id uuid.UUID, input generated.UpdateOrganizationInput) int
-		UpdateSession      func(childComplexity int, id uuid.UUID, input generated.UpdateSessionInput) int
-		UpdateUser         func(childComplexity int, id uuid.UUID, input generated.UpdateUserInput) int
+		DeleteGroup        func(childComplexity int, id nanox.ID) int
+		DeleteIntegration  func(childComplexity int, id nanox.ID) int
+		DeleteOrganization func(childComplexity int, id nanox.ID) int
+		DeleteSession      func(childComplexity int, id nanox.ID) int
+		DeleteUser         func(childComplexity int, id nanox.ID) int
+		UpdateGroup        func(childComplexity int, id nanox.ID, input generated.UpdateGroupInput) int
+		UpdateIntegration  func(childComplexity int, id nanox.ID, input generated.UpdateIntegrationInput) int
+		UpdateOrganization func(childComplexity int, id nanox.ID, input generated.UpdateOrganizationInput) int
+		UpdateSession      func(childComplexity int, id nanox.ID, input generated.UpdateSessionInput) int
+		UpdateUser         func(childComplexity int, id nanox.ID, input generated.UpdateUserInput) int
 	}
 
 	Organization struct {
-		Children     func(childComplexity int, after *entgql.Cursor[uuid.UUID], first *int, before *entgql.Cursor[uuid.UUID], last *int, orderBy *generated.OrganizationOrder, where *generated.OrganizationWhereInput) int
+		Children     func(childComplexity int, after *entgql.Cursor[nanox.ID], first *int, before *entgql.Cursor[nanox.ID], last *int, orderBy *generated.OrganizationOrder, where *generated.OrganizationWhereInput) int
 		CreatedAt    func(childComplexity int) int
 		CreatedBy    func(childComplexity int) int
 		Description  func(childComplexity int) int
@@ -210,19 +210,19 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Group              func(childComplexity int, id uuid.UUID) int
-		GroupSettingsSlice func(childComplexity int, after *entgql.Cursor[uuid.UUID], first *int, before *entgql.Cursor[uuid.UUID], last *int, where *generated.GroupSettingsWhereInput) int
-		Groups             func(childComplexity int, after *entgql.Cursor[uuid.UUID], first *int, before *entgql.Cursor[uuid.UUID], last *int, orderBy *generated.GroupOrder, where *generated.GroupWhereInput) int
-		Integration        func(childComplexity int, id uuid.UUID) int
-		Integrations       func(childComplexity int, after *entgql.Cursor[uuid.UUID], first *int, before *entgql.Cursor[uuid.UUID], last *int, orderBy *generated.IntegrationOrder, where *generated.IntegrationWhereInput) int
-		Node               func(childComplexity int, id uuid.UUID) int
-		Nodes              func(childComplexity int, ids []uuid.UUID) int
-		Organization       func(childComplexity int, id uuid.UUID) int
-		Organizations      func(childComplexity int, after *entgql.Cursor[uuid.UUID], first *int, before *entgql.Cursor[uuid.UUID], last *int, orderBy *generated.OrganizationOrder, where *generated.OrganizationWhereInput) int
-		Session            func(childComplexity int, id uuid.UUID) int
-		Sessions           func(childComplexity int, after *entgql.Cursor[uuid.UUID], first *int, before *entgql.Cursor[uuid.UUID], last *int, where *generated.SessionWhereInput) int
-		User               func(childComplexity int, id uuid.UUID) int
-		Users              func(childComplexity int, after *entgql.Cursor[uuid.UUID], first *int, before *entgql.Cursor[uuid.UUID], last *int, orderBy *generated.UserOrder, where *generated.UserWhereInput) int
+		Group              func(childComplexity int, id nanox.ID) int
+		GroupSettingsSlice func(childComplexity int, after *entgql.Cursor[nanox.ID], first *int, before *entgql.Cursor[nanox.ID], last *int, where *generated.GroupSettingsWhereInput) int
+		Groups             func(childComplexity int, after *entgql.Cursor[nanox.ID], first *int, before *entgql.Cursor[nanox.ID], last *int, orderBy *generated.GroupOrder, where *generated.GroupWhereInput) int
+		Integration        func(childComplexity int, id nanox.ID) int
+		Integrations       func(childComplexity int, after *entgql.Cursor[nanox.ID], first *int, before *entgql.Cursor[nanox.ID], last *int, orderBy *generated.IntegrationOrder, where *generated.IntegrationWhereInput) int
+		Node               func(childComplexity int, id nanox.ID) int
+		Nodes              func(childComplexity int, ids []nanox.ID) int
+		Organization       func(childComplexity int, id nanox.ID) int
+		Organizations      func(childComplexity int, after *entgql.Cursor[nanox.ID], first *int, before *entgql.Cursor[nanox.ID], last *int, orderBy *generated.OrganizationOrder, where *generated.OrganizationWhereInput) int
+		Session            func(childComplexity int, id nanox.ID) int
+		Sessions           func(childComplexity int, after *entgql.Cursor[nanox.ID], first *int, before *entgql.Cursor[nanox.ID], last *int, where *generated.SessionWhereInput) int
+		User               func(childComplexity int, id nanox.ID) int
+		Users              func(childComplexity int, after *entgql.Cursor[nanox.ID], first *int, before *entgql.Cursor[nanox.ID], last *int, orderBy *generated.UserOrder, where *generated.UserWhereInput) int
 		__resolve__service func(childComplexity int) int
 	}
 
@@ -314,35 +314,35 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateGroup(ctx context.Context, input generated.CreateGroupInput) (*GroupCreatePayload, error)
-	UpdateGroup(ctx context.Context, id uuid.UUID, input generated.UpdateGroupInput) (*GroupUpdatePayload, error)
-	DeleteGroup(ctx context.Context, id uuid.UUID) (*GroupDeletePayload, error)
+	UpdateGroup(ctx context.Context, id nanox.ID, input generated.UpdateGroupInput) (*GroupUpdatePayload, error)
+	DeleteGroup(ctx context.Context, id nanox.ID) (*GroupDeletePayload, error)
 	CreateIntegration(ctx context.Context, input generated.CreateIntegrationInput) (*IntegrationCreatePayload, error)
-	UpdateIntegration(ctx context.Context, id uuid.UUID, input generated.UpdateIntegrationInput) (*IntegrationUpdatePayload, error)
-	DeleteIntegration(ctx context.Context, id uuid.UUID) (*IntegrationDeletePayload, error)
+	UpdateIntegration(ctx context.Context, id nanox.ID, input generated.UpdateIntegrationInput) (*IntegrationUpdatePayload, error)
+	DeleteIntegration(ctx context.Context, id nanox.ID) (*IntegrationDeletePayload, error)
 	CreateOrganization(ctx context.Context, input generated.CreateOrganizationInput) (*OrganizationCreatePayload, error)
-	UpdateOrganization(ctx context.Context, id uuid.UUID, input generated.UpdateOrganizationInput) (*OrganizationUpdatePayload, error)
-	DeleteOrganization(ctx context.Context, id uuid.UUID) (*OrganizationDeletePayload, error)
+	UpdateOrganization(ctx context.Context, id nanox.ID, input generated.UpdateOrganizationInput) (*OrganizationUpdatePayload, error)
+	DeleteOrganization(ctx context.Context, id nanox.ID) (*OrganizationDeletePayload, error)
 	CreateSession(ctx context.Context, input generated.CreateSessionInput) (*SessionCreatePayload, error)
-	UpdateSession(ctx context.Context, id uuid.UUID, input generated.UpdateSessionInput) (*SessionUpdatePayload, error)
-	DeleteSession(ctx context.Context, id uuid.UUID) (*SessionDeletePayload, error)
+	UpdateSession(ctx context.Context, id nanox.ID, input generated.UpdateSessionInput) (*SessionUpdatePayload, error)
+	DeleteSession(ctx context.Context, id nanox.ID) (*SessionDeletePayload, error)
 	CreateUser(ctx context.Context, input generated.CreateUserInput) (*UserCreatePayload, error)
-	UpdateUser(ctx context.Context, id uuid.UUID, input generated.UpdateUserInput) (*UserUpdatePayload, error)
-	DeleteUser(ctx context.Context, id uuid.UUID) (*UserDeletePayload, error)
+	UpdateUser(ctx context.Context, id nanox.ID, input generated.UpdateUserInput) (*UserUpdatePayload, error)
+	DeleteUser(ctx context.Context, id nanox.ID) (*UserDeletePayload, error)
 }
 type QueryResolver interface {
-	Node(ctx context.Context, id uuid.UUID) (generated.Noder, error)
-	Nodes(ctx context.Context, ids []uuid.UUID) ([]generated.Noder, error)
-	Groups(ctx context.Context, after *entgql.Cursor[uuid.UUID], first *int, before *entgql.Cursor[uuid.UUID], last *int, orderBy *generated.GroupOrder, where *generated.GroupWhereInput) (*generated.GroupConnection, error)
-	GroupSettingsSlice(ctx context.Context, after *entgql.Cursor[uuid.UUID], first *int, before *entgql.Cursor[uuid.UUID], last *int, where *generated.GroupSettingsWhereInput) (*generated.GroupSettingsConnection, error)
-	Integrations(ctx context.Context, after *entgql.Cursor[uuid.UUID], first *int, before *entgql.Cursor[uuid.UUID], last *int, orderBy *generated.IntegrationOrder, where *generated.IntegrationWhereInput) (*generated.IntegrationConnection, error)
-	Organizations(ctx context.Context, after *entgql.Cursor[uuid.UUID], first *int, before *entgql.Cursor[uuid.UUID], last *int, orderBy *generated.OrganizationOrder, where *generated.OrganizationWhereInput) (*generated.OrganizationConnection, error)
-	Sessions(ctx context.Context, after *entgql.Cursor[uuid.UUID], first *int, before *entgql.Cursor[uuid.UUID], last *int, where *generated.SessionWhereInput) (*generated.SessionConnection, error)
-	Users(ctx context.Context, after *entgql.Cursor[uuid.UUID], first *int, before *entgql.Cursor[uuid.UUID], last *int, orderBy *generated.UserOrder, where *generated.UserWhereInput) (*generated.UserConnection, error)
-	Group(ctx context.Context, id uuid.UUID) (*generated.Group, error)
-	Integration(ctx context.Context, id uuid.UUID) (*generated.Integration, error)
-	Organization(ctx context.Context, id uuid.UUID) (*generated.Organization, error)
-	Session(ctx context.Context, id uuid.UUID) (*generated.Session, error)
-	User(ctx context.Context, id uuid.UUID) (*generated.User, error)
+	Node(ctx context.Context, id nanox.ID) (generated.Noder, error)
+	Nodes(ctx context.Context, ids []nanox.ID) ([]generated.Noder, error)
+	Groups(ctx context.Context, after *entgql.Cursor[nanox.ID], first *int, before *entgql.Cursor[nanox.ID], last *int, orderBy *generated.GroupOrder, where *generated.GroupWhereInput) (*generated.GroupConnection, error)
+	GroupSettingsSlice(ctx context.Context, after *entgql.Cursor[nanox.ID], first *int, before *entgql.Cursor[nanox.ID], last *int, where *generated.GroupSettingsWhereInput) (*generated.GroupSettingsConnection, error)
+	Integrations(ctx context.Context, after *entgql.Cursor[nanox.ID], first *int, before *entgql.Cursor[nanox.ID], last *int, orderBy *generated.IntegrationOrder, where *generated.IntegrationWhereInput) (*generated.IntegrationConnection, error)
+	Organizations(ctx context.Context, after *entgql.Cursor[nanox.ID], first *int, before *entgql.Cursor[nanox.ID], last *int, orderBy *generated.OrganizationOrder, where *generated.OrganizationWhereInput) (*generated.OrganizationConnection, error)
+	Sessions(ctx context.Context, after *entgql.Cursor[nanox.ID], first *int, before *entgql.Cursor[nanox.ID], last *int, where *generated.SessionWhereInput) (*generated.SessionConnection, error)
+	Users(ctx context.Context, after *entgql.Cursor[nanox.ID], first *int, before *entgql.Cursor[nanox.ID], last *int, orderBy *generated.UserOrder, where *generated.UserWhereInput) (*generated.UserConnection, error)
+	Group(ctx context.Context, id nanox.ID) (*generated.Group, error)
+	Integration(ctx context.Context, id nanox.ID) (*generated.Integration, error)
+	Organization(ctx context.Context, id nanox.ID) (*generated.Organization, error)
+	Session(ctx context.Context, id nanox.ID) (*generated.Session, error)
+	User(ctx context.Context, id nanox.ID) (*generated.User, error)
 }
 
 type executableSchema struct {
@@ -777,7 +777,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteGroup(childComplexity, args["id"].(uuid.UUID)), true
+		return e.complexity.Mutation.DeleteGroup(childComplexity, args["id"].(nanox.ID)), true
 
 	case "Mutation.deleteIntegration":
 		if e.complexity.Mutation.DeleteIntegration == nil {
@@ -789,7 +789,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteIntegration(childComplexity, args["id"].(uuid.UUID)), true
+		return e.complexity.Mutation.DeleteIntegration(childComplexity, args["id"].(nanox.ID)), true
 
 	case "Mutation.deleteOrganization":
 		if e.complexity.Mutation.DeleteOrganization == nil {
@@ -801,7 +801,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteOrganization(childComplexity, args["id"].(uuid.UUID)), true
+		return e.complexity.Mutation.DeleteOrganization(childComplexity, args["id"].(nanox.ID)), true
 
 	case "Mutation.deleteSession":
 		if e.complexity.Mutation.DeleteSession == nil {
@@ -813,7 +813,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteSession(childComplexity, args["id"].(uuid.UUID)), true
+		return e.complexity.Mutation.DeleteSession(childComplexity, args["id"].(nanox.ID)), true
 
 	case "Mutation.deleteUser":
 		if e.complexity.Mutation.DeleteUser == nil {
@@ -825,7 +825,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteUser(childComplexity, args["id"].(uuid.UUID)), true
+		return e.complexity.Mutation.DeleteUser(childComplexity, args["id"].(nanox.ID)), true
 
 	case "Mutation.updateGroup":
 		if e.complexity.Mutation.UpdateGroup == nil {
@@ -837,7 +837,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateGroup(childComplexity, args["id"].(uuid.UUID), args["input"].(generated.UpdateGroupInput)), true
+		return e.complexity.Mutation.UpdateGroup(childComplexity, args["id"].(nanox.ID), args["input"].(generated.UpdateGroupInput)), true
 
 	case "Mutation.updateIntegration":
 		if e.complexity.Mutation.UpdateIntegration == nil {
@@ -849,7 +849,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateIntegration(childComplexity, args["id"].(uuid.UUID), args["input"].(generated.UpdateIntegrationInput)), true
+		return e.complexity.Mutation.UpdateIntegration(childComplexity, args["id"].(nanox.ID), args["input"].(generated.UpdateIntegrationInput)), true
 
 	case "Mutation.updateOrganization":
 		if e.complexity.Mutation.UpdateOrganization == nil {
@@ -861,7 +861,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateOrganization(childComplexity, args["id"].(uuid.UUID), args["input"].(generated.UpdateOrganizationInput)), true
+		return e.complexity.Mutation.UpdateOrganization(childComplexity, args["id"].(nanox.ID), args["input"].(generated.UpdateOrganizationInput)), true
 
 	case "Mutation.updateSession":
 		if e.complexity.Mutation.UpdateSession == nil {
@@ -873,7 +873,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateSession(childComplexity, args["id"].(uuid.UUID), args["input"].(generated.UpdateSessionInput)), true
+		return e.complexity.Mutation.UpdateSession(childComplexity, args["id"].(nanox.ID), args["input"].(generated.UpdateSessionInput)), true
 
 	case "Mutation.updateUser":
 		if e.complexity.Mutation.UpdateUser == nil {
@@ -885,7 +885,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateUser(childComplexity, args["id"].(uuid.UUID), args["input"].(generated.UpdateUserInput)), true
+		return e.complexity.Mutation.UpdateUser(childComplexity, args["id"].(nanox.ID), args["input"].(generated.UpdateUserInput)), true
 
 	case "Organization.children":
 		if e.complexity.Organization.Children == nil {
@@ -897,7 +897,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Organization.Children(childComplexity, args["after"].(*entgql.Cursor[uuid.UUID]), args["first"].(*int), args["before"].(*entgql.Cursor[uuid.UUID]), args["last"].(*int), args["orderBy"].(*generated.OrganizationOrder), args["where"].(*generated.OrganizationWhereInput)), true
+		return e.complexity.Organization.Children(childComplexity, args["after"].(*entgql.Cursor[nanox.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[nanox.ID]), args["last"].(*int), args["orderBy"].(*generated.OrganizationOrder), args["where"].(*generated.OrganizationWhereInput)), true
 
 	case "Organization.createdAt":
 		if e.complexity.Organization.CreatedAt == nil {
@@ -1070,7 +1070,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Group(childComplexity, args["id"].(uuid.UUID)), true
+		return e.complexity.Query.Group(childComplexity, args["id"].(nanox.ID)), true
 
 	case "Query.groupSettingsSlice":
 		if e.complexity.Query.GroupSettingsSlice == nil {
@@ -1082,7 +1082,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.GroupSettingsSlice(childComplexity, args["after"].(*entgql.Cursor[uuid.UUID]), args["first"].(*int), args["before"].(*entgql.Cursor[uuid.UUID]), args["last"].(*int), args["where"].(*generated.GroupSettingsWhereInput)), true
+		return e.complexity.Query.GroupSettingsSlice(childComplexity, args["after"].(*entgql.Cursor[nanox.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[nanox.ID]), args["last"].(*int), args["where"].(*generated.GroupSettingsWhereInput)), true
 
 	case "Query.groups":
 		if e.complexity.Query.Groups == nil {
@@ -1094,7 +1094,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Groups(childComplexity, args["after"].(*entgql.Cursor[uuid.UUID]), args["first"].(*int), args["before"].(*entgql.Cursor[uuid.UUID]), args["last"].(*int), args["orderBy"].(*generated.GroupOrder), args["where"].(*generated.GroupWhereInput)), true
+		return e.complexity.Query.Groups(childComplexity, args["after"].(*entgql.Cursor[nanox.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[nanox.ID]), args["last"].(*int), args["orderBy"].(*generated.GroupOrder), args["where"].(*generated.GroupWhereInput)), true
 
 	case "Query.integration":
 		if e.complexity.Query.Integration == nil {
@@ -1106,7 +1106,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Integration(childComplexity, args["id"].(uuid.UUID)), true
+		return e.complexity.Query.Integration(childComplexity, args["id"].(nanox.ID)), true
 
 	case "Query.integrations":
 		if e.complexity.Query.Integrations == nil {
@@ -1118,7 +1118,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Integrations(childComplexity, args["after"].(*entgql.Cursor[uuid.UUID]), args["first"].(*int), args["before"].(*entgql.Cursor[uuid.UUID]), args["last"].(*int), args["orderBy"].(*generated.IntegrationOrder), args["where"].(*generated.IntegrationWhereInput)), true
+		return e.complexity.Query.Integrations(childComplexity, args["after"].(*entgql.Cursor[nanox.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[nanox.ID]), args["last"].(*int), args["orderBy"].(*generated.IntegrationOrder), args["where"].(*generated.IntegrationWhereInput)), true
 
 	case "Query.node":
 		if e.complexity.Query.Node == nil {
@@ -1130,7 +1130,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Node(childComplexity, args["id"].(uuid.UUID)), true
+		return e.complexity.Query.Node(childComplexity, args["id"].(nanox.ID)), true
 
 	case "Query.nodes":
 		if e.complexity.Query.Nodes == nil {
@@ -1142,7 +1142,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Nodes(childComplexity, args["ids"].([]uuid.UUID)), true
+		return e.complexity.Query.Nodes(childComplexity, args["ids"].([]nanox.ID)), true
 
 	case "Query.organization":
 		if e.complexity.Query.Organization == nil {
@@ -1154,7 +1154,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Organization(childComplexity, args["id"].(uuid.UUID)), true
+		return e.complexity.Query.Organization(childComplexity, args["id"].(nanox.ID)), true
 
 	case "Query.organizations":
 		if e.complexity.Query.Organizations == nil {
@@ -1166,7 +1166,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Organizations(childComplexity, args["after"].(*entgql.Cursor[uuid.UUID]), args["first"].(*int), args["before"].(*entgql.Cursor[uuid.UUID]), args["last"].(*int), args["orderBy"].(*generated.OrganizationOrder), args["where"].(*generated.OrganizationWhereInput)), true
+		return e.complexity.Query.Organizations(childComplexity, args["after"].(*entgql.Cursor[nanox.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[nanox.ID]), args["last"].(*int), args["orderBy"].(*generated.OrganizationOrder), args["where"].(*generated.OrganizationWhereInput)), true
 
 	case "Query.session":
 		if e.complexity.Query.Session == nil {
@@ -1178,7 +1178,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Session(childComplexity, args["id"].(uuid.UUID)), true
+		return e.complexity.Query.Session(childComplexity, args["id"].(nanox.ID)), true
 
 	case "Query.sessions":
 		if e.complexity.Query.Sessions == nil {
@@ -1190,7 +1190,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Sessions(childComplexity, args["after"].(*entgql.Cursor[uuid.UUID]), args["first"].(*int), args["before"].(*entgql.Cursor[uuid.UUID]), args["last"].(*int), args["where"].(*generated.SessionWhereInput)), true
+		return e.complexity.Query.Sessions(childComplexity, args["after"].(*entgql.Cursor[nanox.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[nanox.ID]), args["last"].(*int), args["where"].(*generated.SessionWhereInput)), true
 
 	case "Query.user":
 		if e.complexity.Query.User == nil {
@@ -1202,7 +1202,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.User(childComplexity, args["id"].(uuid.UUID)), true
+		return e.complexity.Query.User(childComplexity, args["id"].(nanox.ID)), true
 
 	case "Query.users":
 		if e.complexity.Query.Users == nil {
@@ -1214,7 +1214,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Users(childComplexity, args["after"].(*entgql.Cursor[uuid.UUID]), args["first"].(*int), args["before"].(*entgql.Cursor[uuid.UUID]), args["last"].(*int), args["orderBy"].(*generated.UserOrder), args["where"].(*generated.UserWhereInput)), true
+		return e.complexity.Query.Users(childComplexity, args["after"].(*entgql.Cursor[nanox.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[nanox.ID]), args["last"].(*int), args["orderBy"].(*generated.UserOrder), args["where"].(*generated.UserWhereInput)), true
 
 	case "Query._service":
 		if e.complexity.Query.__resolve__service == nil {
@@ -1681,8 +1681,8 @@ Input was generated by ent.
 input CreateGroupInput {
   createdAt: Time
   updatedAt: Time
-  createdBy: UUID
-  updatedBy: UUID
+  createdBy: String
+  updatedBy: String
   name: String!
   description: String
   logoURL: String!
@@ -1697,8 +1697,8 @@ Input was generated by ent.
 input CreateGroupSettingsInput {
   createdAt: Time
   updatedAt: Time
-  createdBy: UUID
-  updatedBy: UUID
+  createdBy: String
+  updatedBy: String
   visibility: GroupSettingsVisibility
   joinPolicy: GroupSettingsJoinPolicy
 }
@@ -1709,8 +1709,8 @@ Input was generated by ent.
 input CreateIntegrationInput {
   createdAt: Time
   updatedAt: Time
-  createdBy: UUID
-  updatedBy: UUID
+  createdBy: String
+  updatedBy: String
   name: String!
   kind: String!
   description: String
@@ -1724,8 +1724,8 @@ Input was generated by ent.
 input CreateOrganizationInput {
   createdAt: Time
   updatedAt: Time
-  createdBy: UUID
-  updatedBy: UUID
+  createdBy: String
+  updatedBy: String
   name: String!
   """An optional description of the Organization"""
   description: String
@@ -1741,8 +1741,8 @@ Input was generated by ent.
 input CreateSessionInput {
   createdAt: Time
   updatedAt: Time
-  createdBy: UUID
-  updatedBy: UUID
+  createdBy: String
+  updatedBy: String
   """Sessions can derrive from the local (password auth), oauth, or app_password"""
   type: SessionType!
   """The session may be disabled by the user or by automatic security policy"""
@@ -1762,8 +1762,8 @@ Input was generated by ent.
 input CreateUserInput {
   createdAt: Time
   updatedAt: Time
-  createdBy: UUID
-  updatedBy: UUID
+  createdBy: String
+  updatedBy: String
   email: String!
   firstName: String!
   lastName: String!
@@ -1796,8 +1796,8 @@ type Group implements Node {
   id: ID!
   createdAt: Time!
   updatedAt: Time!
-  createdBy: UUID
-  updatedBy: UUID
+  createdBy: String
+  updatedBy: String
   name: String!
   description: String!
   logoURL: String!
@@ -1836,8 +1836,8 @@ type GroupSettings implements Node {
   id: ID!
   createdAt: Time!
   updatedAt: Time!
-  createdBy: UUID
-  updatedBy: UUID
+  createdBy: String
+  updatedBy: String
   visibility: GroupSettingsVisibility!
   joinPolicy: GroupSettingsJoinPolicy!
 }
@@ -1905,27 +1905,37 @@ input GroupSettingsWhereInput {
   updatedAtLT: Time
   updatedAtLTE: Time
   """created_by field predicates"""
-  createdBy: UUID
-  createdByNEQ: UUID
-  createdByIn: [UUID!]
-  createdByNotIn: [UUID!]
-  createdByGT: UUID
-  createdByGTE: UUID
-  createdByLT: UUID
-  createdByLTE: UUID
+  createdBy: String
+  createdByNEQ: String
+  createdByIn: [String!]
+  createdByNotIn: [String!]
+  createdByGT: String
+  createdByGTE: String
+  createdByLT: String
+  createdByLTE: String
+  createdByContains: String
+  createdByHasPrefix: String
+  createdByHasSuffix: String
   createdByIsNil: Boolean
   createdByNotNil: Boolean
+  createdByEqualFold: String
+  createdByContainsFold: String
   """updated_by field predicates"""
-  updatedBy: UUID
-  updatedByNEQ: UUID
-  updatedByIn: [UUID!]
-  updatedByNotIn: [UUID!]
-  updatedByGT: UUID
-  updatedByGTE: UUID
-  updatedByLT: UUID
-  updatedByLTE: UUID
+  updatedBy: String
+  updatedByNEQ: String
+  updatedByIn: [String!]
+  updatedByNotIn: [String!]
+  updatedByGT: String
+  updatedByGTE: String
+  updatedByLT: String
+  updatedByLTE: String
+  updatedByContains: String
+  updatedByHasPrefix: String
+  updatedByHasSuffix: String
   updatedByIsNil: Boolean
   updatedByNotNil: Boolean
+  updatedByEqualFold: String
+  updatedByContainsFold: String
   """visibility field predicates"""
   visibility: GroupSettingsVisibility
   visibilityNEQ: GroupSettingsVisibility
@@ -1973,27 +1983,37 @@ input GroupWhereInput {
   updatedAtLT: Time
   updatedAtLTE: Time
   """created_by field predicates"""
-  createdBy: UUID
-  createdByNEQ: UUID
-  createdByIn: [UUID!]
-  createdByNotIn: [UUID!]
-  createdByGT: UUID
-  createdByGTE: UUID
-  createdByLT: UUID
-  createdByLTE: UUID
+  createdBy: String
+  createdByNEQ: String
+  createdByIn: [String!]
+  createdByNotIn: [String!]
+  createdByGT: String
+  createdByGTE: String
+  createdByLT: String
+  createdByLTE: String
+  createdByContains: String
+  createdByHasPrefix: String
+  createdByHasSuffix: String
   createdByIsNil: Boolean
   createdByNotNil: Boolean
+  createdByEqualFold: String
+  createdByContainsFold: String
   """updated_by field predicates"""
-  updatedBy: UUID
-  updatedByNEQ: UUID
-  updatedByIn: [UUID!]
-  updatedByNotIn: [UUID!]
-  updatedByGT: UUID
-  updatedByGTE: UUID
-  updatedByLT: UUID
-  updatedByLTE: UUID
+  updatedBy: String
+  updatedByNEQ: String
+  updatedByIn: [String!]
+  updatedByNotIn: [String!]
+  updatedByGT: String
+  updatedByGTE: String
+  updatedByLT: String
+  updatedByLTE: String
+  updatedByContains: String
+  updatedByHasPrefix: String
+  updatedByHasSuffix: String
   updatedByIsNil: Boolean
   updatedByNotNil: Boolean
+  updatedByEqualFold: String
+  updatedByContainsFold: String
   """name field predicates"""
   name: String
   nameNEQ: String
@@ -2022,8 +2042,8 @@ type Integration implements Node {
   id: ID!
   createdAt: Time!
   updatedAt: Time!
-  createdBy: UUID
-  updatedBy: UUID
+  createdBy: String
+  updatedBy: String
   name: String!
   kind: String!
   description: String
@@ -2094,27 +2114,37 @@ input IntegrationWhereInput {
   updatedAtLT: Time
   updatedAtLTE: Time
   """created_by field predicates"""
-  createdBy: UUID
-  createdByNEQ: UUID
-  createdByIn: [UUID!]
-  createdByNotIn: [UUID!]
-  createdByGT: UUID
-  createdByGTE: UUID
-  createdByLT: UUID
-  createdByLTE: UUID
+  createdBy: String
+  createdByNEQ: String
+  createdByIn: [String!]
+  createdByNotIn: [String!]
+  createdByGT: String
+  createdByGTE: String
+  createdByLT: String
+  createdByLTE: String
+  createdByContains: String
+  createdByHasPrefix: String
+  createdByHasSuffix: String
   createdByIsNil: Boolean
   createdByNotNil: Boolean
+  createdByEqualFold: String
+  createdByContainsFold: String
   """updated_by field predicates"""
-  updatedBy: UUID
-  updatedByNEQ: UUID
-  updatedByIn: [UUID!]
-  updatedByNotIn: [UUID!]
-  updatedByGT: UUID
-  updatedByGTE: UUID
-  updatedByLT: UUID
-  updatedByLTE: UUID
+  updatedBy: String
+  updatedByNEQ: String
+  updatedByIn: [String!]
+  updatedByNotIn: [String!]
+  updatedByGT: String
+  updatedByGTE: String
+  updatedByLT: String
+  updatedByLTE: String
+  updatedByContains: String
+  updatedByHasPrefix: String
+  updatedByHasSuffix: String
   updatedByIsNil: Boolean
   updatedByNotNil: Boolean
+  updatedByEqualFold: String
+  updatedByContainsFold: String
   """name field predicates"""
   name: String
   nameNEQ: String
@@ -2196,8 +2226,8 @@ type Organization implements Node {
   id: ID!
   createdAt: Time!
   updatedAt: Time!
-  createdBy: UUID
-  updatedBy: UUID
+  createdBy: String
+  updatedBy: String
   name: String!
   """An optional description of the Organization"""
   description: String
@@ -2288,34 +2318,53 @@ input OrganizationWhereInput {
   updatedAtLT: Time
   updatedAtLTE: Time
   """created_by field predicates"""
-  createdBy: UUID
-  createdByNEQ: UUID
-  createdByIn: [UUID!]
-  createdByNotIn: [UUID!]
-  createdByGT: UUID
-  createdByGTE: UUID
-  createdByLT: UUID
-  createdByLTE: UUID
+  createdBy: String
+  createdByNEQ: String
+  createdByIn: [String!]
+  createdByNotIn: [String!]
+  createdByGT: String
+  createdByGTE: String
+  createdByLT: String
+  createdByLTE: String
+  createdByContains: String
+  createdByHasPrefix: String
+  createdByHasSuffix: String
   createdByIsNil: Boolean
   createdByNotNil: Boolean
+  createdByEqualFold: String
+  createdByContainsFold: String
   """updated_by field predicates"""
-  updatedBy: UUID
-  updatedByNEQ: UUID
-  updatedByIn: [UUID!]
-  updatedByNotIn: [UUID!]
-  updatedByGT: UUID
-  updatedByGTE: UUID
-  updatedByLT: UUID
-  updatedByLTE: UUID
+  updatedBy: String
+  updatedByNEQ: String
+  updatedByIn: [String!]
+  updatedByNotIn: [String!]
+  updatedByGT: String
+  updatedByGTE: String
+  updatedByLT: String
+  updatedByLTE: String
+  updatedByContains: String
+  updatedByHasPrefix: String
+  updatedByHasSuffix: String
   updatedByIsNil: Boolean
   updatedByNotNil: Boolean
+  updatedByEqualFold: String
+  updatedByContainsFold: String
   """parent_organization_id field predicates"""
   parentOrganizationID: ID
   parentOrganizationIDNEQ: ID
   parentOrganizationIDIn: [ID!]
   parentOrganizationIDNotIn: [ID!]
+  parentOrganizationIDGT: ID
+  parentOrganizationIDGTE: ID
+  parentOrganizationIDLT: ID
+  parentOrganizationIDLTE: ID
+  parentOrganizationIDContains: ID
+  parentOrganizationIDHasPrefix: ID
+  parentOrganizationIDHasSuffix: ID
   parentOrganizationIDIsNil: Boolean
   parentOrganizationIDNotNil: Boolean
+  parentOrganizationIDEqualFold: ID
+  parentOrganizationIDContainsFold: ID
   """parent edge predicates"""
   hasParent: Boolean
   hasParentWith: [OrganizationWhereInput!]
@@ -2470,8 +2519,8 @@ type Session implements Node {
   id: ID!
   createdAt: Time!
   updatedAt: Time!
-  createdBy: UUID
-  updatedBy: UUID
+  createdBy: String
+  updatedBy: String
   """Sessions can derrive from the local (password auth), oauth, or app_password"""
   type: SessionType!
   """The session may be disabled by the user or by automatic security policy"""
@@ -2543,27 +2592,37 @@ input SessionWhereInput {
   updatedAtLT: Time
   updatedAtLTE: Time
   """created_by field predicates"""
-  createdBy: UUID
-  createdByNEQ: UUID
-  createdByIn: [UUID!]
-  createdByNotIn: [UUID!]
-  createdByGT: UUID
-  createdByGTE: UUID
-  createdByLT: UUID
-  createdByLTE: UUID
+  createdBy: String
+  createdByNEQ: String
+  createdByIn: [String!]
+  createdByNotIn: [String!]
+  createdByGT: String
+  createdByGTE: String
+  createdByLT: String
+  createdByLTE: String
+  createdByContains: String
+  createdByHasPrefix: String
+  createdByHasSuffix: String
   createdByIsNil: Boolean
   createdByNotNil: Boolean
+  createdByEqualFold: String
+  createdByContainsFold: String
   """updated_by field predicates"""
-  updatedBy: UUID
-  updatedByNEQ: UUID
-  updatedByIn: [UUID!]
-  updatedByNotIn: [UUID!]
-  updatedByGT: UUID
-  updatedByGTE: UUID
-  updatedByLT: UUID
-  updatedByLTE: UUID
+  updatedBy: String
+  updatedByNEQ: String
+  updatedByIn: [String!]
+  updatedByNotIn: [String!]
+  updatedByGT: String
+  updatedByGTE: String
+  updatedByLT: String
+  updatedByLTE: String
+  updatedByContains: String
+  updatedByHasPrefix: String
+  updatedByHasSuffix: String
   updatedByIsNil: Boolean
   updatedByNotNil: Boolean
+  updatedByEqualFold: String
+  updatedByContainsFold: String
   """type field predicates"""
   type: SessionType
   typeNEQ: SessionType
@@ -2628,9 +2687,9 @@ Input was generated by ent.
 """
 input UpdateGroupInput {
   updatedAt: Time
-  createdBy: UUID
+  createdBy: String
   clearCreatedBy: Boolean
-  updatedBy: UUID
+  updatedBy: String
   clearUpdatedBy: Boolean
   name: String
   description: String
@@ -2648,9 +2707,9 @@ Input was generated by ent.
 """
 input UpdateGroupSettingsInput {
   updatedAt: Time
-  createdBy: UUID
+  createdBy: String
   clearCreatedBy: Boolean
-  updatedBy: UUID
+  updatedBy: String
   clearUpdatedBy: Boolean
   visibility: GroupSettingsVisibility
   joinPolicy: GroupSettingsJoinPolicy
@@ -2661,9 +2720,9 @@ Input was generated by ent.
 """
 input UpdateIntegrationInput {
   updatedAt: Time
-  createdBy: UUID
+  createdBy: String
   clearCreatedBy: Boolean
-  updatedBy: UUID
+  updatedBy: String
   clearUpdatedBy: Boolean
   name: String
   description: String
@@ -2677,9 +2736,9 @@ Input was generated by ent.
 """
 input UpdateOrganizationInput {
   updatedAt: Time
-  createdBy: UUID
+  createdBy: String
   clearCreatedBy: Boolean
-  updatedBy: UUID
+  updatedBy: String
   clearUpdatedBy: Boolean
   name: String
   """An optional description of the Organization"""
@@ -2701,9 +2760,9 @@ Input was generated by ent.
 """
 input UpdateSessionInput {
   updatedAt: Time
-  createdBy: UUID
+  createdBy: String
   clearCreatedBy: Boolean
-  updatedBy: UUID
+  updatedBy: String
   clearUpdatedBy: Boolean
   """The session may be disabled by the user or by automatic security policy"""
   disabled: Boolean
@@ -2721,9 +2780,9 @@ Input was generated by ent.
 """
 input UpdateUserInput {
   updatedAt: Time
-  createdBy: UUID
+  createdBy: String
   clearCreatedBy: Boolean
-  updatedBy: UUID
+  updatedBy: String
   clearUpdatedBy: Boolean
   email: String
   firstName: String
@@ -2764,8 +2823,8 @@ type User implements Node {
   id: ID!
   createdAt: Time!
   updatedAt: Time!
-  createdBy: UUID
-  updatedBy: UUID
+  createdBy: String
+  updatedBy: String
   email: String!
   firstName: String!
   lastName: String!
@@ -2852,27 +2911,37 @@ input UserWhereInput {
   updatedAtLT: Time
   updatedAtLTE: Time
   """created_by field predicates"""
-  createdBy: UUID
-  createdByNEQ: UUID
-  createdByIn: [UUID!]
-  createdByNotIn: [UUID!]
-  createdByGT: UUID
-  createdByGTE: UUID
-  createdByLT: UUID
-  createdByLTE: UUID
+  createdBy: String
+  createdByNEQ: String
+  createdByIn: [String!]
+  createdByNotIn: [String!]
+  createdByGT: String
+  createdByGTE: String
+  createdByLT: String
+  createdByLTE: String
+  createdByContains: String
+  createdByHasPrefix: String
+  createdByHasSuffix: String
   createdByIsNil: Boolean
   createdByNotNil: Boolean
+  createdByEqualFold: String
+  createdByContainsFold: String
   """updated_by field predicates"""
-  updatedBy: UUID
-  updatedByNEQ: UUID
-  updatedByIn: [UUID!]
-  updatedByNotIn: [UUID!]
-  updatedByGT: UUID
-  updatedByGTE: UUID
-  updatedByLT: UUID
-  updatedByLTE: UUID
+  updatedBy: String
+  updatedByNEQ: String
+  updatedByIn: [String!]
+  updatedByNotIn: [String!]
+  updatedByGT: String
+  updatedByGTE: String
+  updatedByLT: String
+  updatedByLTE: String
+  updatedByContains: String
+  updatedByHasPrefix: String
+  updatedByHasSuffix: String
   updatedByIsNil: Boolean
   updatedByNotNil: Boolean
+  updatedByEqualFold: String
+  updatedByContainsFold: String
   """email field predicates"""
   email: String
   emailNEQ: String
@@ -3488,10 +3557,10 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 func (ec *executionContext) field_Mutation_deleteGroup_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3503,10 +3572,10 @@ func (ec *executionContext) field_Mutation_deleteGroup_args(ctx context.Context,
 func (ec *executionContext) field_Mutation_deleteIntegration_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3518,10 +3587,10 @@ func (ec *executionContext) field_Mutation_deleteIntegration_args(ctx context.Co
 func (ec *executionContext) field_Mutation_deleteOrganization_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3533,10 +3602,10 @@ func (ec *executionContext) field_Mutation_deleteOrganization_args(ctx context.C
 func (ec *executionContext) field_Mutation_deleteSession_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3548,10 +3617,10 @@ func (ec *executionContext) field_Mutation_deleteSession_args(ctx context.Contex
 func (ec *executionContext) field_Mutation_deleteUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3563,10 +3632,10 @@ func (ec *executionContext) field_Mutation_deleteUser_args(ctx context.Context, 
 func (ec *executionContext) field_Mutation_updateGroup_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3587,10 +3656,10 @@ func (ec *executionContext) field_Mutation_updateGroup_args(ctx context.Context,
 func (ec *executionContext) field_Mutation_updateIntegration_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3611,10 +3680,10 @@ func (ec *executionContext) field_Mutation_updateIntegration_args(ctx context.Co
 func (ec *executionContext) field_Mutation_updateOrganization_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3635,10 +3704,10 @@ func (ec *executionContext) field_Mutation_updateOrganization_args(ctx context.C
 func (ec *executionContext) field_Mutation_updateSession_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3659,10 +3728,10 @@ func (ec *executionContext) field_Mutation_updateSession_args(ctx context.Contex
 func (ec *executionContext) field_Mutation_updateUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3683,7 +3752,7 @@ func (ec *executionContext) field_Mutation_updateUser_args(ctx context.Context, 
 func (ec *executionContext) field_Organization_children_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *entgql.Cursor[uuid.UUID]
+	var arg0 *entgql.Cursor[nanox.ID]
 	if tmp, ok := rawArgs["after"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
 		arg0, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
@@ -3701,7 +3770,7 @@ func (ec *executionContext) field_Organization_children_args(ctx context.Context
 		}
 	}
 	args["first"] = arg1
-	var arg2 *entgql.Cursor[uuid.UUID]
+	var arg2 *entgql.Cursor[nanox.ID]
 	if tmp, ok := rawArgs["before"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
 		arg2, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
@@ -3758,7 +3827,7 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 func (ec *executionContext) field_Query_groupSettingsSlice_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *entgql.Cursor[uuid.UUID]
+	var arg0 *entgql.Cursor[nanox.ID]
 	if tmp, ok := rawArgs["after"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
 		arg0, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
@@ -3776,7 +3845,7 @@ func (ec *executionContext) field_Query_groupSettingsSlice_args(ctx context.Cont
 		}
 	}
 	args["first"] = arg1
-	var arg2 *entgql.Cursor[uuid.UUID]
+	var arg2 *entgql.Cursor[nanox.ID]
 	if tmp, ok := rawArgs["before"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
 		arg2, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
@@ -3809,10 +3878,10 @@ func (ec *executionContext) field_Query_groupSettingsSlice_args(ctx context.Cont
 func (ec *executionContext) field_Query_group_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3824,7 +3893,7 @@ func (ec *executionContext) field_Query_group_args(ctx context.Context, rawArgs 
 func (ec *executionContext) field_Query_groups_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *entgql.Cursor[uuid.UUID]
+	var arg0 *entgql.Cursor[nanox.ID]
 	if tmp, ok := rawArgs["after"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
 		arg0, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
@@ -3842,7 +3911,7 @@ func (ec *executionContext) field_Query_groups_args(ctx context.Context, rawArgs
 		}
 	}
 	args["first"] = arg1
-	var arg2 *entgql.Cursor[uuid.UUID]
+	var arg2 *entgql.Cursor[nanox.ID]
 	if tmp, ok := rawArgs["before"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
 		arg2, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
@@ -3884,10 +3953,10 @@ func (ec *executionContext) field_Query_groups_args(ctx context.Context, rawArgs
 func (ec *executionContext) field_Query_integration_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3899,7 +3968,7 @@ func (ec *executionContext) field_Query_integration_args(ctx context.Context, ra
 func (ec *executionContext) field_Query_integrations_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *entgql.Cursor[uuid.UUID]
+	var arg0 *entgql.Cursor[nanox.ID]
 	if tmp, ok := rawArgs["after"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
 		arg0, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
@@ -3917,7 +3986,7 @@ func (ec *executionContext) field_Query_integrations_args(ctx context.Context, r
 		}
 	}
 	args["first"] = arg1
-	var arg2 *entgql.Cursor[uuid.UUID]
+	var arg2 *entgql.Cursor[nanox.ID]
 	if tmp, ok := rawArgs["before"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
 		arg2, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
@@ -3959,10 +4028,10 @@ func (ec *executionContext) field_Query_integrations_args(ctx context.Context, r
 func (ec *executionContext) field_Query_node_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3974,10 +4043,10 @@ func (ec *executionContext) field_Query_node_args(ctx context.Context, rawArgs m
 func (ec *executionContext) field_Query_nodes_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 []uuid.UUID
+	var arg0 []nanox.ID
 	if tmp, ok := rawArgs["ids"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ids"))
-		arg0, err = ec.unmarshalNID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, tmp)
+		arg0, err = ec.unmarshalNID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3989,10 +4058,10 @@ func (ec *executionContext) field_Query_nodes_args(ctx context.Context, rawArgs 
 func (ec *executionContext) field_Query_organization_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4004,7 +4073,7 @@ func (ec *executionContext) field_Query_organization_args(ctx context.Context, r
 func (ec *executionContext) field_Query_organizations_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *entgql.Cursor[uuid.UUID]
+	var arg0 *entgql.Cursor[nanox.ID]
 	if tmp, ok := rawArgs["after"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
 		arg0, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
@@ -4022,7 +4091,7 @@ func (ec *executionContext) field_Query_organizations_args(ctx context.Context, 
 		}
 	}
 	args["first"] = arg1
-	var arg2 *entgql.Cursor[uuid.UUID]
+	var arg2 *entgql.Cursor[nanox.ID]
 	if tmp, ok := rawArgs["before"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
 		arg2, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
@@ -4064,10 +4133,10 @@ func (ec *executionContext) field_Query_organizations_args(ctx context.Context, 
 func (ec *executionContext) field_Query_session_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4079,7 +4148,7 @@ func (ec *executionContext) field_Query_session_args(ctx context.Context, rawArg
 func (ec *executionContext) field_Query_sessions_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *entgql.Cursor[uuid.UUID]
+	var arg0 *entgql.Cursor[nanox.ID]
 	if tmp, ok := rawArgs["after"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
 		arg0, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
@@ -4097,7 +4166,7 @@ func (ec *executionContext) field_Query_sessions_args(ctx context.Context, rawAr
 		}
 	}
 	args["first"] = arg1
-	var arg2 *entgql.Cursor[uuid.UUID]
+	var arg2 *entgql.Cursor[nanox.ID]
 	if tmp, ok := rawArgs["before"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
 		arg2, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
@@ -4130,10 +4199,10 @@ func (ec *executionContext) field_Query_sessions_args(ctx context.Context, rawAr
 func (ec *executionContext) field_Query_user_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 uuid.UUID
+	var arg0 nanox.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4145,7 +4214,7 @@ func (ec *executionContext) field_Query_user_args(ctx context.Context, rawArgs m
 func (ec *executionContext) field_Query_users_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *entgql.Cursor[uuid.UUID]
+	var arg0 *entgql.Cursor[nanox.ID]
 	if tmp, ok := rawArgs["after"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
 		arg0, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
@@ -4163,7 +4232,7 @@ func (ec *executionContext) field_Query_users_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["first"] = arg1
-	var arg2 *entgql.Cursor[uuid.UUID]
+	var arg2 *entgql.Cursor[nanox.ID]
 	if tmp, ok := rawArgs["before"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
 		arg2, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
@@ -4266,9 +4335,9 @@ func (ec *executionContext) _Group_id(ctx context.Context, field graphql.Collect
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(nanox.ID)
 	fc.Result = res
-	return ec.marshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Group_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4395,9 +4464,9 @@ func (ec *executionContext) _Group_createdBy(ctx context.Context, field graphql.
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Group_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4407,7 +4476,7 @@ func (ec *executionContext) fieldContext_Group_createdBy(ctx context.Context, fi
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -4436,9 +4505,9 @@ func (ec *executionContext) _Group_updatedBy(ctx context.Context, field graphql.
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Group_updatedBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4448,7 +4517,7 @@ func (ec *executionContext) fieldContext_Group_updatedBy(ctx context.Context, fi
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -4865,7 +4934,7 @@ func (ec *executionContext) _GroupConnection_pageInfo(ctx context.Context, field
 		}
 		return graphql.Null
 	}
-	res := resTmp.(entgql.PageInfo[uuid.UUID])
+	res := resTmp.(entgql.PageInfo[nanox.ID])
 	fc.Result = res
 	return ec.marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPageInfo(ctx, field.Selections, res)
 }
@@ -5031,9 +5100,9 @@ func (ec *executionContext) _GroupDeletePayload_deletedID(ctx context.Context, f
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(nanox.ID)
 	fc.Result = res
-	return ec.marshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GroupDeletePayload_deletedID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5140,7 +5209,7 @@ func (ec *executionContext) _GroupEdge_cursor(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.(entgql.Cursor[uuid.UUID])
+	res := resTmp.(entgql.Cursor[nanox.ID])
 	fc.Result = res
 	return ec.marshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, field.Selections, res)
 }
@@ -5184,9 +5253,9 @@ func (ec *executionContext) _GroupSettings_id(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(nanox.ID)
 	fc.Result = res
-	return ec.marshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GroupSettings_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5313,9 +5382,9 @@ func (ec *executionContext) _GroupSettings_createdBy(ctx context.Context, field 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GroupSettings_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5325,7 +5394,7 @@ func (ec *executionContext) fieldContext_GroupSettings_createdBy(ctx context.Con
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -5354,9 +5423,9 @@ func (ec *executionContext) _GroupSettings_updatedBy(ctx context.Context, field 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GroupSettings_updatedBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5366,7 +5435,7 @@ func (ec *executionContext) fieldContext_GroupSettings_updatedBy(ctx context.Con
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -5533,7 +5602,7 @@ func (ec *executionContext) _GroupSettingsConnection_pageInfo(ctx context.Contex
 		}
 		return graphql.Null
 	}
-	res := resTmp.(entgql.PageInfo[uuid.UUID])
+	res := resTmp.(entgql.PageInfo[nanox.ID])
 	fc.Result = res
 	return ec.marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPageInfo(ctx, field.Selections, res)
 }
@@ -5688,7 +5757,7 @@ func (ec *executionContext) _GroupSettingsEdge_cursor(ctx context.Context, field
 		}
 		return graphql.Null
 	}
-	res := resTmp.(entgql.Cursor[uuid.UUID])
+	res := resTmp.(entgql.Cursor[nanox.ID])
 	fc.Result = res
 	return ec.marshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, field.Selections, res)
 }
@@ -5800,9 +5869,9 @@ func (ec *executionContext) _Integration_id(ctx context.Context, field graphql.C
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(nanox.ID)
 	fc.Result = res
-	return ec.marshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Integration_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5929,9 +5998,9 @@ func (ec *executionContext) _Integration_createdBy(ctx context.Context, field gr
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Integration_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5941,7 +6010,7 @@ func (ec *executionContext) fieldContext_Integration_createdBy(ctx context.Conte
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -5970,9 +6039,9 @@ func (ec *executionContext) _Integration_updatedBy(ctx context.Context, field gr
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Integration_updatedBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5982,7 +6051,7 @@ func (ec *executionContext) fieldContext_Integration_updatedBy(ctx context.Conte
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -6301,7 +6370,7 @@ func (ec *executionContext) _IntegrationConnection_pageInfo(ctx context.Context,
 		}
 		return graphql.Null
 	}
-	res := resTmp.(entgql.PageInfo[uuid.UUID])
+	res := resTmp.(entgql.PageInfo[nanox.ID])
 	fc.Result = res
 	return ec.marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPageInfo(ctx, field.Selections, res)
 }
@@ -6465,9 +6534,9 @@ func (ec *executionContext) _IntegrationDeletePayload_deletedID(ctx context.Cont
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(nanox.ID)
 	fc.Result = res
-	return ec.marshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_IntegrationDeletePayload_deletedID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6572,7 +6641,7 @@ func (ec *executionContext) _IntegrationEdge_cursor(ctx context.Context, field g
 		}
 		return graphql.Null
 	}
-	res := resTmp.(entgql.Cursor[uuid.UUID])
+	res := resTmp.(entgql.Cursor[nanox.ID])
 	fc.Result = res
 	return ec.marshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, field.Selections, res)
 }
@@ -6729,7 +6798,7 @@ func (ec *executionContext) _Mutation_updateGroup(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateGroup(rctx, fc.Args["id"].(uuid.UUID), fc.Args["input"].(generated.UpdateGroupInput))
+		return ec.resolvers.Mutation().UpdateGroup(rctx, fc.Args["id"].(nanox.ID), fc.Args["input"].(generated.UpdateGroupInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6788,7 +6857,7 @@ func (ec *executionContext) _Mutation_deleteGroup(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteGroup(rctx, fc.Args["id"].(uuid.UUID))
+		return ec.resolvers.Mutation().DeleteGroup(rctx, fc.Args["id"].(nanox.ID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6906,7 +6975,7 @@ func (ec *executionContext) _Mutation_updateIntegration(ctx context.Context, fie
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateIntegration(rctx, fc.Args["id"].(uuid.UUID), fc.Args["input"].(generated.UpdateIntegrationInput))
+		return ec.resolvers.Mutation().UpdateIntegration(rctx, fc.Args["id"].(nanox.ID), fc.Args["input"].(generated.UpdateIntegrationInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6965,7 +7034,7 @@ func (ec *executionContext) _Mutation_deleteIntegration(ctx context.Context, fie
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteIntegration(rctx, fc.Args["id"].(uuid.UUID))
+		return ec.resolvers.Mutation().DeleteIntegration(rctx, fc.Args["id"].(nanox.ID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7083,7 +7152,7 @@ func (ec *executionContext) _Mutation_updateOrganization(ctx context.Context, fi
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateOrganization(rctx, fc.Args["id"].(uuid.UUID), fc.Args["input"].(generated.UpdateOrganizationInput))
+		return ec.resolvers.Mutation().UpdateOrganization(rctx, fc.Args["id"].(nanox.ID), fc.Args["input"].(generated.UpdateOrganizationInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7142,7 +7211,7 @@ func (ec *executionContext) _Mutation_deleteOrganization(ctx context.Context, fi
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteOrganization(rctx, fc.Args["id"].(uuid.UUID))
+		return ec.resolvers.Mutation().DeleteOrganization(rctx, fc.Args["id"].(nanox.ID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7260,7 +7329,7 @@ func (ec *executionContext) _Mutation_updateSession(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateSession(rctx, fc.Args["id"].(uuid.UUID), fc.Args["input"].(generated.UpdateSessionInput))
+		return ec.resolvers.Mutation().UpdateSession(rctx, fc.Args["id"].(nanox.ID), fc.Args["input"].(generated.UpdateSessionInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7319,7 +7388,7 @@ func (ec *executionContext) _Mutation_deleteSession(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteSession(rctx, fc.Args["id"].(uuid.UUID))
+		return ec.resolvers.Mutation().DeleteSession(rctx, fc.Args["id"].(nanox.ID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7437,7 +7506,7 @@ func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateUser(rctx, fc.Args["id"].(uuid.UUID), fc.Args["input"].(generated.UpdateUserInput))
+		return ec.resolvers.Mutation().UpdateUser(rctx, fc.Args["id"].(nanox.ID), fc.Args["input"].(generated.UpdateUserInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7496,7 +7565,7 @@ func (ec *executionContext) _Mutation_deleteUser(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteUser(rctx, fc.Args["id"].(uuid.UUID))
+		return ec.resolvers.Mutation().DeleteUser(rctx, fc.Args["id"].(nanox.ID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7567,9 +7636,9 @@ func (ec *executionContext) _Organization_id(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(nanox.ID)
 	fc.Result = res
-	return ec.marshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Organization_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7696,9 +7765,9 @@ func (ec *executionContext) _Organization_createdBy(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Organization_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7708,7 +7777,7 @@ func (ec *executionContext) fieldContext_Organization_createdBy(ctx context.Cont
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -7737,9 +7806,9 @@ func (ec *executionContext) _Organization_updatedBy(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Organization_updatedBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7749,7 +7818,7 @@ func (ec *executionContext) fieldContext_Organization_updatedBy(ctx context.Cont
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -7921,7 +7990,7 @@ func (ec *executionContext) _Organization_children(ctx context.Context, field gr
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Children(ctx, fc.Args["after"].(*entgql.Cursor[uuid.UUID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[uuid.UUID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*generated.OrganizationOrder), fc.Args["where"].(*generated.OrganizationWhereInput))
+		return obj.Children(ctx, fc.Args["after"].(*entgql.Cursor[nanox.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[nanox.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*generated.OrganizationOrder), fc.Args["where"].(*generated.OrganizationWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8250,7 +8319,7 @@ func (ec *executionContext) _OrganizationConnection_pageInfo(ctx context.Context
 		}
 		return graphql.Null
 	}
-	res := resTmp.(entgql.PageInfo[uuid.UUID])
+	res := resTmp.(entgql.PageInfo[nanox.ID])
 	fc.Result = res
 	return ec.marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPageInfo(ctx, field.Selections, res)
 }
@@ -8418,9 +8487,9 @@ func (ec *executionContext) _OrganizationDeletePayload_deletedID(ctx context.Con
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(nanox.ID)
 	fc.Result = res
-	return ec.marshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_OrganizationDeletePayload_deletedID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8529,7 +8598,7 @@ func (ec *executionContext) _OrganizationEdge_cursor(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(entgql.Cursor[uuid.UUID])
+	res := resTmp.(entgql.Cursor[nanox.ID])
 	fc.Result = res
 	return ec.marshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, field.Selections, res)
 }
@@ -8617,7 +8686,7 @@ func (ec *executionContext) fieldContext_OrganizationUpdatePayload_organization(
 	return fc, nil
 }
 
-func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *entgql.PageInfo[uuid.UUID]) (ret graphql.Marshaler) {
+func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *entgql.PageInfo[nanox.ID]) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_PageInfo_hasNextPage(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -8661,7 +8730,7 @@ func (ec *executionContext) fieldContext_PageInfo_hasNextPage(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _PageInfo_hasPreviousPage(ctx context.Context, field graphql.CollectedField, obj *entgql.PageInfo[uuid.UUID]) (ret graphql.Marshaler) {
+func (ec *executionContext) _PageInfo_hasPreviousPage(ctx context.Context, field graphql.CollectedField, obj *entgql.PageInfo[nanox.ID]) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_PageInfo_hasPreviousPage(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -8705,7 +8774,7 @@ func (ec *executionContext) fieldContext_PageInfo_hasPreviousPage(ctx context.Co
 	return fc, nil
 }
 
-func (ec *executionContext) _PageInfo_startCursor(ctx context.Context, field graphql.CollectedField, obj *entgql.PageInfo[uuid.UUID]) (ret graphql.Marshaler) {
+func (ec *executionContext) _PageInfo_startCursor(ctx context.Context, field graphql.CollectedField, obj *entgql.PageInfo[nanox.ID]) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_PageInfo_startCursor(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -8728,7 +8797,7 @@ func (ec *executionContext) _PageInfo_startCursor(ctx context.Context, field gra
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*entgql.Cursor[uuid.UUID])
+	res := resTmp.(*entgql.Cursor[nanox.ID])
 	fc.Result = res
 	return ec.marshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, field.Selections, res)
 }
@@ -8746,7 +8815,7 @@ func (ec *executionContext) fieldContext_PageInfo_startCursor(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graphql.CollectedField, obj *entgql.PageInfo[uuid.UUID]) (ret graphql.Marshaler) {
+func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graphql.CollectedField, obj *entgql.PageInfo[nanox.ID]) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_PageInfo_endCursor(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -8769,7 +8838,7 @@ func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*entgql.Cursor[uuid.UUID])
+	res := resTmp.(*entgql.Cursor[nanox.ID])
 	fc.Result = res
 	return ec.marshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, field.Selections, res)
 }
@@ -8801,7 +8870,7 @@ func (ec *executionContext) _Query_node(ctx context.Context, field graphql.Colle
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Node(rctx, fc.Args["id"].(uuid.UUID))
+		return ec.resolvers.Query().Node(rctx, fc.Args["id"].(nanox.ID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8853,7 +8922,7 @@ func (ec *executionContext) _Query_nodes(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Nodes(rctx, fc.Args["ids"].([]uuid.UUID))
+		return ec.resolvers.Query().Nodes(rctx, fc.Args["ids"].([]nanox.ID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8908,7 +8977,7 @@ func (ec *executionContext) _Query_groups(ctx context.Context, field graphql.Col
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Groups(rctx, fc.Args["after"].(*entgql.Cursor[uuid.UUID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[uuid.UUID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*generated.GroupOrder), fc.Args["where"].(*generated.GroupWhereInput))
+		return ec.resolvers.Query().Groups(rctx, fc.Args["after"].(*entgql.Cursor[nanox.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[nanox.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*generated.GroupOrder), fc.Args["where"].(*generated.GroupWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8971,7 +9040,7 @@ func (ec *executionContext) _Query_groupSettingsSlice(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GroupSettingsSlice(rctx, fc.Args["after"].(*entgql.Cursor[uuid.UUID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[uuid.UUID]), fc.Args["last"].(*int), fc.Args["where"].(*generated.GroupSettingsWhereInput))
+		return ec.resolvers.Query().GroupSettingsSlice(rctx, fc.Args["after"].(*entgql.Cursor[nanox.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[nanox.ID]), fc.Args["last"].(*int), fc.Args["where"].(*generated.GroupSettingsWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9034,7 +9103,7 @@ func (ec *executionContext) _Query_integrations(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Integrations(rctx, fc.Args["after"].(*entgql.Cursor[uuid.UUID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[uuid.UUID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*generated.IntegrationOrder), fc.Args["where"].(*generated.IntegrationWhereInput))
+		return ec.resolvers.Query().Integrations(rctx, fc.Args["after"].(*entgql.Cursor[nanox.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[nanox.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*generated.IntegrationOrder), fc.Args["where"].(*generated.IntegrationWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9097,7 +9166,7 @@ func (ec *executionContext) _Query_organizations(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Organizations(rctx, fc.Args["after"].(*entgql.Cursor[uuid.UUID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[uuid.UUID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*generated.OrganizationOrder), fc.Args["where"].(*generated.OrganizationWhereInput))
+		return ec.resolvers.Query().Organizations(rctx, fc.Args["after"].(*entgql.Cursor[nanox.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[nanox.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*generated.OrganizationOrder), fc.Args["where"].(*generated.OrganizationWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9160,7 +9229,7 @@ func (ec *executionContext) _Query_sessions(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Sessions(rctx, fc.Args["after"].(*entgql.Cursor[uuid.UUID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[uuid.UUID]), fc.Args["last"].(*int), fc.Args["where"].(*generated.SessionWhereInput))
+		return ec.resolvers.Query().Sessions(rctx, fc.Args["after"].(*entgql.Cursor[nanox.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[nanox.ID]), fc.Args["last"].(*int), fc.Args["where"].(*generated.SessionWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9223,7 +9292,7 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Users(rctx, fc.Args["after"].(*entgql.Cursor[uuid.UUID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[uuid.UUID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*generated.UserOrder), fc.Args["where"].(*generated.UserWhereInput))
+		return ec.resolvers.Query().Users(rctx, fc.Args["after"].(*entgql.Cursor[nanox.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[nanox.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*generated.UserOrder), fc.Args["where"].(*generated.UserWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9286,7 +9355,7 @@ func (ec *executionContext) _Query_group(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Group(rctx, fc.Args["id"].(uuid.UUID))
+		return ec.resolvers.Query().Group(rctx, fc.Args["id"].(nanox.ID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9365,7 +9434,7 @@ func (ec *executionContext) _Query_integration(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Integration(rctx, fc.Args["id"].(uuid.UUID))
+		return ec.resolvers.Query().Integration(rctx, fc.Args["id"].(nanox.ID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9442,7 +9511,7 @@ func (ec *executionContext) _Query_organization(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Organization(rctx, fc.Args["id"].(uuid.UUID))
+		return ec.resolvers.Query().Organization(rctx, fc.Args["id"].(nanox.ID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9523,7 +9592,7 @@ func (ec *executionContext) _Query_session(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Session(rctx, fc.Args["id"].(uuid.UUID))
+		return ec.resolvers.Query().Session(rctx, fc.Args["id"].(nanox.ID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9602,7 +9671,7 @@ func (ec *executionContext) _Query_user(ctx context.Context, field graphql.Colle
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().User(rctx, fc.Args["id"].(uuid.UUID))
+		return ec.resolvers.Query().User(rctx, fc.Args["id"].(nanox.ID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9884,9 +9953,9 @@ func (ec *executionContext) _Session_id(ctx context.Context, field graphql.Colle
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(nanox.ID)
 	fc.Result = res
-	return ec.marshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Session_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10013,9 +10082,9 @@ func (ec *executionContext) _Session_createdBy(ctx context.Context, field graphq
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Session_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10025,7 +10094,7 @@ func (ec *executionContext) fieldContext_Session_createdBy(ctx context.Context, 
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -10054,9 +10123,9 @@ func (ec *executionContext) _Session_updatedBy(ctx context.Context, field graphq
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Session_updatedBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10066,7 +10135,7 @@ func (ec *executionContext) fieldContext_Session_updatedBy(ctx context.Context, 
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -10441,7 +10510,7 @@ func (ec *executionContext) _SessionConnection_pageInfo(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(entgql.PageInfo[uuid.UUID])
+	res := resTmp.(entgql.PageInfo[nanox.ID])
 	fc.Result = res
 	return ec.marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPageInfo(ctx, field.Selections, res)
 }
@@ -10607,9 +10676,9 @@ func (ec *executionContext) _SessionDeletePayload_deletedID(ctx context.Context,
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(nanox.ID)
 	fc.Result = res
-	return ec.marshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SessionDeletePayload_deletedID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10716,7 +10785,7 @@ func (ec *executionContext) _SessionEdge_cursor(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(entgql.Cursor[uuid.UUID])
+	res := resTmp.(entgql.Cursor[nanox.ID])
 	fc.Result = res
 	return ec.marshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, field.Selections, res)
 }
@@ -10828,9 +10897,9 @@ func (ec *executionContext) _User_id(ctx context.Context, field graphql.Collecte
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(nanox.ID)
 	fc.Result = res
-	return ec.marshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10957,9 +11026,9 @@ func (ec *executionContext) _User_createdBy(ctx context.Context, field graphql.C
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10969,7 +11038,7 @@ func (ec *executionContext) fieldContext_User_createdBy(ctx context.Context, fie
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -10998,9 +11067,9 @@ func (ec *executionContext) _User_updatedBy(ctx context.Context, field graphql.C
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_updatedBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -11010,7 +11079,7 @@ func (ec *executionContext) fieldContext_User_updatedBy(ctx context.Context, fie
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -11711,7 +11780,7 @@ func (ec *executionContext) _UserConnection_pageInfo(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(entgql.PageInfo[uuid.UUID])
+	res := resTmp.(entgql.PageInfo[nanox.ID])
 	fc.Result = res
 	return ec.marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPageInfo(ctx, field.Selections, res)
 }
@@ -11891,9 +11960,9 @@ func (ec *executionContext) _UserDeletePayload_deletedID(ctx context.Context, fi
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(nanox.ID)
 	fc.Result = res
-	return ec.marshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UserDeletePayload_deletedID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -12014,7 +12083,7 @@ func (ec *executionContext) _UserEdge_cursor(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(entgql.Cursor[uuid.UUID])
+	res := resTmp.(entgql.Cursor[nanox.ID])
 	fc.Result = res
 	return ec.marshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, field.Selections, res)
 }
@@ -13964,7 +14033,7 @@ func (ec *executionContext) unmarshalInputCreateGroupInput(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13973,7 +14042,7 @@ func (ec *executionContext) unmarshalInputCreateGroupInput(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14009,7 +14078,7 @@ func (ec *executionContext) unmarshalInputCreateGroupInput(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("settingID"))
-			data, err := ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14018,7 +14087,7 @@ func (ec *executionContext) unmarshalInputCreateGroupInput(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14027,7 +14096,7 @@ func (ec *executionContext) unmarshalInputCreateGroupInput(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ownerID"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14074,7 +14143,7 @@ func (ec *executionContext) unmarshalInputCreateGroupSettingsInput(ctx context.C
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14083,7 +14152,7 @@ func (ec *executionContext) unmarshalInputCreateGroupSettingsInput(ctx context.C
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14148,7 +14217,7 @@ func (ec *executionContext) unmarshalInputCreateIntegrationInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14157,7 +14226,7 @@ func (ec *executionContext) unmarshalInputCreateIntegrationInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14202,7 +14271,7 @@ func (ec *executionContext) unmarshalInputCreateIntegrationInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ownerID"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14249,7 +14318,7 @@ func (ec *executionContext) unmarshalInputCreateOrganizationInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14258,7 +14327,7 @@ func (ec *executionContext) unmarshalInputCreateOrganizationInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14285,7 +14354,7 @@ func (ec *executionContext) unmarshalInputCreateOrganizationInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentID"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14294,7 +14363,7 @@ func (ec *executionContext) unmarshalInputCreateOrganizationInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14303,7 +14372,7 @@ func (ec *executionContext) unmarshalInputCreateOrganizationInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("groupIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14312,7 +14381,7 @@ func (ec *executionContext) unmarshalInputCreateOrganizationInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("integrationIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14359,7 +14428,7 @@ func (ec *executionContext) unmarshalInputCreateSessionInput(ctx context.Context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14368,7 +14437,7 @@ func (ec *executionContext) unmarshalInputCreateSessionInput(ctx context.Context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14422,7 +14491,7 @@ func (ec *executionContext) unmarshalInputCreateSessionInput(ctx context.Context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("usersID"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14469,7 +14538,7 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14478,7 +14547,7 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14586,7 +14655,7 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("organizationIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14595,7 +14664,7 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sessionIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14604,7 +14673,7 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("groupIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14664,7 +14733,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByIsNil", "createdByNotNil", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByIsNil", "updatedByNotNil", "visibility", "visibilityNEQ", "visibilityIn", "visibilityNotIn", "joinPolicy", "joinPolicyNEQ", "joinPolicyIn", "joinPolicyNotIn"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByContains", "createdByHasPrefix", "createdByHasSuffix", "createdByIsNil", "createdByNotNil", "createdByEqualFold", "createdByContainsFold", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByContains", "updatedByHasPrefix", "updatedByHasSuffix", "updatedByIsNil", "updatedByNotNil", "updatedByEqualFold", "updatedByContainsFold", "visibility", "visibilityNEQ", "visibilityIn", "visibilityNotIn", "joinPolicy", "joinPolicyNEQ", "joinPolicyIn", "joinPolicyNotIn"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -14702,7 +14771,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14711,7 +14780,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idNEQ"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14720,7 +14789,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14729,7 +14798,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idNotIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14738,7 +14807,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idGT"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14747,7 +14816,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idGTE"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14756,7 +14825,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idLT"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14765,7 +14834,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idLTE"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14918,7 +14987,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14927,7 +14996,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByNEQ"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14936,7 +15005,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14945,7 +15014,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByNotIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14954,7 +15023,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByGT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14963,7 +15032,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByGTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14972,7 +15041,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByLT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14981,11 +15050,38 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByLTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.CreatedByLTE = data
+		case "createdByContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByContains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByContains = data
+		case "createdByHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByHasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByHasPrefix = data
+		case "createdByHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByHasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByHasSuffix = data
 		case "createdByIsNil":
 			var err error
 
@@ -15004,11 +15100,29 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 				return it, err
 			}
 			it.CreatedByNotNil = data
+		case "createdByEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByEqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByEqualFold = data
+		case "createdByContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByContainsFold = data
 		case "updatedBy":
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15017,7 +15131,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByNEQ"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15026,7 +15140,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15035,7 +15149,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByNotIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15044,7 +15158,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByGT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15053,7 +15167,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByGTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15062,7 +15176,7 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByLT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15071,11 +15185,38 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByLTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.UpdatedByLTE = data
+		case "updatedByContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByContains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByContains = data
+		case "updatedByHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByHasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByHasPrefix = data
+		case "updatedByHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByHasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByHasSuffix = data
 		case "updatedByIsNil":
 			var err error
 
@@ -15094,6 +15235,24 @@ func (ec *executionContext) unmarshalInputGroupSettingsWhereInput(ctx context.Co
 				return it, err
 			}
 			it.UpdatedByNotNil = data
+		case "updatedByEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByEqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByEqualFold = data
+		case "updatedByContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByContainsFold = data
 		case "visibility":
 			var err error
 
@@ -15179,7 +15338,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByIsNil", "createdByNotNil", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByIsNil", "updatedByNotNil", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "hasSetting", "hasSettingWith", "hasUsers", "hasUsersWith", "hasOwner", "hasOwnerWith"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByContains", "createdByHasPrefix", "createdByHasSuffix", "createdByIsNil", "createdByNotNil", "createdByEqualFold", "createdByContainsFold", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByContains", "updatedByHasPrefix", "updatedByHasSuffix", "updatedByIsNil", "updatedByNotNil", "updatedByEqualFold", "updatedByContainsFold", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "hasSetting", "hasSettingWith", "hasUsers", "hasUsersWith", "hasOwner", "hasOwnerWith"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -15217,7 +15376,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15226,7 +15385,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idNEQ"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15235,7 +15394,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15244,7 +15403,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idNotIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15253,7 +15412,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idGT"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15262,7 +15421,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idGTE"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15271,7 +15430,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idLT"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15280,7 +15439,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idLTE"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15433,7 +15592,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15442,7 +15601,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByNEQ"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15451,7 +15610,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15460,7 +15619,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByNotIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15469,7 +15628,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByGT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15478,7 +15637,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByGTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15487,7 +15646,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByLT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15496,11 +15655,38 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByLTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.CreatedByLTE = data
+		case "createdByContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByContains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByContains = data
+		case "createdByHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByHasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByHasPrefix = data
+		case "createdByHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByHasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByHasSuffix = data
 		case "createdByIsNil":
 			var err error
 
@@ -15519,11 +15705,29 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 				return it, err
 			}
 			it.CreatedByNotNil = data
+		case "createdByEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByEqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByEqualFold = data
+		case "createdByContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByContainsFold = data
 		case "updatedBy":
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15532,7 +15736,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByNEQ"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15541,7 +15745,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15550,7 +15754,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByNotIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15559,7 +15763,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByGT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15568,7 +15772,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByGTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15577,7 +15781,7 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByLT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15586,11 +15790,38 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByLTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.UpdatedByLTE = data
+		case "updatedByContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByContains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByContains = data
+		case "updatedByHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByHasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByHasPrefix = data
+		case "updatedByHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByHasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByHasSuffix = data
 		case "updatedByIsNil":
 			var err error
 
@@ -15609,6 +15840,24 @@ func (ec *executionContext) unmarshalInputGroupWhereInput(ctx context.Context, o
 				return it, err
 			}
 			it.UpdatedByNotNil = data
+		case "updatedByEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByEqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByEqualFold = data
+		case "updatedByContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByContainsFold = data
 		case "name":
 			var err error
 
@@ -15835,7 +16084,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByIsNil", "createdByNotNil", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByIsNil", "updatedByNotNil", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "kind", "kindNEQ", "kindIn", "kindNotIn", "kindGT", "kindGTE", "kindLT", "kindLTE", "kindContains", "kindHasPrefix", "kindHasSuffix", "kindEqualFold", "kindContainsFold", "description", "descriptionNEQ", "descriptionIn", "descriptionNotIn", "descriptionGT", "descriptionGTE", "descriptionLT", "descriptionLTE", "descriptionContains", "descriptionHasPrefix", "descriptionHasSuffix", "descriptionIsNil", "descriptionNotNil", "descriptionEqualFold", "descriptionContainsFold", "secretName", "secretNameNEQ", "secretNameIn", "secretNameNotIn", "secretNameGT", "secretNameGTE", "secretNameLT", "secretNameLTE", "secretNameContains", "secretNameHasPrefix", "secretNameHasSuffix", "secretNameEqualFold", "secretNameContainsFold", "hasOwner", "hasOwnerWith"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByContains", "createdByHasPrefix", "createdByHasSuffix", "createdByIsNil", "createdByNotNil", "createdByEqualFold", "createdByContainsFold", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByContains", "updatedByHasPrefix", "updatedByHasSuffix", "updatedByIsNil", "updatedByNotNil", "updatedByEqualFold", "updatedByContainsFold", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "kind", "kindNEQ", "kindIn", "kindNotIn", "kindGT", "kindGTE", "kindLT", "kindLTE", "kindContains", "kindHasPrefix", "kindHasSuffix", "kindEqualFold", "kindContainsFold", "description", "descriptionNEQ", "descriptionIn", "descriptionNotIn", "descriptionGT", "descriptionGTE", "descriptionLT", "descriptionLTE", "descriptionContains", "descriptionHasPrefix", "descriptionHasSuffix", "descriptionIsNil", "descriptionNotNil", "descriptionEqualFold", "descriptionContainsFold", "secretName", "secretNameNEQ", "secretNameIn", "secretNameNotIn", "secretNameGT", "secretNameGTE", "secretNameLT", "secretNameLTE", "secretNameContains", "secretNameHasPrefix", "secretNameHasSuffix", "secretNameEqualFold", "secretNameContainsFold", "hasOwner", "hasOwnerWith"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -15873,7 +16122,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15882,7 +16131,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idNEQ"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15891,7 +16140,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15900,7 +16149,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idNotIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15909,7 +16158,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idGT"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15918,7 +16167,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idGTE"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15927,7 +16176,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idLT"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15936,7 +16185,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idLTE"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16089,7 +16338,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16098,7 +16347,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByNEQ"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16107,7 +16356,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16116,7 +16365,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByNotIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16125,7 +16374,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByGT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16134,7 +16383,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByGTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16143,7 +16392,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByLT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16152,11 +16401,38 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByLTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.CreatedByLTE = data
+		case "createdByContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByContains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByContains = data
+		case "createdByHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByHasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByHasPrefix = data
+		case "createdByHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByHasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByHasSuffix = data
 		case "createdByIsNil":
 			var err error
 
@@ -16175,11 +16451,29 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 				return it, err
 			}
 			it.CreatedByNotNil = data
+		case "createdByEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByEqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByEqualFold = data
+		case "createdByContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByContainsFold = data
 		case "updatedBy":
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16188,7 +16482,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByNEQ"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16197,7 +16491,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16206,7 +16500,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByNotIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16215,7 +16509,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByGT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16224,7 +16518,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByGTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16233,7 +16527,7 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByLT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16242,11 +16536,38 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByLTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.UpdatedByLTE = data
+		case "updatedByContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByContains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByContains = data
+		case "updatedByHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByHasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByHasPrefix = data
+		case "updatedByHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByHasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByHasSuffix = data
 		case "updatedByIsNil":
 			var err error
 
@@ -16265,6 +16586,24 @@ func (ec *executionContext) unmarshalInputIntegrationWhereInput(ctx context.Cont
 				return it, err
 			}
 			it.UpdatedByNotNil = data
+		case "updatedByEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByEqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByEqualFold = data
+		case "updatedByContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByContainsFold = data
 		case "name":
 			var err error
 
@@ -16824,7 +17163,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByIsNil", "createdByNotNil", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByIsNil", "updatedByNotNil", "parentOrganizationID", "parentOrganizationIDNEQ", "parentOrganizationIDIn", "parentOrganizationIDNotIn", "parentOrganizationIDIsNil", "parentOrganizationIDNotNil", "hasParent", "hasParentWith", "hasChildren", "hasChildrenWith", "hasUsers", "hasUsersWith", "hasGroups", "hasGroupsWith", "hasIntegrations", "hasIntegrationsWith"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByContains", "createdByHasPrefix", "createdByHasSuffix", "createdByIsNil", "createdByNotNil", "createdByEqualFold", "createdByContainsFold", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByContains", "updatedByHasPrefix", "updatedByHasSuffix", "updatedByIsNil", "updatedByNotNil", "updatedByEqualFold", "updatedByContainsFold", "parentOrganizationID", "parentOrganizationIDNEQ", "parentOrganizationIDIn", "parentOrganizationIDNotIn", "parentOrganizationIDGT", "parentOrganizationIDGTE", "parentOrganizationIDLT", "parentOrganizationIDLTE", "parentOrganizationIDContains", "parentOrganizationIDHasPrefix", "parentOrganizationIDHasSuffix", "parentOrganizationIDIsNil", "parentOrganizationIDNotNil", "parentOrganizationIDEqualFold", "parentOrganizationIDContainsFold", "hasParent", "hasParentWith", "hasChildren", "hasChildrenWith", "hasUsers", "hasUsersWith", "hasGroups", "hasGroupsWith", "hasIntegrations", "hasIntegrationsWith"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -16862,7 +17201,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16871,7 +17210,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idNEQ"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16880,7 +17219,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16889,7 +17228,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idNotIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16898,7 +17237,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idGT"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16907,7 +17246,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idGTE"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16916,7 +17255,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idLT"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -16925,7 +17264,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idLTE"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17078,7 +17417,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17087,7 +17426,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByNEQ"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17096,7 +17435,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17105,7 +17444,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByNotIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17114,7 +17453,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByGT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17123,7 +17462,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByGTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17132,7 +17471,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByLT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17141,11 +17480,38 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByLTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.CreatedByLTE = data
+		case "createdByContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByContains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByContains = data
+		case "createdByHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByHasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByHasPrefix = data
+		case "createdByHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByHasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByHasSuffix = data
 		case "createdByIsNil":
 			var err error
 
@@ -17164,11 +17530,29 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 				return it, err
 			}
 			it.CreatedByNotNil = data
+		case "createdByEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByEqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByEqualFold = data
+		case "createdByContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByContainsFold = data
 		case "updatedBy":
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17177,7 +17561,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByNEQ"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17186,7 +17570,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17195,7 +17579,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByNotIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17204,7 +17588,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByGT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17213,7 +17597,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByGTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17222,7 +17606,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByLT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17231,11 +17615,38 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByLTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.UpdatedByLTE = data
+		case "updatedByContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByContains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByContains = data
+		case "updatedByHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByHasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByHasPrefix = data
+		case "updatedByHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByHasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByHasSuffix = data
 		case "updatedByIsNil":
 			var err error
 
@@ -17254,11 +17665,29 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 				return it, err
 			}
 			it.UpdatedByNotNil = data
+		case "updatedByEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByEqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByEqualFold = data
+		case "updatedByContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByContainsFold = data
 		case "parentOrganizationID":
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationID"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17267,7 +17696,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDNEQ"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17276,7 +17705,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17285,11 +17714,74 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDNotIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.ParentOrganizationIDNotIn = data
+		case "parentOrganizationIDGT":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDGT"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ParentOrganizationIDGT = data
+		case "parentOrganizationIDGTE":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDGTE"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ParentOrganizationIDGTE = data
+		case "parentOrganizationIDLT":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDLT"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ParentOrganizationIDLT = data
+		case "parentOrganizationIDLTE":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDLTE"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ParentOrganizationIDLTE = data
+		case "parentOrganizationIDContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDContains"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ParentOrganizationIDContains = data
+		case "parentOrganizationIDHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDHasPrefix"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ParentOrganizationIDHasPrefix = data
+		case "parentOrganizationIDHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDHasSuffix"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ParentOrganizationIDHasSuffix = data
 		case "parentOrganizationIDIsNil":
 			var err error
 
@@ -17308,6 +17800,24 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 				return it, err
 			}
 			it.ParentOrganizationIDNotNil = data
+		case "parentOrganizationIDEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDEqualFold"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ParentOrganizationIDEqualFold = data
+		case "parentOrganizationIDContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDContainsFold"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ParentOrganizationIDContainsFold = data
 		case "hasParent":
 			var err error
 
@@ -17411,7 +17921,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByIsNil", "createdByNotNil", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByIsNil", "updatedByNotNil", "type", "typeNEQ", "typeIn", "typeNotIn", "disabled", "disabledNEQ", "token", "tokenNEQ", "tokenIn", "tokenNotIn", "tokenGT", "tokenGTE", "tokenLT", "tokenLTE", "tokenContains", "tokenHasPrefix", "tokenHasSuffix", "tokenEqualFold", "tokenContainsFold", "userAgent", "userAgentNEQ", "userAgentIn", "userAgentNotIn", "userAgentGT", "userAgentGTE", "userAgentLT", "userAgentLTE", "userAgentContains", "userAgentHasPrefix", "userAgentHasSuffix", "userAgentIsNil", "userAgentNotNil", "userAgentEqualFold", "userAgentContainsFold", "ips", "ipsNEQ", "ipsIn", "ipsNotIn", "ipsGT", "ipsGTE", "ipsLT", "ipsLTE", "ipsContains", "ipsHasPrefix", "ipsHasSuffix", "ipsEqualFold", "ipsContainsFold", "hasUsers", "hasUsersWith"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByContains", "createdByHasPrefix", "createdByHasSuffix", "createdByIsNil", "createdByNotNil", "createdByEqualFold", "createdByContainsFold", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByContains", "updatedByHasPrefix", "updatedByHasSuffix", "updatedByIsNil", "updatedByNotNil", "updatedByEqualFold", "updatedByContainsFold", "type", "typeNEQ", "typeIn", "typeNotIn", "disabled", "disabledNEQ", "token", "tokenNEQ", "tokenIn", "tokenNotIn", "tokenGT", "tokenGTE", "tokenLT", "tokenLTE", "tokenContains", "tokenHasPrefix", "tokenHasSuffix", "tokenEqualFold", "tokenContainsFold", "userAgent", "userAgentNEQ", "userAgentIn", "userAgentNotIn", "userAgentGT", "userAgentGTE", "userAgentLT", "userAgentLTE", "userAgentContains", "userAgentHasPrefix", "userAgentHasSuffix", "userAgentIsNil", "userAgentNotNil", "userAgentEqualFold", "userAgentContainsFold", "ips", "ipsNEQ", "ipsIn", "ipsNotIn", "ipsGT", "ipsGTE", "ipsLT", "ipsLTE", "ipsContains", "ipsHasPrefix", "ipsHasSuffix", "ipsEqualFold", "ipsContainsFold", "hasUsers", "hasUsersWith"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -17449,7 +17959,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17458,7 +17968,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idNEQ"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17467,7 +17977,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17476,7 +17986,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idNotIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17485,7 +17995,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idGT"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17494,7 +18004,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idGTE"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17503,7 +18013,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idLT"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17512,7 +18022,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idLTE"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17665,7 +18175,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17674,7 +18184,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByNEQ"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17683,7 +18193,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17692,7 +18202,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByNotIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17701,7 +18211,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByGT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17710,7 +18220,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByGTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17719,7 +18229,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByLT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17728,11 +18238,38 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByLTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.CreatedByLTE = data
+		case "createdByContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByContains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByContains = data
+		case "createdByHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByHasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByHasPrefix = data
+		case "createdByHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByHasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByHasSuffix = data
 		case "createdByIsNil":
 			var err error
 
@@ -17751,11 +18288,29 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 				return it, err
 			}
 			it.CreatedByNotNil = data
+		case "createdByEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByEqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByEqualFold = data
+		case "createdByContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByContainsFold = data
 		case "updatedBy":
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17764,7 +18319,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByNEQ"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17773,7 +18328,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17782,7 +18337,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByNotIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17791,7 +18346,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByGT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17800,7 +18355,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByGTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17809,7 +18364,7 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByLT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17818,11 +18373,38 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByLTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.UpdatedByLTE = data
+		case "updatedByContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByContains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByContains = data
+		case "updatedByHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByHasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByHasPrefix = data
+		case "updatedByHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByHasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByHasSuffix = data
 		case "updatedByIsNil":
 			var err error
 
@@ -17841,6 +18423,24 @@ func (ec *executionContext) unmarshalInputSessionWhereInput(ctx context.Context,
 				return it, err
 			}
 			it.UpdatedByNotNil = data
+		case "updatedByEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByEqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByEqualFold = data
+		case "updatedByContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByContainsFold = data
 		case "type":
 			var err error
 
@@ -18315,7 +18915,7 @@ func (ec *executionContext) unmarshalInputUpdateGroupInput(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18333,7 +18933,7 @@ func (ec *executionContext) unmarshalInputUpdateGroupInput(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18378,7 +18978,7 @@ func (ec *executionContext) unmarshalInputUpdateGroupInput(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("settingID"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18387,7 +18987,7 @@ func (ec *executionContext) unmarshalInputUpdateGroupInput(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("addUserIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18396,7 +18996,7 @@ func (ec *executionContext) unmarshalInputUpdateGroupInput(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("removeUserIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18414,7 +19014,7 @@ func (ec *executionContext) unmarshalInputUpdateGroupInput(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ownerID"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18461,7 +19061,7 @@ func (ec *executionContext) unmarshalInputUpdateGroupSettingsInput(ctx context.C
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18479,7 +19079,7 @@ func (ec *executionContext) unmarshalInputUpdateGroupSettingsInput(ctx context.C
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18544,7 +19144,7 @@ func (ec *executionContext) unmarshalInputUpdateIntegrationInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18562,7 +19162,7 @@ func (ec *executionContext) unmarshalInputUpdateIntegrationInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18607,7 +19207,7 @@ func (ec *executionContext) unmarshalInputUpdateIntegrationInput(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ownerID"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18654,7 +19254,7 @@ func (ec *executionContext) unmarshalInputUpdateOrganizationInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18672,7 +19272,7 @@ func (ec *executionContext) unmarshalInputUpdateOrganizationInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18717,7 +19317,7 @@ func (ec *executionContext) unmarshalInputUpdateOrganizationInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("addUserIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18726,7 +19326,7 @@ func (ec *executionContext) unmarshalInputUpdateOrganizationInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("removeUserIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18744,7 +19344,7 @@ func (ec *executionContext) unmarshalInputUpdateOrganizationInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("addGroupIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18753,7 +19353,7 @@ func (ec *executionContext) unmarshalInputUpdateOrganizationInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("removeGroupIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18771,7 +19371,7 @@ func (ec *executionContext) unmarshalInputUpdateOrganizationInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("addIntegrationIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18780,7 +19380,7 @@ func (ec *executionContext) unmarshalInputUpdateOrganizationInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("removeIntegrationIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18827,7 +19427,7 @@ func (ec *executionContext) unmarshalInputUpdateSessionInput(ctx context.Context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18845,7 +19445,7 @@ func (ec *executionContext) unmarshalInputUpdateSessionInput(ctx context.Context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18899,7 +19499,7 @@ func (ec *executionContext) unmarshalInputUpdateSessionInput(ctx context.Context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("usersID"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18946,7 +19546,7 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18964,7 +19564,7 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19135,7 +19735,7 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("addOrganizationIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19144,7 +19744,7 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("removeOrganizationIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19162,7 +19762,7 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("addSessionIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19171,7 +19771,7 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("removeSessionIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19189,7 +19789,7 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("addGroupIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19198,7 +19798,7 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("removeGroupIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19267,7 +19867,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByIsNil", "createdByNotNil", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByIsNil", "updatedByNotNil", "email", "emailNEQ", "emailIn", "emailNotIn", "emailGT", "emailGTE", "emailLT", "emailLTE", "emailContains", "emailHasPrefix", "emailHasSuffix", "emailEqualFold", "emailContainsFold", "firstName", "firstNameNEQ", "firstNameIn", "firstNameNotIn", "firstNameGT", "firstNameGTE", "firstNameLT", "firstNameLTE", "firstNameContains", "firstNameHasPrefix", "firstNameHasSuffix", "firstNameEqualFold", "firstNameContainsFold", "lastName", "lastNameNEQ", "lastNameIn", "lastNameNotIn", "lastNameGT", "lastNameGTE", "lastNameLT", "lastNameLTE", "lastNameContains", "lastNameHasPrefix", "lastNameHasSuffix", "lastNameEqualFold", "lastNameContainsFold", "displayName", "displayNameNEQ", "displayNameIn", "displayNameNotIn", "displayNameGT", "displayNameGTE", "displayNameLT", "displayNameLTE", "displayNameContains", "displayNameHasPrefix", "displayNameHasSuffix", "displayNameEqualFold", "displayNameContainsFold", "locked", "lockedNEQ", "avatarRemoteURL", "avatarRemoteURLNEQ", "avatarRemoteURLIn", "avatarRemoteURLNotIn", "avatarRemoteURLGT", "avatarRemoteURLGTE", "avatarRemoteURLLT", "avatarRemoteURLLTE", "avatarRemoteURLContains", "avatarRemoteURLHasPrefix", "avatarRemoteURLHasSuffix", "avatarRemoteURLIsNil", "avatarRemoteURLNotNil", "avatarRemoteURLEqualFold", "avatarRemoteURLContainsFold", "avatarLocalFile", "avatarLocalFileNEQ", "avatarLocalFileIn", "avatarLocalFileNotIn", "avatarLocalFileGT", "avatarLocalFileGTE", "avatarLocalFileLT", "avatarLocalFileLTE", "avatarLocalFileContains", "avatarLocalFileHasPrefix", "avatarLocalFileHasSuffix", "avatarLocalFileIsNil", "avatarLocalFileNotNil", "avatarLocalFileEqualFold", "avatarLocalFileContainsFold", "avatarUpdatedAt", "avatarUpdatedAtNEQ", "avatarUpdatedAtIn", "avatarUpdatedAtNotIn", "avatarUpdatedAtGT", "avatarUpdatedAtGTE", "avatarUpdatedAtLT", "avatarUpdatedAtLTE", "avatarUpdatedAtIsNil", "avatarUpdatedAtNotNil", "silencedAt", "silencedAtNEQ", "silencedAtIn", "silencedAtNotIn", "silencedAtGT", "silencedAtGTE", "silencedAtLT", "silencedAtLTE", "silencedAtIsNil", "silencedAtNotNil", "suspendedAt", "suspendedAtNEQ", "suspendedAtIn", "suspendedAtNotIn", "suspendedAtGT", "suspendedAtGTE", "suspendedAtLT", "suspendedAtLTE", "suspendedAtIsNil", "suspendedAtNotNil", "hasOrganizations", "hasOrganizationsWith", "hasSessions", "hasSessionsWith", "hasGroups", "hasGroupsWith"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByContains", "createdByHasPrefix", "createdByHasSuffix", "createdByIsNil", "createdByNotNil", "createdByEqualFold", "createdByContainsFold", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByContains", "updatedByHasPrefix", "updatedByHasSuffix", "updatedByIsNil", "updatedByNotNil", "updatedByEqualFold", "updatedByContainsFold", "email", "emailNEQ", "emailIn", "emailNotIn", "emailGT", "emailGTE", "emailLT", "emailLTE", "emailContains", "emailHasPrefix", "emailHasSuffix", "emailEqualFold", "emailContainsFold", "firstName", "firstNameNEQ", "firstNameIn", "firstNameNotIn", "firstNameGT", "firstNameGTE", "firstNameLT", "firstNameLTE", "firstNameContains", "firstNameHasPrefix", "firstNameHasSuffix", "firstNameEqualFold", "firstNameContainsFold", "lastName", "lastNameNEQ", "lastNameIn", "lastNameNotIn", "lastNameGT", "lastNameGTE", "lastNameLT", "lastNameLTE", "lastNameContains", "lastNameHasPrefix", "lastNameHasSuffix", "lastNameEqualFold", "lastNameContainsFold", "displayName", "displayNameNEQ", "displayNameIn", "displayNameNotIn", "displayNameGT", "displayNameGTE", "displayNameLT", "displayNameLTE", "displayNameContains", "displayNameHasPrefix", "displayNameHasSuffix", "displayNameEqualFold", "displayNameContainsFold", "locked", "lockedNEQ", "avatarRemoteURL", "avatarRemoteURLNEQ", "avatarRemoteURLIn", "avatarRemoteURLNotIn", "avatarRemoteURLGT", "avatarRemoteURLGTE", "avatarRemoteURLLT", "avatarRemoteURLLTE", "avatarRemoteURLContains", "avatarRemoteURLHasPrefix", "avatarRemoteURLHasSuffix", "avatarRemoteURLIsNil", "avatarRemoteURLNotNil", "avatarRemoteURLEqualFold", "avatarRemoteURLContainsFold", "avatarLocalFile", "avatarLocalFileNEQ", "avatarLocalFileIn", "avatarLocalFileNotIn", "avatarLocalFileGT", "avatarLocalFileGTE", "avatarLocalFileLT", "avatarLocalFileLTE", "avatarLocalFileContains", "avatarLocalFileHasPrefix", "avatarLocalFileHasSuffix", "avatarLocalFileIsNil", "avatarLocalFileNotNil", "avatarLocalFileEqualFold", "avatarLocalFileContainsFold", "avatarUpdatedAt", "avatarUpdatedAtNEQ", "avatarUpdatedAtIn", "avatarUpdatedAtNotIn", "avatarUpdatedAtGT", "avatarUpdatedAtGTE", "avatarUpdatedAtLT", "avatarUpdatedAtLTE", "avatarUpdatedAtIsNil", "avatarUpdatedAtNotNil", "silencedAt", "silencedAtNEQ", "silencedAtIn", "silencedAtNotIn", "silencedAtGT", "silencedAtGTE", "silencedAtLT", "silencedAtLTE", "silencedAtIsNil", "silencedAtNotNil", "suspendedAt", "suspendedAtNEQ", "suspendedAtIn", "suspendedAtNotIn", "suspendedAtGT", "suspendedAtGTE", "suspendedAtLT", "suspendedAtLTE", "suspendedAtIsNil", "suspendedAtNotNil", "hasOrganizations", "hasOrganizationsWith", "hasSessions", "hasSessionsWith", "hasGroups", "hasGroupsWith"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -19305,7 +19905,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19314,7 +19914,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idNEQ"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19323,7 +19923,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19332,7 +19932,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idNotIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19341,7 +19941,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idGT"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19350,7 +19950,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idGTE"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19359,7 +19959,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idLT"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19368,7 +19968,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idLTE"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19521,7 +20121,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19530,7 +20130,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByNEQ"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19539,7 +20139,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19548,7 +20148,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByNotIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19557,7 +20157,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByGT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19566,7 +20166,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByGTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19575,7 +20175,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByLT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19584,11 +20184,38 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByLTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.CreatedByLTE = data
+		case "createdByContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByContains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByContains = data
+		case "createdByHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByHasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByHasPrefix = data
+		case "createdByHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByHasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByHasSuffix = data
 		case "createdByIsNil":
 			var err error
 
@@ -19607,11 +20234,29 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 				return it, err
 			}
 			it.CreatedByNotNil = data
+		case "createdByEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByEqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByEqualFold = data
+		case "createdByContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedByContainsFold = data
 		case "updatedBy":
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedBy"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19620,7 +20265,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByNEQ"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19629,7 +20274,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19638,7 +20283,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByNotIn"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19647,7 +20292,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByGT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19656,7 +20301,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByGTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19665,7 +20310,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByLT"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19674,11 +20319,38 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByLTE"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.UpdatedByLTE = data
+		case "updatedByContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByContains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByContains = data
+		case "updatedByHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByHasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByHasPrefix = data
+		case "updatedByHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByHasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByHasSuffix = data
 		case "updatedByIsNil":
 			var err error
 
@@ -19697,6 +20369,24 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 				return it, err
 			}
 			it.UpdatedByNotNil = data
+		case "updatedByEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByEqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByEqualFold = data
+		case "updatedByContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedByContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdatedByContainsFold = data
 		case "email":
 			var err error
 
@@ -22242,7 +22932,7 @@ func (ec *executionContext) _OrganizationUpdatePayload(ctx context.Context, sel 
 
 var pageInfoImplementors = []string{"PageInfo"}
 
-func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet, obj *entgql.PageInfo[uuid.UUID]) graphql.Marshaler {
+func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet, obj *entgql.PageInfo[nanox.ID]) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, pageInfoImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -23748,13 +24438,13 @@ func (ec *executionContext) unmarshalNCreateUserInput2githubᚗcomᚋdatumforge�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCursor(ctx context.Context, v interface{}) (entgql.Cursor[uuid.UUID], error) {
-	var res entgql.Cursor[uuid.UUID]
+func (ec *executionContext) unmarshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCursor(ctx context.Context, v interface{}) (entgql.Cursor[nanox.ID], error) {
+	var res entgql.Cursor[nanox.ID]
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCursor(ctx context.Context, sel ast.SelectionSet, v entgql.Cursor[uuid.UUID]) graphql.Marshaler {
+func (ec *executionContext) marshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCursor(ctx context.Context, sel ast.SelectionSet, v entgql.Cursor[nanox.ID]) graphql.Marshaler {
 	return v
 }
 
@@ -23898,31 +24588,26 @@ func (ec *executionContext) unmarshalNGroupWhereInput2ᚖgithubᚗcomᚋdatumfor
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, v interface{}) (uuid.UUID, error) {
-	res, err := graphql.UnmarshalUUID(v)
+func (ec *executionContext) unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx context.Context, v interface{}) (nanox.ID, error) {
+	var res nanox.ID
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, sel ast.SelectionSet, v uuid.UUID) graphql.Marshaler {
-	res := graphql.MarshalUUID(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+func (ec *executionContext) marshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx context.Context, sel ast.SelectionSet, v nanox.ID) graphql.Marshaler {
+	return v
 }
 
-func (ec *executionContext) unmarshalNID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx context.Context, v interface{}) ([]uuid.UUID, error) {
+func (ec *executionContext) unmarshalNID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx context.Context, v interface{}) ([]nanox.ID, error) {
 	var vSlice []interface{}
 	if v != nil {
 		vSlice = graphql.CoerceList(v)
 	}
 	var err error
-	res := make([]uuid.UUID, len(vSlice))
+	res := make([]nanox.ID, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -23930,10 +24615,10 @@ func (ec *executionContext) unmarshalNID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUID�
 	return res, nil
 }
 
-func (ec *executionContext) marshalNID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx context.Context, sel ast.SelectionSet, v []uuid.UUID) graphql.Marshaler {
+func (ec *executionContext) marshalNID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx context.Context, sel ast.SelectionSet, v []nanox.ID) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	for i := range v {
-		ret[i] = ec.marshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, sel, v[i])
+		ret[i] = ec.marshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, sel, v[i])
 	}
 
 	for _, e := range ret {
@@ -24190,7 +24875,7 @@ func (ec *executionContext) unmarshalNOrganizationWhereInput2ᚖgithubᚗcomᚋd
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v entgql.PageInfo[uuid.UUID]) graphql.Marshaler {
+func (ec *executionContext) marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v entgql.PageInfo[nanox.ID]) graphql.Marshaler {
 	return ec._PageInfo(ctx, sel, &v)
 }
 
@@ -24301,21 +24986,6 @@ func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v in
 
 func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel ast.SelectionSet, v time.Time) graphql.Marshaler {
 	res := graphql.MarshalTime(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
-func (ec *executionContext) unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, v interface{}) (uuid.UUID, error) {
-	res, err := graphql.UnmarshalUUID(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, sel ast.SelectionSet, v uuid.UUID) graphql.Marshaler {
-	res := graphql.MarshalUUID(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -24738,16 +25408,16 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
-func (ec *executionContext) unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx context.Context, v interface{}) (*entgql.Cursor[uuid.UUID], error) {
+func (ec *executionContext) unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx context.Context, v interface{}) (*entgql.Cursor[nanox.ID], error) {
 	if v == nil {
 		return nil, nil
 	}
-	var res = new(entgql.Cursor[uuid.UUID])
+	var res = new(entgql.Cursor[nanox.ID])
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx context.Context, sel ast.SelectionSet, v *entgql.Cursor[uuid.UUID]) graphql.Marshaler {
+func (ec *executionContext) marshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx context.Context, sel ast.SelectionSet, v *entgql.Cursor[nanox.ID]) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -25141,7 +25811,7 @@ func (ec *executionContext) unmarshalOGroupWhereInput2ᚖgithubᚗcomᚋdatumfor
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx context.Context, v interface{}) ([]uuid.UUID, error) {
+func (ec *executionContext) unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx context.Context, v interface{}) ([]nanox.ID, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -25150,10 +25820,10 @@ func (ec *executionContext) unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUID�
 		vSlice = graphql.CoerceList(v)
 	}
 	var err error
-	res := make([]uuid.UUID, len(vSlice))
+	res := make([]nanox.ID, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -25161,13 +25831,13 @@ func (ec *executionContext) unmarshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUID�
 	return res, nil
 }
 
-func (ec *executionContext) marshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx context.Context, sel ast.SelectionSet, v []uuid.UUID) graphql.Marshaler {
+func (ec *executionContext) marshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx context.Context, sel ast.SelectionSet, v []nanox.ID) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	ret := make(graphql.Array, len(v))
 	for i := range v {
-		ret[i] = ec.marshalNID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, sel, v[i])
+		ret[i] = ec.marshalNID2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, sel, v[i])
 	}
 
 	for _, e := range ret {
@@ -25179,20 +25849,20 @@ func (ec *executionContext) marshalOID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ
 	return ret
 }
 
-func (ec *executionContext) unmarshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, v interface{}) (*uuid.UUID, error) {
+func (ec *executionContext) unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx context.Context, v interface{}) (*nanox.ID, error) {
 	if v == nil {
 		return nil, nil
 	}
-	res, err := graphql.UnmarshalUUID(v)
-	return &res, graphql.ErrorOnPath(ctx, err)
+	var res = new(nanox.ID)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, sel ast.SelectionSet, v *uuid.UUID) graphql.Marshaler {
+func (ec *executionContext) marshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx context.Context, sel ast.SelectionSet, v *nanox.ID) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalUUID(*v)
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
@@ -25822,70 +26492,6 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 		return graphql.Null
 	}
 	res := graphql.MarshalTime(*v)
-	return res
-}
-
-func (ec *executionContext) unmarshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, v interface{}) (uuid.UUID, error) {
-	res, err := graphql.UnmarshalUUID(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, sel ast.SelectionSet, v uuid.UUID) graphql.Marshaler {
-	res := graphql.MarshalUUID(v)
-	return res
-}
-
-func (ec *executionContext) unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx context.Context, v interface{}) ([]uuid.UUID, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]uuid.UUID, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx context.Context, sel ast.SelectionSet, v []uuid.UUID) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	for i := range v {
-		ret[i] = ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, sel, v[i])
-	}
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, v interface{}) (*uuid.UUID, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := graphql.UnmarshalUUID(v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, sel ast.SelectionSet, v *uuid.UUID) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	res := graphql.MarshalUUID(*v)
 	return res
 }
 
