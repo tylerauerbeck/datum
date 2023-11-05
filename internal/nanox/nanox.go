@@ -69,6 +69,11 @@ func (u *ID) Scan(v any) error {
 	return nil
 }
 
+// String returns ID as a string
+func (u ID) String() string {
+	return string(u)
+}
+
 // Value implements the driver Valuer interface.
 func (u ID) Value() (driver.Value, error) {
 	return string(u), nil

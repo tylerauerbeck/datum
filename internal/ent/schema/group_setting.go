@@ -15,6 +15,14 @@ type GroupSettings struct {
 	ent.Schema
 }
 
+// Mixin of the GroupSettings
+func (GroupSettings) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		mixin.AuditMixin{},
+		mixin.IDMixin{},
+	}
+}
+
 // Fields of the GroupSettings.
 func (GroupSettings) Fields() []ent.Field {
 	return []ent.Field{
@@ -43,13 +51,5 @@ func (GroupSettings) Annotations() []schema.Annotation {
 		entgql.QueryField(),
 		entgql.RelayConnection(),
 		entgql.Mutations(entgql.MutationCreate(), (entgql.MutationUpdate())),
-	}
-}
-
-// Mixin of the GroupSettings
-func (GroupSettings) Mixin() []ent.Mixin {
-	return []ent.Mixin{
-		mixin.AuditMixin{},
-		mixin.IDMixin{},
 	}
 }

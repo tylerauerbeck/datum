@@ -33,8 +33,10 @@ require (
 )
 
 require (
+	ariga.io/ogent v0.0.0-20230621041143-ed3e5d4da458 // indirect
 	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
 	github.com/google/uuid v1.4.0 // indirect
+	github.com/hedwigz/entviz v0.0.0-20221011080911-9d47f6f1d818 // indirect
 	github.com/stoewer/go-strcase v1.2.0 // indirect
 )
 
