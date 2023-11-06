@@ -691,22 +691,6 @@ type OrganizationWhereInput struct {
 	UpdatedByNotNil       *bool    `json:"updatedByNotNil,omitempty"`
 	UpdatedByEqualFold    *string  `json:"updatedByEqualFold,omitempty"`
 	UpdatedByContainsFold *string  `json:"updatedByContainsFold,omitempty"`
-	// parent_organization_id field predicates
-	ParentOrganizationID             *nanox.ID  `json:"parentOrganizationID,omitempty"`
-	ParentOrganizationIDNeq          *nanox.ID  `json:"parentOrganizationIDNEQ,omitempty"`
-	ParentOrganizationIDIn           []nanox.ID `json:"parentOrganizationIDIn,omitempty"`
-	ParentOrganizationIDNotIn        []nanox.ID `json:"parentOrganizationIDNotIn,omitempty"`
-	ParentOrganizationIDGt           *nanox.ID  `json:"parentOrganizationIDGT,omitempty"`
-	ParentOrganizationIDGte          *nanox.ID  `json:"parentOrganizationIDGTE,omitempty"`
-	ParentOrganizationIDLt           *nanox.ID  `json:"parentOrganizationIDLT,omitempty"`
-	ParentOrganizationIDLte          *nanox.ID  `json:"parentOrganizationIDLTE,omitempty"`
-	ParentOrganizationIDContains     *nanox.ID  `json:"parentOrganizationIDContains,omitempty"`
-	ParentOrganizationIDHasPrefix    *nanox.ID  `json:"parentOrganizationIDHasPrefix,omitempty"`
-	ParentOrganizationIDHasSuffix    *nanox.ID  `json:"parentOrganizationIDHasSuffix,omitempty"`
-	ParentOrganizationIDIsNil        *bool      `json:"parentOrganizationIDIsNil,omitempty"`
-	ParentOrganizationIDNotNil       *bool      `json:"parentOrganizationIDNotNil,omitempty"`
-	ParentOrganizationIDEqualFold    *nanox.ID  `json:"parentOrganizationIDEqualFold,omitempty"`
-	ParentOrganizationIDContainsFold *nanox.ID  `json:"parentOrganizationIDContainsFold,omitempty"`
 	// parent edge predicates
 	HasParent     *bool                     `json:"hasParent,omitempty"`
 	HasParentWith []*OrganizationWhereInput `json:"hasParentWith,omitempty"`

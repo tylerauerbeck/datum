@@ -1438,23 +1438,6 @@ type OrganizationWhereInput struct {
 	UpdatedByEqualFold    *string  `json:"updatedByEqualFold,omitempty"`
 	UpdatedByContainsFold *string  `json:"updatedByContainsFold,omitempty"`
 
-	// "parent_organization_id" field predicates.
-	ParentOrganizationID             *nanox.ID  `json:"parentOrganizationID,omitempty"`
-	ParentOrganizationIDNEQ          *nanox.ID  `json:"parentOrganizationIDNEQ,omitempty"`
-	ParentOrganizationIDIn           []nanox.ID `json:"parentOrganizationIDIn,omitempty"`
-	ParentOrganizationIDNotIn        []nanox.ID `json:"parentOrganizationIDNotIn,omitempty"`
-	ParentOrganizationIDGT           *nanox.ID  `json:"parentOrganizationIDGT,omitempty"`
-	ParentOrganizationIDGTE          *nanox.ID  `json:"parentOrganizationIDGTE,omitempty"`
-	ParentOrganizationIDLT           *nanox.ID  `json:"parentOrganizationIDLT,omitempty"`
-	ParentOrganizationIDLTE          *nanox.ID  `json:"parentOrganizationIDLTE,omitempty"`
-	ParentOrganizationIDContains     *nanox.ID  `json:"parentOrganizationIDContains,omitempty"`
-	ParentOrganizationIDHasPrefix    *nanox.ID  `json:"parentOrganizationIDHasPrefix,omitempty"`
-	ParentOrganizationIDHasSuffix    *nanox.ID  `json:"parentOrganizationIDHasSuffix,omitempty"`
-	ParentOrganizationIDIsNil        bool       `json:"parentOrganizationIDIsNil,omitempty"`
-	ParentOrganizationIDNotNil       bool       `json:"parentOrganizationIDNotNil,omitempty"`
-	ParentOrganizationIDEqualFold    *nanox.ID  `json:"parentOrganizationIDEqualFold,omitempty"`
-	ParentOrganizationIDContainsFold *nanox.ID  `json:"parentOrganizationIDContainsFold,omitempty"`
-
 	// "parent" edge predicates.
 	HasParent     *bool                     `json:"hasParent,omitempty"`
 	HasParentWith []*OrganizationWhereInput `json:"hasParentWith,omitempty"`
@@ -1708,51 +1691,6 @@ func (i *OrganizationWhereInput) P() (predicate.Organization, error) {
 	}
 	if i.UpdatedByContainsFold != nil {
 		predicates = append(predicates, organization.UpdatedByContainsFold(*i.UpdatedByContainsFold))
-	}
-	if i.ParentOrganizationID != nil {
-		predicates = append(predicates, organization.ParentOrganizationIDEQ(*i.ParentOrganizationID))
-	}
-	if i.ParentOrganizationIDNEQ != nil {
-		predicates = append(predicates, organization.ParentOrganizationIDNEQ(*i.ParentOrganizationIDNEQ))
-	}
-	if len(i.ParentOrganizationIDIn) > 0 {
-		predicates = append(predicates, organization.ParentOrganizationIDIn(i.ParentOrganizationIDIn...))
-	}
-	if len(i.ParentOrganizationIDNotIn) > 0 {
-		predicates = append(predicates, organization.ParentOrganizationIDNotIn(i.ParentOrganizationIDNotIn...))
-	}
-	if i.ParentOrganizationIDGT != nil {
-		predicates = append(predicates, organization.ParentOrganizationIDGT(*i.ParentOrganizationIDGT))
-	}
-	if i.ParentOrganizationIDGTE != nil {
-		predicates = append(predicates, organization.ParentOrganizationIDGTE(*i.ParentOrganizationIDGTE))
-	}
-	if i.ParentOrganizationIDLT != nil {
-		predicates = append(predicates, organization.ParentOrganizationIDLT(*i.ParentOrganizationIDLT))
-	}
-	if i.ParentOrganizationIDLTE != nil {
-		predicates = append(predicates, organization.ParentOrganizationIDLTE(*i.ParentOrganizationIDLTE))
-	}
-	if i.ParentOrganizationIDContains != nil {
-		predicates = append(predicates, organization.ParentOrganizationIDContains(*i.ParentOrganizationIDContains))
-	}
-	if i.ParentOrganizationIDHasPrefix != nil {
-		predicates = append(predicates, organization.ParentOrganizationIDHasPrefix(*i.ParentOrganizationIDHasPrefix))
-	}
-	if i.ParentOrganizationIDHasSuffix != nil {
-		predicates = append(predicates, organization.ParentOrganizationIDHasSuffix(*i.ParentOrganizationIDHasSuffix))
-	}
-	if i.ParentOrganizationIDIsNil {
-		predicates = append(predicates, organization.ParentOrganizationIDIsNil())
-	}
-	if i.ParentOrganizationIDNotNil {
-		predicates = append(predicates, organization.ParentOrganizationIDNotNil())
-	}
-	if i.ParentOrganizationIDEqualFold != nil {
-		predicates = append(predicates, organization.ParentOrganizationIDEqualFold(*i.ParentOrganizationIDEqualFold))
-	}
-	if i.ParentOrganizationIDContainsFold != nil {
-		predicates = append(predicates, organization.ParentOrganizationIDContainsFold(*i.ParentOrganizationIDContainsFold))
 	}
 
 	if i.HasParent != nil {

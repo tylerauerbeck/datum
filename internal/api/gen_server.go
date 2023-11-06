@@ -2349,22 +2349,6 @@ input OrganizationWhereInput {
   updatedByNotNil: Boolean
   updatedByEqualFold: String
   updatedByContainsFold: String
-  """parent_organization_id field predicates"""
-  parentOrganizationID: ID
-  parentOrganizationIDNEQ: ID
-  parentOrganizationIDIn: [ID!]
-  parentOrganizationIDNotIn: [ID!]
-  parentOrganizationIDGT: ID
-  parentOrganizationIDGTE: ID
-  parentOrganizationIDLT: ID
-  parentOrganizationIDLTE: ID
-  parentOrganizationIDContains: ID
-  parentOrganizationIDHasPrefix: ID
-  parentOrganizationIDHasSuffix: ID
-  parentOrganizationIDIsNil: Boolean
-  parentOrganizationIDNotNil: Boolean
-  parentOrganizationIDEqualFold: ID
-  parentOrganizationIDContainsFold: ID
   """parent edge predicates"""
   hasParent: Boolean
   hasParentWith: [OrganizationWhereInput!]
@@ -17163,7 +17147,7 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByContains", "createdByHasPrefix", "createdByHasSuffix", "createdByIsNil", "createdByNotNil", "createdByEqualFold", "createdByContainsFold", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByContains", "updatedByHasPrefix", "updatedByHasSuffix", "updatedByIsNil", "updatedByNotNil", "updatedByEqualFold", "updatedByContainsFold", "parentOrganizationID", "parentOrganizationIDNEQ", "parentOrganizationIDIn", "parentOrganizationIDNotIn", "parentOrganizationIDGT", "parentOrganizationIDGTE", "parentOrganizationIDLT", "parentOrganizationIDLTE", "parentOrganizationIDContains", "parentOrganizationIDHasPrefix", "parentOrganizationIDHasSuffix", "parentOrganizationIDIsNil", "parentOrganizationIDNotNil", "parentOrganizationIDEqualFold", "parentOrganizationIDContainsFold", "hasParent", "hasParentWith", "hasChildren", "hasChildrenWith", "hasUsers", "hasUsersWith", "hasGroups", "hasGroupsWith", "hasIntegrations", "hasIntegrationsWith"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByContains", "createdByHasPrefix", "createdByHasSuffix", "createdByIsNil", "createdByNotNil", "createdByEqualFold", "createdByContainsFold", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByContains", "updatedByHasPrefix", "updatedByHasSuffix", "updatedByIsNil", "updatedByNotNil", "updatedByEqualFold", "updatedByContainsFold", "hasParent", "hasParentWith", "hasChildren", "hasChildrenWith", "hasUsers", "hasUsersWith", "hasGroups", "hasGroupsWith", "hasIntegrations", "hasIntegrationsWith"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -17683,141 +17667,6 @@ func (ec *executionContext) unmarshalInputOrganizationWhereInput(ctx context.Con
 				return it, err
 			}
 			it.UpdatedByContainsFold = data
-		case "parentOrganizationID":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationID"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationID = data
-		case "parentOrganizationIDNEQ":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDNEQ"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationIDNEQ = data
-		case "parentOrganizationIDIn":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationIDIn = data
-		case "parentOrganizationIDNotIn":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDNotIn"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐIDᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationIDNotIn = data
-		case "parentOrganizationIDGT":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDGT"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationIDGT = data
-		case "parentOrganizationIDGTE":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDGTE"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationIDGTE = data
-		case "parentOrganizationIDLT":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDLT"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationIDLT = data
-		case "parentOrganizationIDLTE":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDLTE"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationIDLTE = data
-		case "parentOrganizationIDContains":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDContains"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationIDContains = data
-		case "parentOrganizationIDHasPrefix":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDHasPrefix"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationIDHasPrefix = data
-		case "parentOrganizationIDHasSuffix":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDHasSuffix"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationIDHasSuffix = data
-		case "parentOrganizationIDIsNil":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDIsNil"))
-			data, err := ec.unmarshalOBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationIDIsNil = data
-		case "parentOrganizationIDNotNil":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDNotNil"))
-			data, err := ec.unmarshalOBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationIDNotNil = data
-		case "parentOrganizationIDEqualFold":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDEqualFold"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationIDEqualFold = data
-		case "parentOrganizationIDContainsFold":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentOrganizationIDContainsFold"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋnanoxᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentOrganizationIDContainsFold = data
 		case "hasParent":
 			var err error
 

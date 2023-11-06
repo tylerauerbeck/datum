@@ -675,22 +675,6 @@ input OrganizationWhereInput {
   updatedByNotNil: Boolean
   updatedByEqualFold: String
   updatedByContainsFold: String
-  """parent_organization_id field predicates"""
-  parentOrganizationID: ID
-  parentOrganizationIDNEQ: ID
-  parentOrganizationIDIn: [ID!]
-  parentOrganizationIDNotIn: [ID!]
-  parentOrganizationIDGT: ID
-  parentOrganizationIDGTE: ID
-  parentOrganizationIDLT: ID
-  parentOrganizationIDLTE: ID
-  parentOrganizationIDContains: ID
-  parentOrganizationIDHasPrefix: ID
-  parentOrganizationIDHasSuffix: ID
-  parentOrganizationIDIsNil: Boolean
-  parentOrganizationIDNotNil: Boolean
-  parentOrganizationIDEqualFold: ID
-  parentOrganizationIDContainsFold: ID
   """parent edge predicates"""
   hasParent: Boolean
   hasParentWith: [OrganizationWhereInput!]

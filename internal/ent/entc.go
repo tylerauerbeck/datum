@@ -13,6 +13,7 @@ import (
 	"entgo.io/contrib/entoas"
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
+	"entgo.io/ent/schema/field"
 	"github.com/hedwigz/entviz"
 	"github.com/ogen-go/ogen"
 )
@@ -23,7 +24,10 @@ func main() {
 
 	// Add OpenAPI Gen extension
 	spec := new(ogen.Spec)
-	oas, err := entoas.NewExtension(entoas.Spec(spec))
+	oas, err := entoas.NewExtension(
+		entoas.Spec(spec),
+		entoas.Config.AllowClientUUIDs(true),
+	)
 	if err != nil {
 		log.Fatalf("creating entoas extension: %v", err)
 	}
@@ -46,6 +50,7 @@ func main() {
 	}
 
 	if err := entc.Generate("./internal/ent/schema", &gen.Config{
+		IDType:  &field.TypeInfo{Type: field.TypeString},
 		Target:  "./internal/ent/generated",
 		Package: "github.com/datumforge/datum/internal/ent/generated",
 		Features: []gen.Feature{

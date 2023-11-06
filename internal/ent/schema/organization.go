@@ -44,7 +44,7 @@ func (Organization) Fields() []ent.Field {
 			GoType(nanox.ID("")).
 			Annotations(
 				entgql.Type("ID"),
-				entgql.Skip(entgql.SkipMutationUpdateInput, entgql.SkipType),
+				entgql.Skip(entgql.SkipWhereInput, entgql.SkipMutationUpdateInput, entgql.SkipType),
 				entoas.Schema(ogen.String()),
 			),
 	}
