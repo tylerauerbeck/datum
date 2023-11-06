@@ -2,19 +2,11 @@ package cmd
 
 import (
 	"context"
-	"fmt"
-	"net"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"entgo.io/ent/dialect"
-	"github.com/brpaz/echozap"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	_ "github.com/mattn/go-sqlite3" // sqlite3 driver
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -28,7 +20,6 @@ import (
 
 const (
 	defaultListenAddr            = ":17608"
-	defaultShutdownGracePeriod   = 5 * time.Second
 	defaultDBPrimaryURI          = "datum.db?mode=memory&_fk=1"
 	defaultDBSecondaryURI        = "backup.db?mode=memory&_fk=1"
 	defaultOIDCJWKSRemoteTimeout = 5 * time.Second
@@ -57,7 +48,22 @@ func init() {
 	serveCmd.Flags().String("listen", defaultListenAddr, "address to listen on")
 	viperBindFlag("server.listen", serveCmd.Flags().Lookup("listen"))
 
-	serveCmd.Flags().Duration("shutdown-grace-period", defaultShutdownGracePeriod, "server shutdown grace period")
+	serveCmd.Flags().Bool("https", false, "enable serving from https")
+	viperBindFlag("server.https", serveCmd.Flags().Lookup("https"))
+
+	serveCmd.Flags().String("ssl-cert", "", "ssl cert file location")
+	viperBindFlag("server.ssl-cert", serveCmd.Flags().Lookup("ssl-cert"))
+
+	serveCmd.Flags().String("ssl-key", "", "ssl key file location")
+	viperBindFlag("server.ssl-key", serveCmd.Flags().Lookup("ssl-key"))
+
+	serveCmd.Flags().Bool("auto-cert", false, "automatically generate tls cert")
+	viperBindFlag("server.auto-cert", serveCmd.Flags().Lookup("auto-cert"))
+
+	serveCmd.Flags().String("cert-host", "example.com", "host to use to generate tls cert")
+	viperBindFlag("server.cert-host", serveCmd.Flags().Lookup("cert-host"))
+
+	serveCmd.Flags().Duration("shutdown-grace-period", echox.DefaultShutdownGracePeriod, "server shutdown grace period")
 	viperBindFlag("server.shutdown-grace-period", serveCmd.Flags().Lookup("shutdown-grace-period"))
 
 	// Database flags
@@ -106,6 +112,7 @@ func serve(ctx context.Context) error {
 		PrimaryDBSource: viper.GetString("server.db-primary"),
 	}
 
+	// create new ent db client
 	if viper.GetBool("server.db.multi-write") {
 		entConfig.SecondaryDBSource = viper.GetString("server.db-secondary")
 
@@ -123,22 +130,10 @@ func serve(ctx context.Context) error {
 
 	var mw []echo.MiddlewareFunc
 
-	srv := echo.New()
-	srv.Use(middleware.RequestID())
-	srv.Use(middleware.Recover())
-
 	// dev mode settings
 	if serveDevMode {
 		enablePlayground = true
-
-		srv.Use(middleware.CORS())
 	}
-
-	// add logging
-	zapLogger, _ := zap.NewProduction()
-	srv.Use(echozap.ZapLogger(zapLogger))
-
-	srv.Debug = viper.GetBool("server.debug")
 
 	// add jwt middleware
 	if viper.GetBool("oidc.enabled") {
@@ -148,70 +143,44 @@ func serve(ctx context.Context) error {
 		mw = append(mw, jwtConfig)
 	}
 
-	// Add echo context to middleware
-	srv.Use(echox.EchoContextToContextMiddleware())
-	mw = append(mw, echox.EchoContextToContextMiddleware())
+	// create default server config
+	httpsEnabled := viper.GetBool("server.https")
+	serverConfig := echox.Config{}.WithDefaults()
+
+	// override with flags
+	serverConfig = serverConfig.WithListen(viper.GetString("server.listen")).
+		WithShutdownGracePeriod(viper.GetDuration("server.shutdown-grace-period")).
+		WithDebug(viper.GetBool("server.debug")).
+		WithDev(serveDevMode).
+		WithHTTPS(httpsEnabled)
+
+	if httpsEnabled {
+		serverConfig = serverConfig.WithTLSDefaults()
+
+		if viper.GetBool("server.auto-cert") {
+			serverConfig = serverConfig.WithAutoCert(viper.GetString("server.cert-host"))
+		} else {
+			certFile, certKey, err := getCertFiles()
+			if err != nil {
+				return err
+			}
+
+			serverConfig = serverConfig.WithTLSCerts(certFile, certKey)
+		}
+	}
+
+	srv, err := echox.NewServer(logger.Desugar(), serverConfig)
+	if err != nil {
+		logger.Error("failed to create server", zap.Error(err))
+	}
 
 	r := api.NewResolver(client, logger.Named("resolvers"))
 	handler := r.Handler(enablePlayground, mw...)
 
-	handler.Routes(srv.Group(""))
+	srv.AddHandler(handler)
 
-	listener, err := net.Listen("tcp", viper.GetString("server.listen"))
-	if err != nil {
-		return err
-	}
-
-	defer listener.Close() //nolint:errcheck // No need to check error.
-
-	logger.Info("starting server")
-
-	s := &http.Server{
-		Handler: srv.Server.Handler,
-	}
-
-	var (
-		exit = make(chan error, 1)
-		quit = make(chan os.Signal, 2) //nolint:gomnd
-	)
-
-	// Serve in a go routine.
-	// If serve returns an error, capture the error to return later.
-	go func() {
-		if err := s.Serve(listener); err != nil {
-			exit <- err
-
-			return
-		}
-
-		exit <- nil
-	}()
-
-	// close server to kill active connections.
-	defer s.Close() //nolint:errcheck // server is being closed, we'll ignore this.
-
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-
-	select {
-	case err = <-exit:
-		return err
-	case sig := <-quit:
-		logger.Warn(fmt.Sprintf("%s received, server shutting down", sig.String()))
-	case <-ctx.Done():
-		logger.Warn("context done, server shutting down")
-
-		// Since the context has already been canceled, the server would immediately shutdown.
-		// We'll reset the context to allow for the proper grace period to be given.
-		ctx = context.Background()
-	}
-
-	ctx, cancel := context.WithTimeout(ctx, viper.GetDuration("server.shutdown-grace-period"))
-	defer cancel()
-
-	if err = srv.Shutdown(ctx); err != nil {
-		logger.Error("server shutdown timed out", zap.Error(err))
-
-		return err
+	if err := srv.RunWithContext(ctx); err != nil {
+		logger.Error("failed to run server", zap.Error(err))
 	}
 
 	return nil
@@ -224,4 +193,20 @@ func createJwtMiddleware(secret []byte) echo.MiddlewareFunc {
 	}
 
 	return echojwt.WithConfig(config)
+}
+
+// getCertFiles for https enabled echo server
+func getCertFiles() (string, string, error) {
+	certFile := viper.GetString("server.ssl-cert")
+	keyFile := viper.GetString("server.ssl-key")
+
+	if certFile == "" {
+		return "", "", ErrCertFileMissing
+	}
+
+	if keyFile == "" {
+		return "", "", ErrKeyFileMissing
+	}
+
+	return certFile, keyFile, nil
 }
