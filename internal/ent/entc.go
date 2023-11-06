@@ -60,10 +60,10 @@ func main() {
 	},
 		entc.TemplateDir("./internal/ent/templates"),
 		entc.Extensions(
-			ogent,
-			oas,
 			entviz.Extension{},
 			gqlExt,
+			ogent,
+			oas,
 		)); err != nil {
 		log.Fatalf("running ent codegen: %v", err)
 	}
