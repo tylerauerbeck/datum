@@ -1,0 +1,57 @@
+query GetOrganizationByID($organizationId: ID!) {
+  organization(id: $organizationId) {
+    id
+    name
+    parent {
+      id
+      name
+    }
+    description
+  }
+}
+
+query GetAllOrganizations {
+  organizations {
+    edges {
+      node {
+        id
+        name
+        description
+      }
+    }
+  }
+}
+
+mutation CreateOrganization($input: CreateOrganizationInput!) {
+  createOrganization(input: $input) {
+    organization {
+      id
+      name
+      description
+      parent {
+        id
+        name
+      }
+    }
+  }
+}
+
+mutation UpdateOrganization($updateOrganizationId: ID!, $input: UpdateOrganizationInput!) {
+  updateOrganization(id: $updateOrganizationId, input: $input) {
+    organization {
+      id
+      name
+      parent {
+        id
+        name
+      }
+      description
+    }
+  }
+}
+
+mutation DeleteOrganization($deleteOrganizationId: ID!) {
+  deleteOrganization(id: $deleteOrganizationId) {
+    deletedID
+  }
+}
