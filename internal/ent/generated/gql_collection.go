@@ -14,6 +14,7 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/groupsettings"
 	"github.com/datumforge/datum/internal/ent/generated/integration"
 	"github.com/datumforge/datum/internal/ent/generated/organization"
+	"github.com/datumforge/datum/internal/ent/generated/refreshtoken"
 	"github.com/datumforge/datum/internal/ent/generated/session"
 	"github.com/datumforge/datum/internal/ent/generated/user"
 )
@@ -639,6 +640,138 @@ func newOrganizationPaginateArgs(rv map[string]any) *organizationPaginateArgs {
 	}
 	if v, ok := rv[whereField].(*OrganizationWhereInput); ok {
 		args.opts = append(args.opts, WithOrganizationFilter(v.Filter))
+	}
+	return args
+}
+
+// CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
+func (rt *RefreshTokenQuery) CollectFields(ctx context.Context, satisfies ...string) (*RefreshTokenQuery, error) {
+	fc := graphql.GetFieldContext(ctx)
+	if fc == nil {
+		return rt, nil
+	}
+	if err := rt.collectField(ctx, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
+		return nil, err
+	}
+	return rt, nil
+}
+
+func (rt *RefreshTokenQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
+	path = append([]string(nil), path...)
+	var (
+		unknownSeen    bool
+		fieldSeen      = make(map[string]struct{}, len(refreshtoken.Columns))
+		selectedFields = []string{refreshtoken.FieldID}
+	)
+	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
+		switch field.Name {
+		case "clientID":
+			if _, ok := fieldSeen[refreshtoken.FieldClientID]; !ok {
+				selectedFields = append(selectedFields, refreshtoken.FieldClientID)
+				fieldSeen[refreshtoken.FieldClientID] = struct{}{}
+			}
+		case "scopes":
+			if _, ok := fieldSeen[refreshtoken.FieldScopes]; !ok {
+				selectedFields = append(selectedFields, refreshtoken.FieldScopes)
+				fieldSeen[refreshtoken.FieldScopes] = struct{}{}
+			}
+		case "nonce":
+			if _, ok := fieldSeen[refreshtoken.FieldNonce]; !ok {
+				selectedFields = append(selectedFields, refreshtoken.FieldNonce)
+				fieldSeen[refreshtoken.FieldNonce] = struct{}{}
+			}
+		case "claimsUserID":
+			if _, ok := fieldSeen[refreshtoken.FieldClaimsUserID]; !ok {
+				selectedFields = append(selectedFields, refreshtoken.FieldClaimsUserID)
+				fieldSeen[refreshtoken.FieldClaimsUserID] = struct{}{}
+			}
+		case "claimsUsername":
+			if _, ok := fieldSeen[refreshtoken.FieldClaimsUsername]; !ok {
+				selectedFields = append(selectedFields, refreshtoken.FieldClaimsUsername)
+				fieldSeen[refreshtoken.FieldClaimsUsername] = struct{}{}
+			}
+		case "claimsEmail":
+			if _, ok := fieldSeen[refreshtoken.FieldClaimsEmail]; !ok {
+				selectedFields = append(selectedFields, refreshtoken.FieldClaimsEmail)
+				fieldSeen[refreshtoken.FieldClaimsEmail] = struct{}{}
+			}
+		case "claimsEmailVerified":
+			if _, ok := fieldSeen[refreshtoken.FieldClaimsEmailVerified]; !ok {
+				selectedFields = append(selectedFields, refreshtoken.FieldClaimsEmailVerified)
+				fieldSeen[refreshtoken.FieldClaimsEmailVerified] = struct{}{}
+			}
+		case "claimsGroups":
+			if _, ok := fieldSeen[refreshtoken.FieldClaimsGroups]; !ok {
+				selectedFields = append(selectedFields, refreshtoken.FieldClaimsGroups)
+				fieldSeen[refreshtoken.FieldClaimsGroups] = struct{}{}
+			}
+		case "claimsPreferredUsername":
+			if _, ok := fieldSeen[refreshtoken.FieldClaimsPreferredUsername]; !ok {
+				selectedFields = append(selectedFields, refreshtoken.FieldClaimsPreferredUsername)
+				fieldSeen[refreshtoken.FieldClaimsPreferredUsername] = struct{}{}
+			}
+		case "connectorID":
+			if _, ok := fieldSeen[refreshtoken.FieldConnectorID]; !ok {
+				selectedFields = append(selectedFields, refreshtoken.FieldConnectorID)
+				fieldSeen[refreshtoken.FieldConnectorID] = struct{}{}
+			}
+		case "connectorData":
+			if _, ok := fieldSeen[refreshtoken.FieldConnectorData]; !ok {
+				selectedFields = append(selectedFields, refreshtoken.FieldConnectorData)
+				fieldSeen[refreshtoken.FieldConnectorData] = struct{}{}
+			}
+		case "token":
+			if _, ok := fieldSeen[refreshtoken.FieldToken]; !ok {
+				selectedFields = append(selectedFields, refreshtoken.FieldToken)
+				fieldSeen[refreshtoken.FieldToken] = struct{}{}
+			}
+		case "obsoleteToken":
+			if _, ok := fieldSeen[refreshtoken.FieldObsoleteToken]; !ok {
+				selectedFields = append(selectedFields, refreshtoken.FieldObsoleteToken)
+				fieldSeen[refreshtoken.FieldObsoleteToken] = struct{}{}
+			}
+		case "lastUsed":
+			if _, ok := fieldSeen[refreshtoken.FieldLastUsed]; !ok {
+				selectedFields = append(selectedFields, refreshtoken.FieldLastUsed)
+				fieldSeen[refreshtoken.FieldLastUsed] = struct{}{}
+			}
+		case "id":
+		case "__typename":
+		default:
+			unknownSeen = true
+		}
+	}
+	if !unknownSeen {
+		rt.Select(selectedFields...)
+	}
+	return nil
+}
+
+type refreshtokenPaginateArgs struct {
+	first, last   *int
+	after, before *Cursor
+	opts          []RefreshTokenPaginateOption
+}
+
+func newRefreshTokenPaginateArgs(rv map[string]any) *refreshtokenPaginateArgs {
+	args := &refreshtokenPaginateArgs{}
+	if rv == nil {
+		return args
+	}
+	if v := rv[firstField]; v != nil {
+		args.first = v.(*int)
+	}
+	if v := rv[lastField]; v != nil {
+		args.last = v.(*int)
+	}
+	if v := rv[afterField]; v != nil {
+		args.after = v.(*Cursor)
+	}
+	if v := rv[beforeField]; v != nil {
+		args.before = v.(*Cursor)
+	}
+	if v, ok := rv[whereField].(*RefreshTokenWhereInput); ok {
+		args.opts = append(args.opts, WithRefreshTokenFilter(v.Filter))
 	}
 	return args
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/integration"
 	"github.com/datumforge/datum/internal/ent/generated/organization"
 	"github.com/datumforge/datum/internal/ent/generated/predicate"
+	"github.com/datumforge/datum/internal/ent/generated/refreshtoken"
 	"github.com/datumforge/datum/internal/ent/generated/session"
 	"github.com/datumforge/datum/internal/ent/generated/user"
 
@@ -19,7 +20,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 6)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 7)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   group.Table,
@@ -102,6 +103,33 @@ var schemaGraph = func() *sqlgraph.Schema {
 	}
 	graph.Nodes[4] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
+			Table:   refreshtoken.Table,
+			Columns: refreshtoken.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeString,
+				Column: refreshtoken.FieldID,
+			},
+		},
+		Type: "RefreshToken",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			refreshtoken.FieldClientID:                {Type: field.TypeString, Column: refreshtoken.FieldClientID},
+			refreshtoken.FieldScopes:                  {Type: field.TypeString, Column: refreshtoken.FieldScopes},
+			refreshtoken.FieldNonce:                   {Type: field.TypeString, Column: refreshtoken.FieldNonce},
+			refreshtoken.FieldClaimsUserID:            {Type: field.TypeString, Column: refreshtoken.FieldClaimsUserID},
+			refreshtoken.FieldClaimsUsername:          {Type: field.TypeString, Column: refreshtoken.FieldClaimsUsername},
+			refreshtoken.FieldClaimsEmail:             {Type: field.TypeString, Column: refreshtoken.FieldClaimsEmail},
+			refreshtoken.FieldClaimsEmailVerified:     {Type: field.TypeBool, Column: refreshtoken.FieldClaimsEmailVerified},
+			refreshtoken.FieldClaimsGroups:            {Type: field.TypeString, Column: refreshtoken.FieldClaimsGroups},
+			refreshtoken.FieldClaimsPreferredUsername: {Type: field.TypeString, Column: refreshtoken.FieldClaimsPreferredUsername},
+			refreshtoken.FieldConnectorID:             {Type: field.TypeString, Column: refreshtoken.FieldConnectorID},
+			refreshtoken.FieldConnectorData:           {Type: field.TypeString, Column: refreshtoken.FieldConnectorData},
+			refreshtoken.FieldToken:                   {Type: field.TypeString, Column: refreshtoken.FieldToken},
+			refreshtoken.FieldObsoleteToken:           {Type: field.TypeString, Column: refreshtoken.FieldObsoleteToken},
+			refreshtoken.FieldLastUsed:                {Type: field.TypeTime, Column: refreshtoken.FieldLastUsed},
+		},
+	}
+	graph.Nodes[5] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
 			Table:   session.Table,
 			Columns: session.Columns,
 			ID: &sqlgraph.FieldSpec{
@@ -122,7 +150,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			session.FieldIps:       {Type: field.TypeString, Column: session.FieldIps},
 		},
 	}
-	graph.Nodes[5] = &sqlgraph.Node{
+	graph.Nodes[6] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   user.Table,
 			Columns: user.Columns,
@@ -768,6 +796,116 @@ func (f *OrganizationFilter) WhereHasIntegrationsWith(preds ...predicate.Integra
 }
 
 // addPredicate implements the predicateAdder interface.
+func (rtq *RefreshTokenQuery) addPredicate(pred func(s *sql.Selector)) {
+	rtq.predicates = append(rtq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the RefreshTokenQuery builder.
+func (rtq *RefreshTokenQuery) Filter() *RefreshTokenFilter {
+	return &RefreshTokenFilter{config: rtq.config, predicateAdder: rtq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *RefreshTokenMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the RefreshTokenMutation builder.
+func (m *RefreshTokenMutation) Filter() *RefreshTokenFilter {
+	return &RefreshTokenFilter{config: m.config, predicateAdder: m}
+}
+
+// RefreshTokenFilter provides a generic filtering capability at runtime for RefreshTokenQuery.
+type RefreshTokenFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *RefreshTokenFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[4].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql string predicate on the id field.
+func (f *RefreshTokenFilter) WhereID(p entql.StringP) {
+	f.Where(p.Field(refreshtoken.FieldID))
+}
+
+// WhereClientID applies the entql string predicate on the client_id field.
+func (f *RefreshTokenFilter) WhereClientID(p entql.StringP) {
+	f.Where(p.Field(refreshtoken.FieldClientID))
+}
+
+// WhereScopes applies the entql string predicate on the scopes field.
+func (f *RefreshTokenFilter) WhereScopes(p entql.StringP) {
+	f.Where(p.Field(refreshtoken.FieldScopes))
+}
+
+// WhereNonce applies the entql string predicate on the nonce field.
+func (f *RefreshTokenFilter) WhereNonce(p entql.StringP) {
+	f.Where(p.Field(refreshtoken.FieldNonce))
+}
+
+// WhereClaimsUserID applies the entql string predicate on the claims_user_id field.
+func (f *RefreshTokenFilter) WhereClaimsUserID(p entql.StringP) {
+	f.Where(p.Field(refreshtoken.FieldClaimsUserID))
+}
+
+// WhereClaimsUsername applies the entql string predicate on the claims_username field.
+func (f *RefreshTokenFilter) WhereClaimsUsername(p entql.StringP) {
+	f.Where(p.Field(refreshtoken.FieldClaimsUsername))
+}
+
+// WhereClaimsEmail applies the entql string predicate on the claims_email field.
+func (f *RefreshTokenFilter) WhereClaimsEmail(p entql.StringP) {
+	f.Where(p.Field(refreshtoken.FieldClaimsEmail))
+}
+
+// WhereClaimsEmailVerified applies the entql bool predicate on the claims_email_verified field.
+func (f *RefreshTokenFilter) WhereClaimsEmailVerified(p entql.BoolP) {
+	f.Where(p.Field(refreshtoken.FieldClaimsEmailVerified))
+}
+
+// WhereClaimsGroups applies the entql string predicate on the claims_groups field.
+func (f *RefreshTokenFilter) WhereClaimsGroups(p entql.StringP) {
+	f.Where(p.Field(refreshtoken.FieldClaimsGroups))
+}
+
+// WhereClaimsPreferredUsername applies the entql string predicate on the claims_preferred_username field.
+func (f *RefreshTokenFilter) WhereClaimsPreferredUsername(p entql.StringP) {
+	f.Where(p.Field(refreshtoken.FieldClaimsPreferredUsername))
+}
+
+// WhereConnectorID applies the entql string predicate on the connector_id field.
+func (f *RefreshTokenFilter) WhereConnectorID(p entql.StringP) {
+	f.Where(p.Field(refreshtoken.FieldConnectorID))
+}
+
+// WhereConnectorData applies the entql string predicate on the connector_data field.
+func (f *RefreshTokenFilter) WhereConnectorData(p entql.StringP) {
+	f.Where(p.Field(refreshtoken.FieldConnectorData))
+}
+
+// WhereToken applies the entql string predicate on the token field.
+func (f *RefreshTokenFilter) WhereToken(p entql.StringP) {
+	f.Where(p.Field(refreshtoken.FieldToken))
+}
+
+// WhereObsoleteToken applies the entql string predicate on the obsolete_token field.
+func (f *RefreshTokenFilter) WhereObsoleteToken(p entql.StringP) {
+	f.Where(p.Field(refreshtoken.FieldObsoleteToken))
+}
+
+// WhereLastUsed applies the entql time.Time predicate on the last_used field.
+func (f *RefreshTokenFilter) WhereLastUsed(p entql.TimeP) {
+	f.Where(p.Field(refreshtoken.FieldLastUsed))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (sq *SessionQuery) addPredicate(pred func(s *sql.Selector)) {
 	sq.predicates = append(sq.predicates, pred)
 }
@@ -796,7 +934,7 @@ type SessionFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *SessionFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[4].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[5].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -895,7 +1033,7 @@ type UserFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *UserFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[5].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[6].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

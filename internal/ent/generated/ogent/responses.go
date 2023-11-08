@@ -932,6 +932,182 @@ func (u *OrganizationUsersList) Elem() OrganizationUsersList {
 	return *u
 }
 
+func NewRefreshTokenCreate(e *generated.RefreshToken) *RefreshTokenCreate {
+	if e == nil {
+		return nil
+	}
+	var ret RefreshTokenCreate
+	ret.ID = e.ID
+	ret.ClientID = e.ClientID
+	ret.Scopes = NewOptString(e.Scopes)
+	ret.Nonce = e.Nonce
+	ret.ClaimsUserID = e.ClaimsUserID
+	ret.ClaimsUsername = e.ClaimsUsername
+	ret.ClaimsEmail = e.ClaimsEmail
+	ret.ClaimsEmailVerified = e.ClaimsEmailVerified
+	ret.ClaimsGroups = NewOptString(e.ClaimsGroups)
+	ret.ClaimsPreferredUsername = e.ClaimsPreferredUsername
+	ret.ConnectorID = e.ConnectorID
+	ret.ConnectorData = OptString{}
+	if e.ConnectorData != nil {
+		ret.ConnectorData.SetTo(*e.ConnectorData)
+	}
+	ret.Token = e.Token
+	ret.ObsoleteToken = e.ObsoleteToken
+	ret.LastUsed = e.LastUsed
+	return &ret
+}
+
+func NewRefreshTokenCreates(es []*generated.RefreshToken) []RefreshTokenCreate {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]RefreshTokenCreate, len(es))
+	for i, e := range es {
+		r[i] = NewRefreshTokenCreate(e).Elem()
+	}
+	return r
+}
+
+func (rt *RefreshTokenCreate) Elem() RefreshTokenCreate {
+	if rt == nil {
+		return RefreshTokenCreate{}
+	}
+	return *rt
+}
+
+func NewRefreshTokenList(e *generated.RefreshToken) *RefreshTokenList {
+	if e == nil {
+		return nil
+	}
+	var ret RefreshTokenList
+	ret.ID = e.ID
+	ret.ClientID = e.ClientID
+	ret.Scopes = NewOptString(e.Scopes)
+	ret.Nonce = e.Nonce
+	ret.ClaimsUserID = e.ClaimsUserID
+	ret.ClaimsUsername = e.ClaimsUsername
+	ret.ClaimsEmail = e.ClaimsEmail
+	ret.ClaimsEmailVerified = e.ClaimsEmailVerified
+	ret.ClaimsGroups = NewOptString(e.ClaimsGroups)
+	ret.ClaimsPreferredUsername = e.ClaimsPreferredUsername
+	ret.ConnectorID = e.ConnectorID
+	ret.ConnectorData = OptString{}
+	if e.ConnectorData != nil {
+		ret.ConnectorData.SetTo(*e.ConnectorData)
+	}
+	ret.Token = e.Token
+	ret.ObsoleteToken = e.ObsoleteToken
+	ret.LastUsed = e.LastUsed
+	return &ret
+}
+
+func NewRefreshTokenLists(es []*generated.RefreshToken) []RefreshTokenList {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]RefreshTokenList, len(es))
+	for i, e := range es {
+		r[i] = NewRefreshTokenList(e).Elem()
+	}
+	return r
+}
+
+func (rt *RefreshTokenList) Elem() RefreshTokenList {
+	if rt == nil {
+		return RefreshTokenList{}
+	}
+	return *rt
+}
+
+func NewRefreshTokenRead(e *generated.RefreshToken) *RefreshTokenRead {
+	if e == nil {
+		return nil
+	}
+	var ret RefreshTokenRead
+	ret.ID = e.ID
+	ret.ClientID = e.ClientID
+	ret.Scopes = NewOptString(e.Scopes)
+	ret.Nonce = e.Nonce
+	ret.ClaimsUserID = e.ClaimsUserID
+	ret.ClaimsUsername = e.ClaimsUsername
+	ret.ClaimsEmail = e.ClaimsEmail
+	ret.ClaimsEmailVerified = e.ClaimsEmailVerified
+	ret.ClaimsGroups = NewOptString(e.ClaimsGroups)
+	ret.ClaimsPreferredUsername = e.ClaimsPreferredUsername
+	ret.ConnectorID = e.ConnectorID
+	ret.ConnectorData = OptString{}
+	if e.ConnectorData != nil {
+		ret.ConnectorData.SetTo(*e.ConnectorData)
+	}
+	ret.Token = e.Token
+	ret.ObsoleteToken = e.ObsoleteToken
+	ret.LastUsed = e.LastUsed
+	return &ret
+}
+
+func NewRefreshTokenReads(es []*generated.RefreshToken) []RefreshTokenRead {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]RefreshTokenRead, len(es))
+	for i, e := range es {
+		r[i] = NewRefreshTokenRead(e).Elem()
+	}
+	return r
+}
+
+func (rt *RefreshTokenRead) Elem() RefreshTokenRead {
+	if rt == nil {
+		return RefreshTokenRead{}
+	}
+	return *rt
+}
+
+func NewRefreshTokenUpdate(e *generated.RefreshToken) *RefreshTokenUpdate {
+	if e == nil {
+		return nil
+	}
+	var ret RefreshTokenUpdate
+	ret.ID = e.ID
+	ret.ClientID = e.ClientID
+	ret.Scopes = NewOptString(e.Scopes)
+	ret.Nonce = e.Nonce
+	ret.ClaimsUserID = e.ClaimsUserID
+	ret.ClaimsUsername = e.ClaimsUsername
+	ret.ClaimsEmail = e.ClaimsEmail
+	ret.ClaimsEmailVerified = e.ClaimsEmailVerified
+	ret.ClaimsGroups = NewOptString(e.ClaimsGroups)
+	ret.ClaimsPreferredUsername = e.ClaimsPreferredUsername
+	ret.ConnectorID = e.ConnectorID
+	ret.ConnectorData = OptString{}
+	if e.ConnectorData != nil {
+		ret.ConnectorData.SetTo(*e.ConnectorData)
+	}
+	ret.Token = e.Token
+	ret.ObsoleteToken = e.ObsoleteToken
+	ret.LastUsed = e.LastUsed
+	return &ret
+}
+
+func NewRefreshTokenUpdates(es []*generated.RefreshToken) []RefreshTokenUpdate {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]RefreshTokenUpdate, len(es))
+	for i, e := range es {
+		r[i] = NewRefreshTokenUpdate(e).Elem()
+	}
+	return r
+}
+
+func (rt *RefreshTokenUpdate) Elem() RefreshTokenUpdate {
+	if rt == nil {
+		return RefreshTokenUpdate{}
+	}
+	return *rt
+}
+
 func NewSessionCreate(e *generated.Session) *SessionCreate {
 	if e == nil {
 		return nil

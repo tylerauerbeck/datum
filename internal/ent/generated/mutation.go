@@ -16,6 +16,7 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/integration"
 	"github.com/datumforge/datum/internal/ent/generated/organization"
 	"github.com/datumforge/datum/internal/ent/generated/predicate"
+	"github.com/datumforge/datum/internal/ent/generated/refreshtoken"
 	"github.com/datumforge/datum/internal/ent/generated/session"
 	"github.com/datumforge/datum/internal/ent/generated/user"
 )
@@ -33,6 +34,7 @@ const (
 	TypeGroupSettings = "GroupSettings"
 	TypeIntegration   = "Integration"
 	TypeOrganization  = "Organization"
+	TypeRefreshToken  = "RefreshToken"
 	TypeSession       = "Session"
 	TypeUser          = "User"
 )
@@ -3626,6 +3628,1100 @@ func (m *OrganizationMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown Organization edge %s", name)
+}
+
+// RefreshTokenMutation represents an operation that mutates the RefreshToken nodes in the graph.
+type RefreshTokenMutation struct {
+	config
+	op                        Op
+	typ                       string
+	id                        *string
+	client_id                 *string
+	scopes                    *string
+	nonce                     *string
+	claims_user_id            *string
+	claims_username           *string
+	claims_email              *string
+	claims_email_verified     *bool
+	claims_groups             *string
+	claims_preferred_username *string
+	connector_id              *string
+	connector_data            *string
+	token                     *string
+	obsolete_token            *string
+	last_used                 *time.Time
+	clearedFields             map[string]struct{}
+	done                      bool
+	oldValue                  func(context.Context) (*RefreshToken, error)
+	predicates                []predicate.RefreshToken
+}
+
+var _ ent.Mutation = (*RefreshTokenMutation)(nil)
+
+// refreshtokenOption allows management of the mutation configuration using functional options.
+type refreshtokenOption func(*RefreshTokenMutation)
+
+// newRefreshTokenMutation creates new mutation for the RefreshToken entity.
+func newRefreshTokenMutation(c config, op Op, opts ...refreshtokenOption) *RefreshTokenMutation {
+	m := &RefreshTokenMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeRefreshToken,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withRefreshTokenID sets the ID field of the mutation.
+func withRefreshTokenID(id string) refreshtokenOption {
+	return func(m *RefreshTokenMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *RefreshToken
+		)
+		m.oldValue = func(ctx context.Context) (*RefreshToken, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().RefreshToken.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withRefreshToken sets the old RefreshToken of the mutation.
+func withRefreshToken(node *RefreshToken) refreshtokenOption {
+	return func(m *RefreshTokenMutation) {
+		m.oldValue = func(context.Context) (*RefreshToken, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m RefreshTokenMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m RefreshTokenMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("generated: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of RefreshToken entities.
+func (m *RefreshTokenMutation) SetID(id string) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *RefreshTokenMutation) ID() (id string, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *RefreshTokenMutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().RefreshToken.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetClientID sets the "client_id" field.
+func (m *RefreshTokenMutation) SetClientID(s string) {
+	m.client_id = &s
+}
+
+// ClientID returns the value of the "client_id" field in the mutation.
+func (m *RefreshTokenMutation) ClientID() (r string, exists bool) {
+	v := m.client_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldClientID returns the old "client_id" field's value of the RefreshToken entity.
+// If the RefreshToken object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RefreshTokenMutation) OldClientID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldClientID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldClientID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldClientID: %w", err)
+	}
+	return oldValue.ClientID, nil
+}
+
+// ResetClientID resets all changes to the "client_id" field.
+func (m *RefreshTokenMutation) ResetClientID() {
+	m.client_id = nil
+}
+
+// SetScopes sets the "scopes" field.
+func (m *RefreshTokenMutation) SetScopes(s string) {
+	m.scopes = &s
+}
+
+// Scopes returns the value of the "scopes" field in the mutation.
+func (m *RefreshTokenMutation) Scopes() (r string, exists bool) {
+	v := m.scopes
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldScopes returns the old "scopes" field's value of the RefreshToken entity.
+// If the RefreshToken object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RefreshTokenMutation) OldScopes(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldScopes is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldScopes requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldScopes: %w", err)
+	}
+	return oldValue.Scopes, nil
+}
+
+// ClearScopes clears the value of the "scopes" field.
+func (m *RefreshTokenMutation) ClearScopes() {
+	m.scopes = nil
+	m.clearedFields[refreshtoken.FieldScopes] = struct{}{}
+}
+
+// ScopesCleared returns if the "scopes" field was cleared in this mutation.
+func (m *RefreshTokenMutation) ScopesCleared() bool {
+	_, ok := m.clearedFields[refreshtoken.FieldScopes]
+	return ok
+}
+
+// ResetScopes resets all changes to the "scopes" field.
+func (m *RefreshTokenMutation) ResetScopes() {
+	m.scopes = nil
+	delete(m.clearedFields, refreshtoken.FieldScopes)
+}
+
+// SetNonce sets the "nonce" field.
+func (m *RefreshTokenMutation) SetNonce(s string) {
+	m.nonce = &s
+}
+
+// Nonce returns the value of the "nonce" field in the mutation.
+func (m *RefreshTokenMutation) Nonce() (r string, exists bool) {
+	v := m.nonce
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNonce returns the old "nonce" field's value of the RefreshToken entity.
+// If the RefreshToken object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RefreshTokenMutation) OldNonce(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldNonce is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldNonce requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNonce: %w", err)
+	}
+	return oldValue.Nonce, nil
+}
+
+// ResetNonce resets all changes to the "nonce" field.
+func (m *RefreshTokenMutation) ResetNonce() {
+	m.nonce = nil
+}
+
+// SetClaimsUserID sets the "claims_user_id" field.
+func (m *RefreshTokenMutation) SetClaimsUserID(s string) {
+	m.claims_user_id = &s
+}
+
+// ClaimsUserID returns the value of the "claims_user_id" field in the mutation.
+func (m *RefreshTokenMutation) ClaimsUserID() (r string, exists bool) {
+	v := m.claims_user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldClaimsUserID returns the old "claims_user_id" field's value of the RefreshToken entity.
+// If the RefreshToken object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RefreshTokenMutation) OldClaimsUserID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldClaimsUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldClaimsUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldClaimsUserID: %w", err)
+	}
+	return oldValue.ClaimsUserID, nil
+}
+
+// ResetClaimsUserID resets all changes to the "claims_user_id" field.
+func (m *RefreshTokenMutation) ResetClaimsUserID() {
+	m.claims_user_id = nil
+}
+
+// SetClaimsUsername sets the "claims_username" field.
+func (m *RefreshTokenMutation) SetClaimsUsername(s string) {
+	m.claims_username = &s
+}
+
+// ClaimsUsername returns the value of the "claims_username" field in the mutation.
+func (m *RefreshTokenMutation) ClaimsUsername() (r string, exists bool) {
+	v := m.claims_username
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldClaimsUsername returns the old "claims_username" field's value of the RefreshToken entity.
+// If the RefreshToken object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RefreshTokenMutation) OldClaimsUsername(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldClaimsUsername is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldClaimsUsername requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldClaimsUsername: %w", err)
+	}
+	return oldValue.ClaimsUsername, nil
+}
+
+// ResetClaimsUsername resets all changes to the "claims_username" field.
+func (m *RefreshTokenMutation) ResetClaimsUsername() {
+	m.claims_username = nil
+}
+
+// SetClaimsEmail sets the "claims_email" field.
+func (m *RefreshTokenMutation) SetClaimsEmail(s string) {
+	m.claims_email = &s
+}
+
+// ClaimsEmail returns the value of the "claims_email" field in the mutation.
+func (m *RefreshTokenMutation) ClaimsEmail() (r string, exists bool) {
+	v := m.claims_email
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldClaimsEmail returns the old "claims_email" field's value of the RefreshToken entity.
+// If the RefreshToken object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RefreshTokenMutation) OldClaimsEmail(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldClaimsEmail is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldClaimsEmail requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldClaimsEmail: %w", err)
+	}
+	return oldValue.ClaimsEmail, nil
+}
+
+// ResetClaimsEmail resets all changes to the "claims_email" field.
+func (m *RefreshTokenMutation) ResetClaimsEmail() {
+	m.claims_email = nil
+}
+
+// SetClaimsEmailVerified sets the "claims_email_verified" field.
+func (m *RefreshTokenMutation) SetClaimsEmailVerified(b bool) {
+	m.claims_email_verified = &b
+}
+
+// ClaimsEmailVerified returns the value of the "claims_email_verified" field in the mutation.
+func (m *RefreshTokenMutation) ClaimsEmailVerified() (r bool, exists bool) {
+	v := m.claims_email_verified
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldClaimsEmailVerified returns the old "claims_email_verified" field's value of the RefreshToken entity.
+// If the RefreshToken object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RefreshTokenMutation) OldClaimsEmailVerified(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldClaimsEmailVerified is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldClaimsEmailVerified requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldClaimsEmailVerified: %w", err)
+	}
+	return oldValue.ClaimsEmailVerified, nil
+}
+
+// ResetClaimsEmailVerified resets all changes to the "claims_email_verified" field.
+func (m *RefreshTokenMutation) ResetClaimsEmailVerified() {
+	m.claims_email_verified = nil
+}
+
+// SetClaimsGroups sets the "claims_groups" field.
+func (m *RefreshTokenMutation) SetClaimsGroups(s string) {
+	m.claims_groups = &s
+}
+
+// ClaimsGroups returns the value of the "claims_groups" field in the mutation.
+func (m *RefreshTokenMutation) ClaimsGroups() (r string, exists bool) {
+	v := m.claims_groups
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldClaimsGroups returns the old "claims_groups" field's value of the RefreshToken entity.
+// If the RefreshToken object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RefreshTokenMutation) OldClaimsGroups(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldClaimsGroups is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldClaimsGroups requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldClaimsGroups: %w", err)
+	}
+	return oldValue.ClaimsGroups, nil
+}
+
+// ClearClaimsGroups clears the value of the "claims_groups" field.
+func (m *RefreshTokenMutation) ClearClaimsGroups() {
+	m.claims_groups = nil
+	m.clearedFields[refreshtoken.FieldClaimsGroups] = struct{}{}
+}
+
+// ClaimsGroupsCleared returns if the "claims_groups" field was cleared in this mutation.
+func (m *RefreshTokenMutation) ClaimsGroupsCleared() bool {
+	_, ok := m.clearedFields[refreshtoken.FieldClaimsGroups]
+	return ok
+}
+
+// ResetClaimsGroups resets all changes to the "claims_groups" field.
+func (m *RefreshTokenMutation) ResetClaimsGroups() {
+	m.claims_groups = nil
+	delete(m.clearedFields, refreshtoken.FieldClaimsGroups)
+}
+
+// SetClaimsPreferredUsername sets the "claims_preferred_username" field.
+func (m *RefreshTokenMutation) SetClaimsPreferredUsername(s string) {
+	m.claims_preferred_username = &s
+}
+
+// ClaimsPreferredUsername returns the value of the "claims_preferred_username" field in the mutation.
+func (m *RefreshTokenMutation) ClaimsPreferredUsername() (r string, exists bool) {
+	v := m.claims_preferred_username
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldClaimsPreferredUsername returns the old "claims_preferred_username" field's value of the RefreshToken entity.
+// If the RefreshToken object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RefreshTokenMutation) OldClaimsPreferredUsername(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldClaimsPreferredUsername is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldClaimsPreferredUsername requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldClaimsPreferredUsername: %w", err)
+	}
+	return oldValue.ClaimsPreferredUsername, nil
+}
+
+// ResetClaimsPreferredUsername resets all changes to the "claims_preferred_username" field.
+func (m *RefreshTokenMutation) ResetClaimsPreferredUsername() {
+	m.claims_preferred_username = nil
+}
+
+// SetConnectorID sets the "connector_id" field.
+func (m *RefreshTokenMutation) SetConnectorID(s string) {
+	m.connector_id = &s
+}
+
+// ConnectorID returns the value of the "connector_id" field in the mutation.
+func (m *RefreshTokenMutation) ConnectorID() (r string, exists bool) {
+	v := m.connector_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldConnectorID returns the old "connector_id" field's value of the RefreshToken entity.
+// If the RefreshToken object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RefreshTokenMutation) OldConnectorID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldConnectorID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldConnectorID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldConnectorID: %w", err)
+	}
+	return oldValue.ConnectorID, nil
+}
+
+// ResetConnectorID resets all changes to the "connector_id" field.
+func (m *RefreshTokenMutation) ResetConnectorID() {
+	m.connector_id = nil
+}
+
+// SetConnectorData sets the "connector_data" field.
+func (m *RefreshTokenMutation) SetConnectorData(s string) {
+	m.connector_data = &s
+}
+
+// ConnectorData returns the value of the "connector_data" field in the mutation.
+func (m *RefreshTokenMutation) ConnectorData() (r string, exists bool) {
+	v := m.connector_data
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldConnectorData returns the old "connector_data" field's value of the RefreshToken entity.
+// If the RefreshToken object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RefreshTokenMutation) OldConnectorData(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldConnectorData is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldConnectorData requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldConnectorData: %w", err)
+	}
+	return oldValue.ConnectorData, nil
+}
+
+// ClearConnectorData clears the value of the "connector_data" field.
+func (m *RefreshTokenMutation) ClearConnectorData() {
+	m.connector_data = nil
+	m.clearedFields[refreshtoken.FieldConnectorData] = struct{}{}
+}
+
+// ConnectorDataCleared returns if the "connector_data" field was cleared in this mutation.
+func (m *RefreshTokenMutation) ConnectorDataCleared() bool {
+	_, ok := m.clearedFields[refreshtoken.FieldConnectorData]
+	return ok
+}
+
+// ResetConnectorData resets all changes to the "connector_data" field.
+func (m *RefreshTokenMutation) ResetConnectorData() {
+	m.connector_data = nil
+	delete(m.clearedFields, refreshtoken.FieldConnectorData)
+}
+
+// SetToken sets the "token" field.
+func (m *RefreshTokenMutation) SetToken(s string) {
+	m.token = &s
+}
+
+// Token returns the value of the "token" field in the mutation.
+func (m *RefreshTokenMutation) Token() (r string, exists bool) {
+	v := m.token
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldToken returns the old "token" field's value of the RefreshToken entity.
+// If the RefreshToken object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RefreshTokenMutation) OldToken(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldToken is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldToken requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldToken: %w", err)
+	}
+	return oldValue.Token, nil
+}
+
+// ResetToken resets all changes to the "token" field.
+func (m *RefreshTokenMutation) ResetToken() {
+	m.token = nil
+}
+
+// SetObsoleteToken sets the "obsolete_token" field.
+func (m *RefreshTokenMutation) SetObsoleteToken(s string) {
+	m.obsolete_token = &s
+}
+
+// ObsoleteToken returns the value of the "obsolete_token" field in the mutation.
+func (m *RefreshTokenMutation) ObsoleteToken() (r string, exists bool) {
+	v := m.obsolete_token
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldObsoleteToken returns the old "obsolete_token" field's value of the RefreshToken entity.
+// If the RefreshToken object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RefreshTokenMutation) OldObsoleteToken(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldObsoleteToken is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldObsoleteToken requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldObsoleteToken: %w", err)
+	}
+	return oldValue.ObsoleteToken, nil
+}
+
+// ResetObsoleteToken resets all changes to the "obsolete_token" field.
+func (m *RefreshTokenMutation) ResetObsoleteToken() {
+	m.obsolete_token = nil
+}
+
+// SetLastUsed sets the "last_used" field.
+func (m *RefreshTokenMutation) SetLastUsed(t time.Time) {
+	m.last_used = &t
+}
+
+// LastUsed returns the value of the "last_used" field in the mutation.
+func (m *RefreshTokenMutation) LastUsed() (r time.Time, exists bool) {
+	v := m.last_used
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLastUsed returns the old "last_used" field's value of the RefreshToken entity.
+// If the RefreshToken object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RefreshTokenMutation) OldLastUsed(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLastUsed is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLastUsed requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLastUsed: %w", err)
+	}
+	return oldValue.LastUsed, nil
+}
+
+// ResetLastUsed resets all changes to the "last_used" field.
+func (m *RefreshTokenMutation) ResetLastUsed() {
+	m.last_used = nil
+}
+
+// Where appends a list predicates to the RefreshTokenMutation builder.
+func (m *RefreshTokenMutation) Where(ps ...predicate.RefreshToken) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the RefreshTokenMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *RefreshTokenMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.RefreshToken, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *RefreshTokenMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *RefreshTokenMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (RefreshToken).
+func (m *RefreshTokenMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *RefreshTokenMutation) Fields() []string {
+	fields := make([]string, 0, 14)
+	if m.client_id != nil {
+		fields = append(fields, refreshtoken.FieldClientID)
+	}
+	if m.scopes != nil {
+		fields = append(fields, refreshtoken.FieldScopes)
+	}
+	if m.nonce != nil {
+		fields = append(fields, refreshtoken.FieldNonce)
+	}
+	if m.claims_user_id != nil {
+		fields = append(fields, refreshtoken.FieldClaimsUserID)
+	}
+	if m.claims_username != nil {
+		fields = append(fields, refreshtoken.FieldClaimsUsername)
+	}
+	if m.claims_email != nil {
+		fields = append(fields, refreshtoken.FieldClaimsEmail)
+	}
+	if m.claims_email_verified != nil {
+		fields = append(fields, refreshtoken.FieldClaimsEmailVerified)
+	}
+	if m.claims_groups != nil {
+		fields = append(fields, refreshtoken.FieldClaimsGroups)
+	}
+	if m.claims_preferred_username != nil {
+		fields = append(fields, refreshtoken.FieldClaimsPreferredUsername)
+	}
+	if m.connector_id != nil {
+		fields = append(fields, refreshtoken.FieldConnectorID)
+	}
+	if m.connector_data != nil {
+		fields = append(fields, refreshtoken.FieldConnectorData)
+	}
+	if m.token != nil {
+		fields = append(fields, refreshtoken.FieldToken)
+	}
+	if m.obsolete_token != nil {
+		fields = append(fields, refreshtoken.FieldObsoleteToken)
+	}
+	if m.last_used != nil {
+		fields = append(fields, refreshtoken.FieldLastUsed)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *RefreshTokenMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case refreshtoken.FieldClientID:
+		return m.ClientID()
+	case refreshtoken.FieldScopes:
+		return m.Scopes()
+	case refreshtoken.FieldNonce:
+		return m.Nonce()
+	case refreshtoken.FieldClaimsUserID:
+		return m.ClaimsUserID()
+	case refreshtoken.FieldClaimsUsername:
+		return m.ClaimsUsername()
+	case refreshtoken.FieldClaimsEmail:
+		return m.ClaimsEmail()
+	case refreshtoken.FieldClaimsEmailVerified:
+		return m.ClaimsEmailVerified()
+	case refreshtoken.FieldClaimsGroups:
+		return m.ClaimsGroups()
+	case refreshtoken.FieldClaimsPreferredUsername:
+		return m.ClaimsPreferredUsername()
+	case refreshtoken.FieldConnectorID:
+		return m.ConnectorID()
+	case refreshtoken.FieldConnectorData:
+		return m.ConnectorData()
+	case refreshtoken.FieldToken:
+		return m.Token()
+	case refreshtoken.FieldObsoleteToken:
+		return m.ObsoleteToken()
+	case refreshtoken.FieldLastUsed:
+		return m.LastUsed()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *RefreshTokenMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case refreshtoken.FieldClientID:
+		return m.OldClientID(ctx)
+	case refreshtoken.FieldScopes:
+		return m.OldScopes(ctx)
+	case refreshtoken.FieldNonce:
+		return m.OldNonce(ctx)
+	case refreshtoken.FieldClaimsUserID:
+		return m.OldClaimsUserID(ctx)
+	case refreshtoken.FieldClaimsUsername:
+		return m.OldClaimsUsername(ctx)
+	case refreshtoken.FieldClaimsEmail:
+		return m.OldClaimsEmail(ctx)
+	case refreshtoken.FieldClaimsEmailVerified:
+		return m.OldClaimsEmailVerified(ctx)
+	case refreshtoken.FieldClaimsGroups:
+		return m.OldClaimsGroups(ctx)
+	case refreshtoken.FieldClaimsPreferredUsername:
+		return m.OldClaimsPreferredUsername(ctx)
+	case refreshtoken.FieldConnectorID:
+		return m.OldConnectorID(ctx)
+	case refreshtoken.FieldConnectorData:
+		return m.OldConnectorData(ctx)
+	case refreshtoken.FieldToken:
+		return m.OldToken(ctx)
+	case refreshtoken.FieldObsoleteToken:
+		return m.OldObsoleteToken(ctx)
+	case refreshtoken.FieldLastUsed:
+		return m.OldLastUsed(ctx)
+	}
+	return nil, fmt.Errorf("unknown RefreshToken field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *RefreshTokenMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case refreshtoken.FieldClientID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetClientID(v)
+		return nil
+	case refreshtoken.FieldScopes:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetScopes(v)
+		return nil
+	case refreshtoken.FieldNonce:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNonce(v)
+		return nil
+	case refreshtoken.FieldClaimsUserID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetClaimsUserID(v)
+		return nil
+	case refreshtoken.FieldClaimsUsername:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetClaimsUsername(v)
+		return nil
+	case refreshtoken.FieldClaimsEmail:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetClaimsEmail(v)
+		return nil
+	case refreshtoken.FieldClaimsEmailVerified:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetClaimsEmailVerified(v)
+		return nil
+	case refreshtoken.FieldClaimsGroups:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetClaimsGroups(v)
+		return nil
+	case refreshtoken.FieldClaimsPreferredUsername:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetClaimsPreferredUsername(v)
+		return nil
+	case refreshtoken.FieldConnectorID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetConnectorID(v)
+		return nil
+	case refreshtoken.FieldConnectorData:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetConnectorData(v)
+		return nil
+	case refreshtoken.FieldToken:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetToken(v)
+		return nil
+	case refreshtoken.FieldObsoleteToken:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetObsoleteToken(v)
+		return nil
+	case refreshtoken.FieldLastUsed:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLastUsed(v)
+		return nil
+	}
+	return fmt.Errorf("unknown RefreshToken field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *RefreshTokenMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *RefreshTokenMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *RefreshTokenMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown RefreshToken numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *RefreshTokenMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(refreshtoken.FieldScopes) {
+		fields = append(fields, refreshtoken.FieldScopes)
+	}
+	if m.FieldCleared(refreshtoken.FieldClaimsGroups) {
+		fields = append(fields, refreshtoken.FieldClaimsGroups)
+	}
+	if m.FieldCleared(refreshtoken.FieldConnectorData) {
+		fields = append(fields, refreshtoken.FieldConnectorData)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *RefreshTokenMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *RefreshTokenMutation) ClearField(name string) error {
+	switch name {
+	case refreshtoken.FieldScopes:
+		m.ClearScopes()
+		return nil
+	case refreshtoken.FieldClaimsGroups:
+		m.ClearClaimsGroups()
+		return nil
+	case refreshtoken.FieldConnectorData:
+		m.ClearConnectorData()
+		return nil
+	}
+	return fmt.Errorf("unknown RefreshToken nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *RefreshTokenMutation) ResetField(name string) error {
+	switch name {
+	case refreshtoken.FieldClientID:
+		m.ResetClientID()
+		return nil
+	case refreshtoken.FieldScopes:
+		m.ResetScopes()
+		return nil
+	case refreshtoken.FieldNonce:
+		m.ResetNonce()
+		return nil
+	case refreshtoken.FieldClaimsUserID:
+		m.ResetClaimsUserID()
+		return nil
+	case refreshtoken.FieldClaimsUsername:
+		m.ResetClaimsUsername()
+		return nil
+	case refreshtoken.FieldClaimsEmail:
+		m.ResetClaimsEmail()
+		return nil
+	case refreshtoken.FieldClaimsEmailVerified:
+		m.ResetClaimsEmailVerified()
+		return nil
+	case refreshtoken.FieldClaimsGroups:
+		m.ResetClaimsGroups()
+		return nil
+	case refreshtoken.FieldClaimsPreferredUsername:
+		m.ResetClaimsPreferredUsername()
+		return nil
+	case refreshtoken.FieldConnectorID:
+		m.ResetConnectorID()
+		return nil
+	case refreshtoken.FieldConnectorData:
+		m.ResetConnectorData()
+		return nil
+	case refreshtoken.FieldToken:
+		m.ResetToken()
+		return nil
+	case refreshtoken.FieldObsoleteToken:
+		m.ResetObsoleteToken()
+		return nil
+	case refreshtoken.FieldLastUsed:
+		m.ResetLastUsed()
+		return nil
+	}
+	return fmt.Errorf("unknown RefreshToken field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *RefreshTokenMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *RefreshTokenMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *RefreshTokenMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *RefreshTokenMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *RefreshTokenMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *RefreshTokenMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *RefreshTokenMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown RefreshToken unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *RefreshTokenMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown RefreshToken edge %s", name)
 }
 
 // SessionMutation represents an operation that mutates the Session nodes in the graph.

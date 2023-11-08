@@ -118,6 +118,30 @@ var (
 			},
 		},
 	}
+	// RefreshTokensColumns holds the columns for the "refresh_tokens" table.
+	RefreshTokensColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString},
+		{Name: "client_id", Type: field.TypeString},
+		{Name: "scopes", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "nonce", Type: field.TypeString, Size: 2147483647},
+		{Name: "claims_user_id", Type: field.TypeString, Size: 2147483647},
+		{Name: "claims_username", Type: field.TypeString, Size: 2147483647},
+		{Name: "claims_email", Type: field.TypeString, Size: 2147483647},
+		{Name: "claims_email_verified", Type: field.TypeBool},
+		{Name: "claims_groups", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "claims_preferred_username", Type: field.TypeString, Size: 2147483647},
+		{Name: "connector_id", Type: field.TypeString, Size: 2147483647},
+		{Name: "connector_data", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "token", Type: field.TypeString, Size: 2147483647},
+		{Name: "obsolete_token", Type: field.TypeString, Size: 2147483647},
+		{Name: "last_used", Type: field.TypeTime},
+	}
+	// RefreshTokensTable holds the schema information for the "refresh_tokens" table.
+	RefreshTokensTable = &schema.Table{
+		Name:       "refresh_tokens",
+		Columns:    RefreshTokensColumns,
+		PrimaryKey: []*schema.Column{RefreshTokensColumns[0]},
+	}
 	// SessionsColumns holds the columns for the "sessions" table.
 	SessionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
@@ -248,6 +272,7 @@ var (
 		GroupSettingsTable,
 		IntegrationsTable,
 		OrganizationsTable,
+		RefreshTokensTable,
 		SessionsTable,
 		UsersTable,
 		GroupUsersTable,
