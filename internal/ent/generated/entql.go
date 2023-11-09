@@ -3,6 +3,7 @@
 package generated
 
 import (
+	"github.com/datumforge/datum/internal/ent/generated/entitlement"
 	"github.com/datumforge/datum/internal/ent/generated/group"
 	"github.com/datumforge/datum/internal/ent/generated/groupsettings"
 	"github.com/datumforge/datum/internal/ent/generated/integration"
@@ -21,8 +22,30 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 8)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 9)}
 	graph.Nodes[0] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   entitlement.Table,
+			Columns: entitlement.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeString,
+				Column: entitlement.FieldID,
+			},
+		},
+		Type: "Entitlement",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			entitlement.FieldCreatedAt:            {Type: field.TypeTime, Column: entitlement.FieldCreatedAt},
+			entitlement.FieldUpdatedAt:            {Type: field.TypeTime, Column: entitlement.FieldUpdatedAt},
+			entitlement.FieldCreatedBy:            {Type: field.TypeString, Column: entitlement.FieldCreatedBy},
+			entitlement.FieldUpdatedBy:            {Type: field.TypeString, Column: entitlement.FieldUpdatedBy},
+			entitlement.FieldTier:                 {Type: field.TypeEnum, Column: entitlement.FieldTier},
+			entitlement.FieldStripeCustomerID:     {Type: field.TypeString, Column: entitlement.FieldStripeCustomerID},
+			entitlement.FieldStripeSubscriptionID: {Type: field.TypeString, Column: entitlement.FieldStripeSubscriptionID},
+			entitlement.FieldExpiresAt:            {Type: field.TypeTime, Column: entitlement.FieldExpiresAt},
+			entitlement.FieldCancelled:            {Type: field.TypeBool, Column: entitlement.FieldCancelled},
+		},
+	}
+	graph.Nodes[1] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   group.Table,
 			Columns: group.Columns,
@@ -42,7 +65,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			group.FieldLogoURL:     {Type: field.TypeString, Column: group.FieldLogoURL},
 		},
 	}
-	graph.Nodes[1] = &sqlgraph.Node{
+	graph.Nodes[2] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   groupsettings.Table,
 			Columns: groupsettings.Columns,
@@ -61,7 +84,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			groupsettings.FieldJoinPolicy: {Type: field.TypeEnum, Column: groupsettings.FieldJoinPolicy},
 		},
 	}
-	graph.Nodes[2] = &sqlgraph.Node{
+	graph.Nodes[3] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   integration.Table,
 			Columns: integration.Columns,
@@ -82,7 +105,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			integration.FieldSecretName:  {Type: field.TypeString, Column: integration.FieldSecretName},
 		},
 	}
-	graph.Nodes[3] = &sqlgraph.Node{
+	graph.Nodes[4] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   organization.Table,
 			Columns: organization.Columns,
@@ -102,7 +125,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			organization.FieldParentOrganizationID: {Type: field.TypeString, Column: organization.FieldParentOrganizationID},
 		},
 	}
-	graph.Nodes[4] = &sqlgraph.Node{
+	graph.Nodes[5] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   organizationsettings.Table,
 			Columns: organizationsettings.Columns,
@@ -128,7 +151,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			organizationsettings.FieldTaxIdentifier:  {Type: field.TypeString, Column: organizationsettings.FieldTaxIdentifier},
 		},
 	}
-	graph.Nodes[5] = &sqlgraph.Node{
+	graph.Nodes[6] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   refreshtoken.Table,
 			Columns: refreshtoken.Columns,
@@ -155,7 +178,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			refreshtoken.FieldLastUsed:                {Type: field.TypeTime, Column: refreshtoken.FieldLastUsed},
 		},
 	}
-	graph.Nodes[6] = &sqlgraph.Node{
+	graph.Nodes[7] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   session.Table,
 			Columns: session.Columns,
@@ -177,7 +200,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			session.FieldIps:       {Type: field.TypeString, Column: session.FieldIps},
 		},
 	}
-	graph.Nodes[7] = &sqlgraph.Node{
+	graph.Nodes[8] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   user.Table,
 			Columns: user.Columns,
@@ -383,6 +406,91 @@ type predicateAdder interface {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (eq *EntitlementQuery) addPredicate(pred func(s *sql.Selector)) {
+	eq.predicates = append(eq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the EntitlementQuery builder.
+func (eq *EntitlementQuery) Filter() *EntitlementFilter {
+	return &EntitlementFilter{config: eq.config, predicateAdder: eq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *EntitlementMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the EntitlementMutation builder.
+func (m *EntitlementMutation) Filter() *EntitlementFilter {
+	return &EntitlementFilter{config: m.config, predicateAdder: m}
+}
+
+// EntitlementFilter provides a generic filtering capability at runtime for EntitlementQuery.
+type EntitlementFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *EntitlementFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[0].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql string predicate on the id field.
+func (f *EntitlementFilter) WhereID(p entql.StringP) {
+	f.Where(p.Field(entitlement.FieldID))
+}
+
+// WhereCreatedAt applies the entql time.Time predicate on the created_at field.
+func (f *EntitlementFilter) WhereCreatedAt(p entql.TimeP) {
+	f.Where(p.Field(entitlement.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql time.Time predicate on the updated_at field.
+func (f *EntitlementFilter) WhereUpdatedAt(p entql.TimeP) {
+	f.Where(p.Field(entitlement.FieldUpdatedAt))
+}
+
+// WhereCreatedBy applies the entql string predicate on the created_by field.
+func (f *EntitlementFilter) WhereCreatedBy(p entql.StringP) {
+	f.Where(p.Field(entitlement.FieldCreatedBy))
+}
+
+// WhereUpdatedBy applies the entql string predicate on the updated_by field.
+func (f *EntitlementFilter) WhereUpdatedBy(p entql.StringP) {
+	f.Where(p.Field(entitlement.FieldUpdatedBy))
+}
+
+// WhereTier applies the entql string predicate on the tier field.
+func (f *EntitlementFilter) WhereTier(p entql.StringP) {
+	f.Where(p.Field(entitlement.FieldTier))
+}
+
+// WhereStripeCustomerID applies the entql string predicate on the stripe_customer_id field.
+func (f *EntitlementFilter) WhereStripeCustomerID(p entql.StringP) {
+	f.Where(p.Field(entitlement.FieldStripeCustomerID))
+}
+
+// WhereStripeSubscriptionID applies the entql string predicate on the stripe_subscription_id field.
+func (f *EntitlementFilter) WhereStripeSubscriptionID(p entql.StringP) {
+	f.Where(p.Field(entitlement.FieldStripeSubscriptionID))
+}
+
+// WhereExpiresAt applies the entql time.Time predicate on the expires_at field.
+func (f *EntitlementFilter) WhereExpiresAt(p entql.TimeP) {
+	f.Where(p.Field(entitlement.FieldExpiresAt))
+}
+
+// WhereCancelled applies the entql bool predicate on the cancelled field.
+func (f *EntitlementFilter) WhereCancelled(p entql.BoolP) {
+	f.Where(p.Field(entitlement.FieldCancelled))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (gq *GroupQuery) addPredicate(pred func(s *sql.Selector)) {
 	gq.predicates = append(gq.predicates, pred)
 }
@@ -411,7 +519,7 @@ type GroupFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *GroupFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[0].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -528,7 +636,7 @@ type GroupSettingsFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *GroupSettingsFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -612,7 +720,7 @@ type IntegrationFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *IntegrationFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[3].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -706,7 +814,7 @@ type OrganizationFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *OrganizationFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[3].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[4].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -851,7 +959,7 @@ type OrganizationSettingsFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *OrganizationSettingsFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[4].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[5].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -956,7 +1064,7 @@ type RefreshTokenFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *RefreshTokenFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[5].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[6].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1066,7 +1174,7 @@ type SessionFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *SessionFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[6].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[7].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1165,7 +1273,7 @@ type UserFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *UserFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[7].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[8].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

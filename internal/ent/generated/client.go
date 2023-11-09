@@ -15,6 +15,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"github.com/datumforge/datum/internal/ent/generated/entitlement"
 	"github.com/datumforge/datum/internal/ent/generated/group"
 	"github.com/datumforge/datum/internal/ent/generated/groupsettings"
 	"github.com/datumforge/datum/internal/ent/generated/integration"
@@ -33,6 +34,8 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// Entitlement is the client for interacting with the Entitlement builders.
+	Entitlement *EntitlementClient
 	// Group is the client for interacting with the Group builders.
 	Group *GroupClient
 	// GroupSettings is the client for interacting with the GroupSettings builders.
@@ -62,6 +65,7 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.Entitlement = NewEntitlementClient(c.config)
 	c.Group = NewGroupClient(c.config)
 	c.GroupSettings = NewGroupSettingsClient(c.config)
 	c.Integration = NewIntegrationClient(c.config)
@@ -165,6 +169,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	return &Tx{
 		ctx:                  ctx,
 		config:               cfg,
+		Entitlement:          NewEntitlementClient(cfg),
 		Group:                NewGroupClient(cfg),
 		GroupSettings:        NewGroupSettingsClient(cfg),
 		Integration:          NewIntegrationClient(cfg),
@@ -192,6 +197,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		ctx:                  ctx,
 		config:               cfg,
+		Entitlement:          NewEntitlementClient(cfg),
 		Group:                NewGroupClient(cfg),
 		GroupSettings:        NewGroupSettingsClient(cfg),
 		Integration:          NewIntegrationClient(cfg),
@@ -206,7 +212,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Group.
+//		Entitlement.
 //		Query().
 //		Count(ctx)
 func (c *Client) Debug() *Client {
@@ -229,8 +235,8 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Group, c.GroupSettings, c.Integration, c.Organization, c.OrganizationSettings,
-		c.RefreshToken, c.Session, c.User,
+		c.Entitlement, c.Group, c.GroupSettings, c.Integration, c.Organization,
+		c.OrganizationSettings, c.RefreshToken, c.Session, c.User,
 	} {
 		n.Use(hooks...)
 	}
@@ -240,8 +246,8 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Group, c.GroupSettings, c.Integration, c.Organization, c.OrganizationSettings,
-		c.RefreshToken, c.Session, c.User,
+		c.Entitlement, c.Group, c.GroupSettings, c.Integration, c.Organization,
+		c.OrganizationSettings, c.RefreshToken, c.Session, c.User,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -250,6 +256,8 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 // Mutate implements the ent.Mutator interface.
 func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
+	case *EntitlementMutation:
+		return c.Entitlement.mutate(ctx, m)
 	case *GroupMutation:
 		return c.Group.mutate(ctx, m)
 	case *GroupSettingsMutation:
@@ -268,6 +276,140 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.User.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("generated: unknown mutation type %T", m)
+	}
+}
+
+// EntitlementClient is a client for the Entitlement schema.
+type EntitlementClient struct {
+	config
+}
+
+// NewEntitlementClient returns a client for the Entitlement from the given config.
+func NewEntitlementClient(c config) *EntitlementClient {
+	return &EntitlementClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `entitlement.Hooks(f(g(h())))`.
+func (c *EntitlementClient) Use(hooks ...Hook) {
+	c.hooks.Entitlement = append(c.hooks.Entitlement, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `entitlement.Intercept(f(g(h())))`.
+func (c *EntitlementClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Entitlement = append(c.inters.Entitlement, interceptors...)
+}
+
+// Create returns a builder for creating a Entitlement entity.
+func (c *EntitlementClient) Create() *EntitlementCreate {
+	mutation := newEntitlementMutation(c.config, OpCreate)
+	return &EntitlementCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Entitlement entities.
+func (c *EntitlementClient) CreateBulk(builders ...*EntitlementCreate) *EntitlementCreateBulk {
+	return &EntitlementCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *EntitlementClient) MapCreateBulk(slice any, setFunc func(*EntitlementCreate, int)) *EntitlementCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &EntitlementCreateBulk{err: fmt.Errorf("calling to EntitlementClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*EntitlementCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &EntitlementCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Entitlement.
+func (c *EntitlementClient) Update() *EntitlementUpdate {
+	mutation := newEntitlementMutation(c.config, OpUpdate)
+	return &EntitlementUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *EntitlementClient) UpdateOne(e *Entitlement) *EntitlementUpdateOne {
+	mutation := newEntitlementMutation(c.config, OpUpdateOne, withEntitlement(e))
+	return &EntitlementUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *EntitlementClient) UpdateOneID(id string) *EntitlementUpdateOne {
+	mutation := newEntitlementMutation(c.config, OpUpdateOne, withEntitlementID(id))
+	return &EntitlementUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Entitlement.
+func (c *EntitlementClient) Delete() *EntitlementDelete {
+	mutation := newEntitlementMutation(c.config, OpDelete)
+	return &EntitlementDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *EntitlementClient) DeleteOne(e *Entitlement) *EntitlementDeleteOne {
+	return c.DeleteOneID(e.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *EntitlementClient) DeleteOneID(id string) *EntitlementDeleteOne {
+	builder := c.Delete().Where(entitlement.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &EntitlementDeleteOne{builder}
+}
+
+// Query returns a query builder for Entitlement.
+func (c *EntitlementClient) Query() *EntitlementQuery {
+	return &EntitlementQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeEntitlement},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Entitlement entity by its id.
+func (c *EntitlementClient) Get(ctx context.Context, id string) (*Entitlement, error) {
+	return c.Query().Where(entitlement.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *EntitlementClient) GetX(ctx context.Context, id string) *Entitlement {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *EntitlementClient) Hooks() []Hook {
+	hooks := c.hooks.Entitlement
+	return append(hooks[:len(hooks):len(hooks)], entitlement.Hooks[:]...)
+}
+
+// Interceptors returns the client interceptors.
+func (c *EntitlementClient) Interceptors() []Interceptor {
+	return c.inters.Entitlement
+}
+
+func (c *EntitlementClient) mutate(ctx context.Context, m *EntitlementMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&EntitlementCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&EntitlementUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&EntitlementUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&EntitlementDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("generated: unknown Entitlement mutation op: %q", m.Op())
 	}
 }
 
@@ -1611,12 +1753,12 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Group, GroupSettings, Integration, Organization, OrganizationSettings,
-		RefreshToken, Session, User []ent.Hook
+		Entitlement, Group, GroupSettings, Integration, Organization,
+		OrganizationSettings, RefreshToken, Session, User []ent.Hook
 	}
 	inters struct {
-		Group, GroupSettings, Integration, Organization, OrganizationSettings,
-		RefreshToken, Session, User []ent.Interceptor
+		Entitlement, Group, GroupSettings, Integration, Organization,
+		OrganizationSettings, RefreshToken, Session, User []ent.Interceptor
 	}
 )
 
