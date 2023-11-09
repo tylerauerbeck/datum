@@ -34,6 +34,7 @@ type Query struct {
 	Integrations              IntegrationConnection          "json:\"integrations\" graphql:\"integrations\""
 	Organizations             OrganizationConnection         "json:\"organizations\" graphql:\"organizations\""
 	OrganizationSettingsSlice OrganizationSettingsConnection "json:\"organizationSettingsSlice\" graphql:\"organizationSettingsSlice\""
+	PersonalAccessTokens      PersonalAccessTokenConnection  "json:\"personalAccessTokens\" graphql:\"personalAccessTokens\""
 	Sessions                  SessionConnection              "json:\"sessions\" graphql:\"sessions\""
 	Users                     UserConnection                 "json:\"users\" graphql:\"users\""
 	Group                     Group                          "json:\"group\" graphql:\"group\""
@@ -490,4 +491,12 @@ func (c *Client) DeleteOrganization(ctx context.Context, deleteOrganizationID st
 	}
 
 	return &res, nil
+}
+
+var DocumentOperationNames = map[string]string{
+	GetOrganizationByIDDocument: "GetOrganizationByID",
+	GetAllOrganizationsDocument: "GetAllOrganizations",
+	CreateOrganizationDocument:  "CreateOrganization",
+	UpdateOrganizationDocument:  "UpdateOrganization",
+	DeleteOrganizationDocument:  "DeleteOrganization",
 }

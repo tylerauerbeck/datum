@@ -13,6 +13,7 @@ type SchemaConfig struct {
 	Integration          string // Integration table.
 	Organization         string // Organization table.
 	OrganizationSettings string // OrganizationSettings table.
+	PersonalAccessToken  string // PersonalAccessToken table.
 	RefreshToken         string // RefreshToken table.
 	Session              string // Session table.
 	User                 string // User table.
