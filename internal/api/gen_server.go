@@ -146,21 +146,24 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateGroup        func(childComplexity int, input generated.CreateGroupInput) int
-		CreateIntegration  func(childComplexity int, input generated.CreateIntegrationInput) int
-		CreateOrganization func(childComplexity int, input generated.CreateOrganizationInput) int
-		CreateSession      func(childComplexity int, input generated.CreateSessionInput) int
-		CreateUser         func(childComplexity int, input generated.CreateUserInput) int
-		DeleteGroup        func(childComplexity int, id string) int
-		DeleteIntegration  func(childComplexity int, id string) int
-		DeleteOrganization func(childComplexity int, id string) int
-		DeleteSession      func(childComplexity int, id string) int
-		DeleteUser         func(childComplexity int, id string) int
-		UpdateGroup        func(childComplexity int, id string, input generated.UpdateGroupInput) int
-		UpdateIntegration  func(childComplexity int, id string, input generated.UpdateIntegrationInput) int
-		UpdateOrganization func(childComplexity int, id string, input generated.UpdateOrganizationInput) int
-		UpdateSession      func(childComplexity int, id string, input generated.UpdateSessionInput) int
-		UpdateUser         func(childComplexity int, id string, input generated.UpdateUserInput) int
+		CreateGroup               func(childComplexity int, input generated.CreateGroupInput) int
+		CreateIntegration         func(childComplexity int, input generated.CreateIntegrationInput) int
+		CreateOrganization        func(childComplexity int, input generated.CreateOrganizationInput) int
+		CreatePersonalAccessToken func(childComplexity int, input generated.CreatePersonalAccessTokenInput) int
+		CreateSession             func(childComplexity int, input generated.CreateSessionInput) int
+		CreateUser                func(childComplexity int, input generated.CreateUserInput) int
+		DeleteGroup               func(childComplexity int, id string) int
+		DeleteIntegration         func(childComplexity int, id string) int
+		DeleteOrganization        func(childComplexity int, id string) int
+		DeletePersonalAccessToken func(childComplexity int, id string) int
+		DeleteSession             func(childComplexity int, id string) int
+		DeleteUser                func(childComplexity int, id string) int
+		UpdateGroup               func(childComplexity int, id string, input generated.UpdateGroupInput) int
+		UpdateIntegration         func(childComplexity int, id string, input generated.UpdateIntegrationInput) int
+		UpdateOrganization        func(childComplexity int, id string, input generated.UpdateOrganizationInput) int
+		UpdatePersonalAccessToken func(childComplexity int, id string, input generated.UpdatePersonalAccessTokenInput) int
+		UpdateSession             func(childComplexity int, id string, input generated.UpdateSessionInput) int
+		UpdateUser                func(childComplexity int, id string, input generated.UpdateUserInput) int
 	}
 
 	Organization struct {
@@ -257,9 +260,21 @@ type ComplexityRoot struct {
 		TotalCount func(childComplexity int) int
 	}
 
+	PersonalAccessTokenCreatePayload struct {
+		PersonalAccessToken func(childComplexity int) int
+	}
+
+	PersonalAccessTokenDeletePayload struct {
+		DeletedID func(childComplexity int) int
+	}
+
 	PersonalAccessTokenEdge struct {
 		Cursor func(childComplexity int) int
 		Node   func(childComplexity int) int
+	}
+
+	PersonalAccessTokenUpdatePayload struct {
+		PersonalAccessToken func(childComplexity int) int
 	}
 
 	Query struct {
@@ -273,6 +288,7 @@ type ComplexityRoot struct {
 		Organization              func(childComplexity int, id string) int
 		OrganizationSettingsSlice func(childComplexity int, after *entgql.Cursor[string], first *int, before *entgql.Cursor[string], last *int, where *generated.OrganizationSettingsWhereInput) int
 		Organizations             func(childComplexity int, after *entgql.Cursor[string], first *int, before *entgql.Cursor[string], last *int, orderBy *generated.OrganizationOrder, where *generated.OrganizationWhereInput) int
+		PersonalAccessToken       func(childComplexity int, id string) int
 		PersonalAccessTokens      func(childComplexity int, after *entgql.Cursor[string], first *int, before *entgql.Cursor[string], last *int, where *generated.PersonalAccessTokenWhereInput) int
 		Session                   func(childComplexity int, id string) int
 		Sessions                  func(childComplexity int, after *entgql.Cursor[string], first *int, before *entgql.Cursor[string], last *int, where *generated.SessionWhereInput) int
@@ -396,6 +412,9 @@ type MutationResolver interface {
 	CreateOrganization(ctx context.Context, input generated.CreateOrganizationInput) (*OrganizationCreatePayload, error)
 	UpdateOrganization(ctx context.Context, id string, input generated.UpdateOrganizationInput) (*OrganizationUpdatePayload, error)
 	DeleteOrganization(ctx context.Context, id string) (*OrganizationDeletePayload, error)
+	CreatePersonalAccessToken(ctx context.Context, input generated.CreatePersonalAccessTokenInput) (*PersonalAccessTokenCreatePayload, error)
+	UpdatePersonalAccessToken(ctx context.Context, id string, input generated.UpdatePersonalAccessTokenInput) (*PersonalAccessTokenUpdatePayload, error)
+	DeletePersonalAccessToken(ctx context.Context, id string) (*PersonalAccessTokenDeletePayload, error)
 	CreateSession(ctx context.Context, input generated.CreateSessionInput) (*SessionCreatePayload, error)
 	UpdateSession(ctx context.Context, id string, input generated.UpdateSessionInput) (*SessionUpdatePayload, error)
 	DeleteSession(ctx context.Context, id string) (*SessionDeletePayload, error)
@@ -417,6 +436,7 @@ type QueryResolver interface {
 	Group(ctx context.Context, id string) (*generated.Group, error)
 	Integration(ctx context.Context, id string) (*generated.Integration, error)
 	Organization(ctx context.Context, id string) (*generated.Organization, error)
+	PersonalAccessToken(ctx context.Context, id string) (*generated.PersonalAccessToken, error)
 	Session(ctx context.Context, id string) (*generated.Session, error)
 	User(ctx context.Context, id string) (*generated.User, error)
 }
@@ -819,6 +839,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateOrganization(childComplexity, args["input"].(generated.CreateOrganizationInput)), true
 
+	case "Mutation.createPersonalAccessToken":
+		if e.complexity.Mutation.CreatePersonalAccessToken == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createPersonalAccessToken_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreatePersonalAccessToken(childComplexity, args["input"].(generated.CreatePersonalAccessTokenInput)), true
+
 	case "Mutation.createSession":
 		if e.complexity.Mutation.CreateSession == nil {
 			break
@@ -879,6 +911,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteOrganization(childComplexity, args["id"].(string)), true
 
+	case "Mutation.deletePersonalAccessToken":
+		if e.complexity.Mutation.DeletePersonalAccessToken == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deletePersonalAccessToken_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeletePersonalAccessToken(childComplexity, args["id"].(string)), true
+
 	case "Mutation.deleteSession":
 		if e.complexity.Mutation.DeleteSession == nil {
 			break
@@ -938,6 +982,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateOrganization(childComplexity, args["id"].(string), args["input"].(generated.UpdateOrganizationInput)), true
+
+	case "Mutation.updatePersonalAccessToken":
+		if e.complexity.Mutation.UpdatePersonalAccessToken == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePersonalAccessToken_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePersonalAccessToken(childComplexity, args["id"].(string), args["input"].(generated.UpdatePersonalAccessTokenInput)), true
 
 	case "Mutation.updateSession":
 		if e.complexity.Mutation.UpdateSession == nil {
@@ -1374,6 +1430,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PersonalAccessTokenConnection.TotalCount(childComplexity), true
 
+	case "PersonalAccessTokenCreatePayload.PersonalAccessToken":
+		if e.complexity.PersonalAccessTokenCreatePayload.PersonalAccessToken == nil {
+			break
+		}
+
+		return e.complexity.PersonalAccessTokenCreatePayload.PersonalAccessToken(childComplexity), true
+
+	case "PersonalAccessTokenDeletePayload.deletedID":
+		if e.complexity.PersonalAccessTokenDeletePayload.DeletedID == nil {
+			break
+		}
+
+		return e.complexity.PersonalAccessTokenDeletePayload.DeletedID(childComplexity), true
+
 	case "PersonalAccessTokenEdge.cursor":
 		if e.complexity.PersonalAccessTokenEdge.Cursor == nil {
 			break
@@ -1387,6 +1457,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PersonalAccessTokenEdge.Node(childComplexity), true
+
+	case "PersonalAccessTokenUpdatePayload.PersonalAccessToken":
+		if e.complexity.PersonalAccessTokenUpdatePayload.PersonalAccessToken == nil {
+			break
+		}
+
+		return e.complexity.PersonalAccessTokenUpdatePayload.PersonalAccessToken(childComplexity), true
 
 	case "Query.group":
 		if e.complexity.Query.Group == nil {
@@ -1507,6 +1584,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Organizations(childComplexity, args["after"].(*entgql.Cursor[string]), args["first"].(*int), args["before"].(*entgql.Cursor[string]), args["last"].(*int), args["orderBy"].(*generated.OrganizationOrder), args["where"].(*generated.OrganizationWhereInput)), true
+
+	case "Query.PersonalAccessToken":
+		if e.complexity.Query.PersonalAccessToken == nil {
+			break
+		}
+
+		args, err := ec.field_Query_PersonalAccessToken_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.PersonalAccessToken(childComplexity, args["id"].(string)), true
 
 	case "Query.personalAccessTokens":
 		if e.complexity.Query.PersonalAccessTokens == nil {
@@ -4465,7 +4554,81 @@ type OrganizationDeletePayload {
     deletedID: ID!
 }`, BuiltIn: false},
 	{Name: "../../schema/organization_settings.graphql", Input: ``, BuiltIn: false},
-	{Name: "../../schema/personalaccesstoken.graphql", Input: ``, BuiltIn: false},
+	{Name: "../../schema/personalaccesstoken.graphql", Input: `extend type Query {
+    """
+    Look up PersonalAccessToken by ID
+    """
+     PersonalAccessToken(
+        """
+        ID of the PersonalAccessToken
+        """
+        id: ID!
+    ):  PersonalAccessToken!
+}
+
+extend type Mutation{
+    """
+    Create a new PersonalAccessToken
+    """
+    createPersonalAccessToken(
+        """
+        values of the PersonalAccessToken
+        """
+        input: CreatePersonalAccessTokenInput!
+    ): PersonalAccessTokenCreatePayload!
+    """
+    Update an existing PersonalAccessToken
+    """
+    updatePersonalAccessToken(
+        """
+        ID of the PersonalAccessToken
+        """
+        id: ID!
+        """
+        New values for the PersonalAccessToken
+        """
+        input: UpdatePersonalAccessTokenInput!
+    ): PersonalAccessTokenUpdatePayload!
+    """
+    Delete an existing PersonalAccessToken
+    """
+    deletePersonalAccessToken(
+        """
+        ID of the PersonalAccessToken
+        """
+        id: ID!
+    ): PersonalAccessTokenDeletePayload!
+}
+
+"""
+Return response for createPersonalAccessToken mutation
+"""
+type PersonalAccessTokenCreatePayload {
+    """
+    Created PersonalAccessToken
+    """
+    PersonalAccessToken: PersonalAccessToken!
+}
+
+"""
+Return response for updatePersonalAccessToken mutation
+"""
+type PersonalAccessTokenUpdatePayload {
+    """
+    Updated PersonalAccessToken
+    """
+    PersonalAccessToken: PersonalAccessToken!
+}
+
+"""
+Return response for deletePersonalAccessToken mutation
+"""
+type PersonalAccessTokenDeletePayload {
+    """
+    Deleted PersonalAccessToken ID
+    """
+    deletedID: ID!
+}`, BuiltIn: false},
 	{Name: "../../schema/refreshtoken.graphql", Input: ``, BuiltIn: false},
 	{Name: "../../schema/session.graphql", Input: `extend type Query {
     """
@@ -4687,6 +4850,21 @@ func (ec *executionContext) field_Mutation_createOrganization_args(ctx context.C
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createPersonalAccessToken_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 generated.CreatePersonalAccessTokenInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreatePersonalAccessTokenInput2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋentᚋgeneratedᚐCreatePersonalAccessTokenInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createSession_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -4748,6 +4926,21 @@ func (ec *executionContext) field_Mutation_deleteIntegration_args(ctx context.Co
 }
 
 func (ec *executionContext) field_Mutation_deleteOrganization_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deletePersonalAccessToken_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -4864,6 +5057,30 @@ func (ec *executionContext) field_Mutation_updateOrganization_args(ctx context.C
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_updatePersonalAccessToken_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	var arg1 generated.UpdatePersonalAccessTokenInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg1, err = ec.unmarshalNUpdatePersonalAccessTokenInput2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋentᚋgeneratedᚐUpdatePersonalAccessTokenInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg1
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updateSession_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -4969,6 +5186,21 @@ func (ec *executionContext) field_Organization_children_args(ctx context.Context
 		}
 	}
 	args["where"] = arg5
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_PersonalAccessToken_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -8523,6 +8755,183 @@ func (ec *executionContext) fieldContext_Mutation_deleteOrganization(ctx context
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_createPersonalAccessToken(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createPersonalAccessToken(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreatePersonalAccessToken(rctx, fc.Args["input"].(generated.CreatePersonalAccessTokenInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*PersonalAccessTokenCreatePayload)
+	fc.Result = res
+	return ec.marshalNPersonalAccessTokenCreatePayload2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋapiᚐPersonalAccessTokenCreatePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createPersonalAccessToken(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "PersonalAccessToken":
+				return ec.fieldContext_PersonalAccessTokenCreatePayload_PersonalAccessToken(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PersonalAccessTokenCreatePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createPersonalAccessToken_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updatePersonalAccessToken(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updatePersonalAccessToken(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePersonalAccessToken(rctx, fc.Args["id"].(string), fc.Args["input"].(generated.UpdatePersonalAccessTokenInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*PersonalAccessTokenUpdatePayload)
+	fc.Result = res
+	return ec.marshalNPersonalAccessTokenUpdatePayload2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋapiᚐPersonalAccessTokenUpdatePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updatePersonalAccessToken(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "PersonalAccessToken":
+				return ec.fieldContext_PersonalAccessTokenUpdatePayload_PersonalAccessToken(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PersonalAccessTokenUpdatePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updatePersonalAccessToken_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deletePersonalAccessToken(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deletePersonalAccessToken(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeletePersonalAccessToken(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*PersonalAccessTokenDeletePayload)
+	fc.Result = res
+	return ec.marshalNPersonalAccessTokenDeletePayload2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋapiᚐPersonalAccessTokenDeletePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deletePersonalAccessToken(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "deletedID":
+				return ec.fieldContext_PersonalAccessTokenDeletePayload_deletedID(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PersonalAccessTokenDeletePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deletePersonalAccessToken_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_createSession(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createSession(ctx, field)
 	if err != nil {
@@ -11696,6 +12105,120 @@ func (ec *executionContext) fieldContext_PersonalAccessTokenConnection_totalCoun
 	return fc, nil
 }
 
+func (ec *executionContext) _PersonalAccessTokenCreatePayload_PersonalAccessToken(ctx context.Context, field graphql.CollectedField, obj *PersonalAccessTokenCreatePayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PersonalAccessTokenCreatePayload_PersonalAccessToken(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PersonalAccessToken, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*generated.PersonalAccessToken)
+	fc.Result = res
+	return ec.marshalNPersonalAccessToken2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋentᚋgeneratedᚐPersonalAccessToken(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PersonalAccessTokenCreatePayload_PersonalAccessToken(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PersonalAccessTokenCreatePayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_PersonalAccessToken_id(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_PersonalAccessToken_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_PersonalAccessToken_updatedAt(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_PersonalAccessToken_createdBy(ctx, field)
+			case "updatedBy":
+				return ec.fieldContext_PersonalAccessToken_updatedBy(ctx, field)
+			case "name":
+				return ec.fieldContext_PersonalAccessToken_name(ctx, field)
+			case "userID":
+				return ec.fieldContext_PersonalAccessToken_userID(ctx, field)
+			case "token":
+				return ec.fieldContext_PersonalAccessToken_token(ctx, field)
+			case "abilities":
+				return ec.fieldContext_PersonalAccessToken_abilities(ctx, field)
+			case "expirationAt":
+				return ec.fieldContext_PersonalAccessToken_expirationAt(ctx, field)
+			case "lastUsedAt":
+				return ec.fieldContext_PersonalAccessToken_lastUsedAt(ctx, field)
+			case "user":
+				return ec.fieldContext_PersonalAccessToken_user(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PersonalAccessToken", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PersonalAccessTokenDeletePayload_deletedID(ctx context.Context, field graphql.CollectedField, obj *PersonalAccessTokenDeletePayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PersonalAccessTokenDeletePayload_deletedID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DeletedID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PersonalAccessTokenDeletePayload_deletedID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PersonalAccessTokenDeletePayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _PersonalAccessTokenEdge_node(ctx context.Context, field graphql.CollectedField, obj *generated.PersonalAccessTokenEdge) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_PersonalAccessTokenEdge_node(ctx, field)
 	if err != nil {
@@ -11802,6 +12325,76 @@ func (ec *executionContext) fieldContext_PersonalAccessTokenEdge_cursor(ctx cont
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Cursor does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PersonalAccessTokenUpdatePayload_PersonalAccessToken(ctx context.Context, field graphql.CollectedField, obj *PersonalAccessTokenUpdatePayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PersonalAccessTokenUpdatePayload_PersonalAccessToken(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PersonalAccessToken, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*generated.PersonalAccessToken)
+	fc.Result = res
+	return ec.marshalNPersonalAccessToken2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋentᚋgeneratedᚐPersonalAccessToken(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PersonalAccessTokenUpdatePayload_PersonalAccessToken(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PersonalAccessTokenUpdatePayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_PersonalAccessToken_id(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_PersonalAccessToken_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_PersonalAccessToken_updatedAt(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_PersonalAccessToken_createdBy(ctx, field)
+			case "updatedBy":
+				return ec.fieldContext_PersonalAccessToken_updatedBy(ctx, field)
+			case "name":
+				return ec.fieldContext_PersonalAccessToken_name(ctx, field)
+			case "userID":
+				return ec.fieldContext_PersonalAccessToken_userID(ctx, field)
+			case "token":
+				return ec.fieldContext_PersonalAccessToken_token(ctx, field)
+			case "abilities":
+				return ec.fieldContext_PersonalAccessToken_abilities(ctx, field)
+			case "expirationAt":
+				return ec.fieldContext_PersonalAccessToken_expirationAt(ctx, field)
+			case "lastUsedAt":
+				return ec.fieldContext_PersonalAccessToken_lastUsedAt(ctx, field)
+			case "user":
+				return ec.fieldContext_PersonalAccessToken_user(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PersonalAccessToken", field.Name)
 		},
 	}
 	return fc, nil
@@ -12649,6 +13242,87 @@ func (ec *executionContext) fieldContext_Query_organization(ctx context.Context,
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_organization_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_PersonalAccessToken(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_PersonalAccessToken(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().PersonalAccessToken(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*generated.PersonalAccessToken)
+	fc.Result = res
+	return ec.marshalNPersonalAccessToken2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋentᚋgeneratedᚐPersonalAccessToken(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_PersonalAccessToken(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_PersonalAccessToken_id(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_PersonalAccessToken_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_PersonalAccessToken_updatedAt(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_PersonalAccessToken_createdBy(ctx, field)
+			case "updatedBy":
+				return ec.fieldContext_PersonalAccessToken_updatedBy(ctx, field)
+			case "name":
+				return ec.fieldContext_PersonalAccessToken_name(ctx, field)
+			case "userID":
+				return ec.fieldContext_PersonalAccessToken_userID(ctx, field)
+			case "token":
+				return ec.fieldContext_PersonalAccessToken_token(ctx, field)
+			case "abilities":
+				return ec.fieldContext_PersonalAccessToken_abilities(ctx, field)
+			case "expirationAt":
+				return ec.fieldContext_PersonalAccessToken_expirationAt(ctx, field)
+			case "lastUsedAt":
+				return ec.fieldContext_PersonalAccessToken_lastUsedAt(ctx, field)
+			case "user":
+				return ec.fieldContext_PersonalAccessToken_user(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PersonalAccessToken", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_PersonalAccessToken_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -30812,6 +31486,27 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "createPersonalAccessToken":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createPersonalAccessToken(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updatePersonalAccessToken":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePersonalAccessToken(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "deletePersonalAccessToken":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deletePersonalAccessToken(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "createSession":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createSession(ctx, field)
@@ -31701,6 +32396,84 @@ func (ec *executionContext) _PersonalAccessTokenConnection(ctx context.Context, 
 	return out
 }
 
+var personalAccessTokenCreatePayloadImplementors = []string{"PersonalAccessTokenCreatePayload"}
+
+func (ec *executionContext) _PersonalAccessTokenCreatePayload(ctx context.Context, sel ast.SelectionSet, obj *PersonalAccessTokenCreatePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, personalAccessTokenCreatePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PersonalAccessTokenCreatePayload")
+		case "PersonalAccessToken":
+			out.Values[i] = ec._PersonalAccessTokenCreatePayload_PersonalAccessToken(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var personalAccessTokenDeletePayloadImplementors = []string{"PersonalAccessTokenDeletePayload"}
+
+func (ec *executionContext) _PersonalAccessTokenDeletePayload(ctx context.Context, sel ast.SelectionSet, obj *PersonalAccessTokenDeletePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, personalAccessTokenDeletePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PersonalAccessTokenDeletePayload")
+		case "deletedID":
+			out.Values[i] = ec._PersonalAccessTokenDeletePayload_deletedID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var personalAccessTokenEdgeImplementors = []string{"PersonalAccessTokenEdge"}
 
 func (ec *executionContext) _PersonalAccessTokenEdge(ctx context.Context, sel ast.SelectionSet, obj *generated.PersonalAccessTokenEdge) graphql.Marshaler {
@@ -31716,6 +32489,45 @@ func (ec *executionContext) _PersonalAccessTokenEdge(ctx context.Context, sel as
 			out.Values[i] = ec._PersonalAccessTokenEdge_node(ctx, field, obj)
 		case "cursor":
 			out.Values[i] = ec._PersonalAccessTokenEdge_cursor(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var personalAccessTokenUpdatePayloadImplementors = []string{"PersonalAccessTokenUpdatePayload"}
+
+func (ec *executionContext) _PersonalAccessTokenUpdatePayload(ctx context.Context, sel ast.SelectionSet, obj *PersonalAccessTokenUpdatePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, personalAccessTokenUpdatePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PersonalAccessTokenUpdatePayload")
+		case "PersonalAccessToken":
+			out.Values[i] = ec._PersonalAccessTokenUpdatePayload_PersonalAccessToken(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -32032,6 +32844,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_organization(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "PersonalAccessToken":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_PersonalAccessToken(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -33369,6 +34203,11 @@ func (ec *executionContext) unmarshalNCreateOrganizationInput2githubᚗcomᚋdat
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreatePersonalAccessTokenInput2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋentᚋgeneratedᚐCreatePersonalAccessTokenInput(ctx context.Context, v interface{}) (generated.CreatePersonalAccessTokenInput, error) {
+	res, err := ec.unmarshalInputCreatePersonalAccessTokenInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateSessionInput2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋentᚋgeneratedᚐCreateSessionInput(ctx context.Context, v interface{}) (generated.CreateSessionInput, error) {
 	res, err := ec.unmarshalInputCreateSessionInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -33844,6 +34683,10 @@ func (ec *executionContext) marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPag
 	return ec._PageInfo(ctx, sel, &v)
 }
 
+func (ec *executionContext) marshalNPersonalAccessToken2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋentᚋgeneratedᚐPersonalAccessToken(ctx context.Context, sel ast.SelectionSet, v generated.PersonalAccessToken) graphql.Marshaler {
+	return ec._PersonalAccessToken(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNPersonalAccessToken2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋentᚋgeneratedᚐPersonalAccessToken(ctx context.Context, sel ast.SelectionSet, v *generated.PersonalAccessToken) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -33866,6 +34709,48 @@ func (ec *executionContext) marshalNPersonalAccessTokenConnection2ᚖgithubᚗco
 		return graphql.Null
 	}
 	return ec._PersonalAccessTokenConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNPersonalAccessTokenCreatePayload2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋapiᚐPersonalAccessTokenCreatePayload(ctx context.Context, sel ast.SelectionSet, v PersonalAccessTokenCreatePayload) graphql.Marshaler {
+	return ec._PersonalAccessTokenCreatePayload(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNPersonalAccessTokenCreatePayload2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋapiᚐPersonalAccessTokenCreatePayload(ctx context.Context, sel ast.SelectionSet, v *PersonalAccessTokenCreatePayload) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._PersonalAccessTokenCreatePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNPersonalAccessTokenDeletePayload2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋapiᚐPersonalAccessTokenDeletePayload(ctx context.Context, sel ast.SelectionSet, v PersonalAccessTokenDeletePayload) graphql.Marshaler {
+	return ec._PersonalAccessTokenDeletePayload(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNPersonalAccessTokenDeletePayload2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋapiᚐPersonalAccessTokenDeletePayload(ctx context.Context, sel ast.SelectionSet, v *PersonalAccessTokenDeletePayload) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._PersonalAccessTokenDeletePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNPersonalAccessTokenUpdatePayload2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋapiᚐPersonalAccessTokenUpdatePayload(ctx context.Context, sel ast.SelectionSet, v PersonalAccessTokenUpdatePayload) graphql.Marshaler {
+	return ec._PersonalAccessTokenUpdatePayload(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNPersonalAccessTokenUpdatePayload2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋapiᚐPersonalAccessTokenUpdatePayload(ctx context.Context, sel ast.SelectionSet, v *PersonalAccessTokenUpdatePayload) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._PersonalAccessTokenUpdatePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNPersonalAccessTokenWhereInput2ᚖgithubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋentᚋgeneratedᚐPersonalAccessTokenWhereInput(ctx context.Context, v interface{}) (*generated.PersonalAccessTokenWhereInput, error) {
@@ -34037,6 +34922,11 @@ func (ec *executionContext) unmarshalNUpdateIntegrationInput2githubᚗcomᚋdatu
 
 func (ec *executionContext) unmarshalNUpdateOrganizationInput2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋentᚋgeneratedᚐUpdateOrganizationInput(ctx context.Context, v interface{}) (generated.UpdateOrganizationInput, error) {
 	res, err := ec.unmarshalInputUpdateOrganizationInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdatePersonalAccessTokenInput2githubᚗcomᚋdatumforgeᚋdatumᚋinternalᚋentᚋgeneratedᚐUpdatePersonalAccessTokenInput(ctx context.Context, v interface{}) (generated.UpdatePersonalAccessTokenInput, error) {
+	res, err := ec.unmarshalInputUpdatePersonalAccessTokenInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

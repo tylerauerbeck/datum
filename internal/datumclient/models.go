@@ -1027,12 +1027,30 @@ type PersonalAccessTokenConnection struct {
 	TotalCount int64 `json:"totalCount"`
 }
 
+// Return response for createPersonalAccessToken mutation
+type PersonalAccessTokenCreatePayload struct {
+	// Created PersonalAccessToken
+	PersonalAccessToken PersonalAccessToken `json:"PersonalAccessToken"`
+}
+
+// Return response for deletePersonalAccessToken mutation
+type PersonalAccessTokenDeletePayload struct {
+	// Deleted PersonalAccessToken ID
+	DeletedID string `json:"deletedID"`
+}
+
 // An edge in a connection.
 type PersonalAccessTokenEdge struct {
 	// The item at the end of the edge.
 	Node *PersonalAccessToken `json:"node,omitempty"`
 	// A cursor for use in pagination.
 	Cursor string `json:"cursor"`
+}
+
+// Return response for updatePersonalAccessToken mutation
+type PersonalAccessTokenUpdatePayload struct {
+	// Updated PersonalAccessToken
+	PersonalAccessToken PersonalAccessToken `json:"PersonalAccessToken"`
 }
 
 // PersonalAccessTokenWhereInput is used for filtering PersonalAccessToken objects.

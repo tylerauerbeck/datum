@@ -664,6 +664,24 @@ type Mutation {
 		"""ID of the organization"""
 		id: ID!
 	): OrganizationDeletePayload!
+	"""Create a new PersonalAccessToken"""
+	createPersonalAccessToken(
+		"""values of the PersonalAccessToken"""
+		input: CreatePersonalAccessTokenInput!
+	): PersonalAccessTokenCreatePayload!
+	"""Update an existing PersonalAccessToken"""
+	updatePersonalAccessToken(
+		"""ID of the PersonalAccessToken"""
+		id: ID!
+
+		"""New values for the PersonalAccessToken"""
+		input: UpdatePersonalAccessTokenInput!
+	): PersonalAccessTokenUpdatePayload!
+	"""Delete an existing PersonalAccessToken"""
+	deletePersonalAccessToken(
+		"""ID of the PersonalAccessToken"""
+		id: ID!
+	): PersonalAccessTokenDeletePayload!
 	"""Create a new session"""
 	createSession(
 		"""values of the session"""
@@ -1145,12 +1163,27 @@ type PersonalAccessTokenConnection {
 	"""Identifies the total count of items in the connection."""
 	totalCount: Int!
 }
+"""Return response for createPersonalAccessToken mutation"""
+type PersonalAccessTokenCreatePayload {
+	"""Created PersonalAccessToken"""
+	PersonalAccessToken: PersonalAccessToken!
+}
+"""Return response for deletePersonalAccessToken mutation"""
+type PersonalAccessTokenDeletePayload {
+	"""Deleted PersonalAccessToken ID"""
+	deletedID: ID!
+}
 """An edge in a connection."""
 type PersonalAccessTokenEdge {
 	"""The item at the end of the edge."""
 	node: PersonalAccessToken
 	"""A cursor for use in pagination."""
 	cursor: Cursor!
+}
+"""Return response for updatePersonalAccessToken mutation"""
+type PersonalAccessTokenUpdatePayload {
+	"""Updated PersonalAccessToken"""
+	PersonalAccessToken: PersonalAccessToken!
 }
 """
 PersonalAccessTokenWhereInput is used for filtering PersonalAccessToken objects.
@@ -1453,6 +1486,11 @@ type Query {
 		"""ID of the organization"""
 		id: ID!
 	): Organization!
+	"""Look up PersonalAccessToken by ID"""
+	PersonalAccessToken(
+		"""ID of the PersonalAccessToken"""
+		id: ID!
+	): PersonalAccessToken!
 	"""Look up session by ID"""
 	session(
 		"""ID of the session"""
