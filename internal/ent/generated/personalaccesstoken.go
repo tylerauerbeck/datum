@@ -32,7 +32,7 @@ type PersonalAccessToken struct {
 	// UserID holds the value of the "user_id" field.
 	UserID string `json:"user_id,omitempty"`
 	// Token holds the value of the "token" field.
-	Token string `json:"token,omitempty"`
+	Token string `json:"-"`
 	// Abilities holds the value of the "abilities" field.
 	Abilities []string `json:"abilities,omitempty"`
 	// ExpirationAt holds the value of the "expiration_at" field.
@@ -223,8 +223,7 @@ func (pat *PersonalAccessToken) String() string {
 	builder.WriteString("user_id=")
 	builder.WriteString(pat.UserID)
 	builder.WriteString(", ")
-	builder.WriteString("token=")
-	builder.WriteString(pat.Token)
+	builder.WriteString("token=<sensitive>")
 	builder.WriteString(", ")
 	builder.WriteString("abilities=")
 	builder.WriteString(fmt.Sprintf("%v", pat.Abilities))

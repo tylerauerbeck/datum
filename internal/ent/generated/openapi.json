@@ -5581,9 +5581,6 @@
           "user_id": {
             "type": "string"
           },
-          "token": {
-            "type": "string"
-          },
           "abilities": {
             "type": "array",
             "items": {
@@ -5605,7 +5602,6 @@
           "updated_at",
           "name",
           "user_id",
-          "token",
           "expiration_at"
         ]
       },
@@ -5635,9 +5631,6 @@
           "user_id": {
             "type": "string"
           },
-          "token": {
-            "type": "string"
-          },
           "abilities": {
             "type": "array",
             "items": {
@@ -5659,7 +5652,6 @@
           "updated_at",
           "name",
           "user_id",
-          "token",
           "expiration_at"
         ]
       },
@@ -5689,9 +5681,6 @@
           "user_id": {
             "type": "string"
           },
-          "token": {
-            "type": "string"
-          },
           "abilities": {
             "type": "array",
             "items": {
@@ -5713,7 +5702,6 @@
           "updated_at",
           "name",
           "user_id",
-          "token",
           "expiration_at"
         ]
       },
@@ -5743,9 +5731,6 @@
           "user_id": {
             "type": "string"
           },
-          "token": {
-            "type": "string"
-          },
           "abilities": {
             "type": "array",
             "items": {
@@ -5767,7 +5752,6 @@
           "updated_at",
           "name",
           "user_id",
-          "token",
           "expiration_at"
         ]
       },
@@ -6983,9 +6967,6 @@
           "user_id": {
             "type": "string"
           },
-          "token": {
-            "type": "string"
-          },
           "abilities": {
             "type": "array",
             "items": {
@@ -7007,7 +6988,6 @@
           "updated_at",
           "name",
           "user_id",
-          "token",
           "expiration_at"
         ]
       },

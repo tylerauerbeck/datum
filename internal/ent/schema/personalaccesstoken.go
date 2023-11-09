@@ -21,7 +21,7 @@ func (PersonalAccessToken) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
 		field.String("user_id"),
-		field.String("token"),
+		field.String("token").Sensitive(),
 		field.JSON("abilities", []string{}).
 			Optional(),
 		field.Time("expiration_at"),

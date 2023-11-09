@@ -838,11 +838,6 @@ func (pat *PersonalAccessTokenQuery) collectField(ctx context.Context, opCtx *gr
 				selectedFields = append(selectedFields, personalaccesstoken.FieldUserID)
 				fieldSeen[personalaccesstoken.FieldUserID] = struct{}{}
 			}
-		case "token":
-			if _, ok := fieldSeen[personalaccesstoken.FieldToken]; !ok {
-				selectedFields = append(selectedFields, personalaccesstoken.FieldToken)
-				fieldSeen[personalaccesstoken.FieldToken] = struct{}{}
-			}
 		case "abilities":
 			if _, ok := fieldSeen[personalaccesstoken.FieldAbilities]; !ok {
 				selectedFields = append(selectedFields, personalaccesstoken.FieldAbilities)

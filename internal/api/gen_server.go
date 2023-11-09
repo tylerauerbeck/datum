@@ -247,7 +247,6 @@ type ComplexityRoot struct {
 		ID           func(childComplexity int) int
 		LastUsedAt   func(childComplexity int) int
 		Name         func(childComplexity int) int
-		Token        func(childComplexity int) int
 		UpdatedAt    func(childComplexity int) int
 		UpdatedBy    func(childComplexity int) int
 		User         func(childComplexity int) int
@@ -1373,13 +1372,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PersonalAccessToken.Name(childComplexity), true
-
-	case "PersonalAccessToken.token":
-		if e.complexity.PersonalAccessToken.Token == nil {
-			break
-		}
-
-		return e.complexity.PersonalAccessToken.Token(childComplexity), true
 
 	case "PersonalAccessToken.updatedAt":
 		if e.complexity.PersonalAccessToken.UpdatedAt == nil {
@@ -3227,7 +3219,6 @@ type PersonalAccessToken implements Node {
   updatedBy: String
   name: String!
   userID: ID!
-  token: String!
   abilities: [String!]
   expirationAt: Time!
   lastUsedAt: Time
@@ -3346,20 +3337,6 @@ input PersonalAccessTokenWhereInput {
   userIDHasSuffix: ID
   userIDEqualFold: ID
   userIDContainsFold: ID
-  """token field predicates"""
-  token: String
-  tokenNEQ: String
-  tokenIn: [String!]
-  tokenNotIn: [String!]
-  tokenGT: String
-  tokenGTE: String
-  tokenLT: String
-  tokenLTE: String
-  tokenContains: String
-  tokenHasPrefix: String
-  tokenHasSuffix: String
-  tokenEqualFold: String
-  tokenContainsFold: String
   """expiration_at field predicates"""
   expirationAt: Time
   expirationAtNEQ: Time
@@ -11706,50 +11683,6 @@ func (ec *executionContext) fieldContext_PersonalAccessToken_userID(ctx context.
 	return fc, nil
 }
 
-func (ec *executionContext) _PersonalAccessToken_token(ctx context.Context, field graphql.CollectedField, obj *generated.PersonalAccessToken) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_PersonalAccessToken_token(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Token, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_PersonalAccessToken_token(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "PersonalAccessToken",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _PersonalAccessToken_abilities(ctx context.Context, field graphql.CollectedField, obj *generated.PersonalAccessToken) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_PersonalAccessToken_abilities(ctx, field)
 	if err != nil {
@@ -12158,8 +12091,6 @@ func (ec *executionContext) fieldContext_PersonalAccessTokenCreatePayload_Person
 				return ec.fieldContext_PersonalAccessToken_name(ctx, field)
 			case "userID":
 				return ec.fieldContext_PersonalAccessToken_userID(ctx, field)
-			case "token":
-				return ec.fieldContext_PersonalAccessToken_token(ctx, field)
 			case "abilities":
 				return ec.fieldContext_PersonalAccessToken_abilities(ctx, field)
 			case "expirationAt":
@@ -12269,8 +12200,6 @@ func (ec *executionContext) fieldContext_PersonalAccessTokenEdge_node(ctx contex
 				return ec.fieldContext_PersonalAccessToken_name(ctx, field)
 			case "userID":
 				return ec.fieldContext_PersonalAccessToken_userID(ctx, field)
-			case "token":
-				return ec.fieldContext_PersonalAccessToken_token(ctx, field)
 			case "abilities":
 				return ec.fieldContext_PersonalAccessToken_abilities(ctx, field)
 			case "expirationAt":
@@ -12383,8 +12312,6 @@ func (ec *executionContext) fieldContext_PersonalAccessTokenUpdatePayload_Person
 				return ec.fieldContext_PersonalAccessToken_name(ctx, field)
 			case "userID":
 				return ec.fieldContext_PersonalAccessToken_userID(ctx, field)
-			case "token":
-				return ec.fieldContext_PersonalAccessToken_token(ctx, field)
 			case "abilities":
 				return ec.fieldContext_PersonalAccessToken_abilities(ctx, field)
 			case "expirationAt":
@@ -13301,8 +13228,6 @@ func (ec *executionContext) fieldContext_Query_PersonalAccessToken(ctx context.C
 				return ec.fieldContext_PersonalAccessToken_name(ctx, field)
 			case "userID":
 				return ec.fieldContext_PersonalAccessToken_userID(ctx, field)
-			case "token":
-				return ec.fieldContext_PersonalAccessToken_token(ctx, field)
 			case "abilities":
 				return ec.fieldContext_PersonalAccessToken_abilities(ctx, field)
 			case "expirationAt":
@@ -16163,8 +16088,6 @@ func (ec *executionContext) fieldContext_User_personalAccessTokens(ctx context.C
 				return ec.fieldContext_PersonalAccessToken_name(ctx, field)
 			case "userID":
 				return ec.fieldContext_PersonalAccessToken_userID(ctx, field)
-			case "token":
-				return ec.fieldContext_PersonalAccessToken_token(ctx, field)
 			case "abilities":
 				return ec.fieldContext_PersonalAccessToken_abilities(ctx, field)
 			case "expirationAt":
@@ -24215,7 +24138,7 @@ func (ec *executionContext) unmarshalInputPersonalAccessTokenWhereInput(ctx cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "idEqualFold", "idContainsFold", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByContains", "createdByHasPrefix", "createdByHasSuffix", "createdByIsNil", "createdByNotNil", "createdByEqualFold", "createdByContainsFold", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByContains", "updatedByHasPrefix", "updatedByHasSuffix", "updatedByIsNil", "updatedByNotNil", "updatedByEqualFold", "updatedByContainsFold", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "userID", "userIDNEQ", "userIDIn", "userIDNotIn", "userIDGT", "userIDGTE", "userIDLT", "userIDLTE", "userIDContains", "userIDHasPrefix", "userIDHasSuffix", "userIDEqualFold", "userIDContainsFold", "token", "tokenNEQ", "tokenIn", "tokenNotIn", "tokenGT", "tokenGTE", "tokenLT", "tokenLTE", "tokenContains", "tokenHasPrefix", "tokenHasSuffix", "tokenEqualFold", "tokenContainsFold", "expirationAt", "expirationAtNEQ", "expirationAtIn", "expirationAtNotIn", "expirationAtGT", "expirationAtGTE", "expirationAtLT", "expirationAtLTE", "lastUsedAt", "lastUsedAtNEQ", "lastUsedAtIn", "lastUsedAtNotIn", "lastUsedAtGT", "lastUsedAtGTE", "lastUsedAtLT", "lastUsedAtLTE", "lastUsedAtIsNil", "lastUsedAtNotNil", "hasUser", "hasUserWith"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "idEqualFold", "idContainsFold", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "updatedAt", "updatedAtNEQ", "updatedAtIn", "updatedAtNotIn", "updatedAtGT", "updatedAtGTE", "updatedAtLT", "updatedAtLTE", "createdBy", "createdByNEQ", "createdByIn", "createdByNotIn", "createdByGT", "createdByGTE", "createdByLT", "createdByLTE", "createdByContains", "createdByHasPrefix", "createdByHasSuffix", "createdByIsNil", "createdByNotNil", "createdByEqualFold", "createdByContainsFold", "updatedBy", "updatedByNEQ", "updatedByIn", "updatedByNotIn", "updatedByGT", "updatedByGTE", "updatedByLT", "updatedByLTE", "updatedByContains", "updatedByHasPrefix", "updatedByHasSuffix", "updatedByIsNil", "updatedByNotNil", "updatedByEqualFold", "updatedByContainsFold", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "userID", "userIDNEQ", "userIDIn", "userIDNotIn", "userIDGT", "userIDGTE", "userIDLT", "userIDLTE", "userIDContains", "userIDHasPrefix", "userIDHasSuffix", "userIDEqualFold", "userIDContainsFold", "expirationAt", "expirationAtNEQ", "expirationAtIn", "expirationAtNotIn", "expirationAtGT", "expirationAtGTE", "expirationAtLT", "expirationAtLTE", "lastUsedAt", "lastUsedAtNEQ", "lastUsedAtIn", "lastUsedAtNotIn", "lastUsedAtGT", "lastUsedAtGTE", "lastUsedAtLT", "lastUsedAtLTE", "lastUsedAtIsNil", "lastUsedAtNotNil", "hasUser", "hasUserWith"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -24987,123 +24910,6 @@ func (ec *executionContext) unmarshalInputPersonalAccessTokenWhereInput(ctx cont
 				return it, err
 			}
 			it.UserIDContainsFold = data
-		case "token":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("token"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Token = data
-		case "tokenNEQ":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tokenNEQ"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TokenNEQ = data
-		case "tokenIn":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tokenIn"))
-			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TokenIn = data
-		case "tokenNotIn":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tokenNotIn"))
-			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TokenNotIn = data
-		case "tokenGT":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tokenGT"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TokenGT = data
-		case "tokenGTE":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tokenGTE"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TokenGTE = data
-		case "tokenLT":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tokenLT"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TokenLT = data
-		case "tokenLTE":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tokenLTE"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TokenLTE = data
-		case "tokenContains":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tokenContains"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TokenContains = data
-		case "tokenHasPrefix":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tokenHasPrefix"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TokenHasPrefix = data
-		case "tokenHasSuffix":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tokenHasSuffix"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TokenHasSuffix = data
-		case "tokenEqualFold":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tokenEqualFold"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TokenEqualFold = data
-		case "tokenContainsFold":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tokenContainsFold"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TokenContainsFold = data
 		case "expirationAt":
 			var err error
 
@@ -32274,11 +32080,6 @@ func (ec *executionContext) _PersonalAccessToken(ctx context.Context, sel ast.Se
 			}
 		case "userID":
 			out.Values[i] = ec._PersonalAccessToken_userID(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "token":
-			out.Values[i] = ec._PersonalAccessToken_token(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}

@@ -1008,7 +1008,6 @@ type PersonalAccessToken struct {
 	UpdatedBy    *string    `json:"updatedBy,omitempty"`
 	Name         string     `json:"name"`
 	UserID       string     `json:"userID"`
-	Token        string     `json:"token"`
 	Abilities    []string   `json:"abilities,omitempty"`
 	ExpirationAt time.Time  `json:"expirationAt"`
 	LastUsedAt   *time.Time `json:"lastUsedAt,omitempty"`
@@ -1148,20 +1147,6 @@ type PersonalAccessTokenWhereInput struct {
 	UserIDHasSuffix    *string  `json:"userIDHasSuffix,omitempty"`
 	UserIDEqualFold    *string  `json:"userIDEqualFold,omitempty"`
 	UserIDContainsFold *string  `json:"userIDContainsFold,omitempty"`
-	// token field predicates
-	Token             *string  `json:"token,omitempty"`
-	TokenNeq          *string  `json:"tokenNEQ,omitempty"`
-	TokenIn           []string `json:"tokenIn,omitempty"`
-	TokenNotIn        []string `json:"tokenNotIn,omitempty"`
-	TokenGt           *string  `json:"tokenGT,omitempty"`
-	TokenGte          *string  `json:"tokenGTE,omitempty"`
-	TokenLt           *string  `json:"tokenLT,omitempty"`
-	TokenLte          *string  `json:"tokenLTE,omitempty"`
-	TokenContains     *string  `json:"tokenContains,omitempty"`
-	TokenHasPrefix    *string  `json:"tokenHasPrefix,omitempty"`
-	TokenHasSuffix    *string  `json:"tokenHasSuffix,omitempty"`
-	TokenEqualFold    *string  `json:"tokenEqualFold,omitempty"`
-	TokenContainsFold *string  `json:"tokenContainsFold,omitempty"`
 	// expiration_at field predicates
 	ExpirationAt      *time.Time   `json:"expirationAt,omitempty"`
 	ExpirationAtNeq   *time.Time   `json:"expirationAtNEQ,omitempty"`

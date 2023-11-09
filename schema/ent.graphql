@@ -993,7 +993,6 @@ type PersonalAccessToken implements Node {
   updatedBy: String
   name: String!
   userID: ID!
-  token: String!
   abilities: [String!]
   expirationAt: Time!
   lastUsedAt: Time
@@ -1112,20 +1111,6 @@ input PersonalAccessTokenWhereInput {
   userIDHasSuffix: ID
   userIDEqualFold: ID
   userIDContainsFold: ID
-  """token field predicates"""
-  token: String
-  tokenNEQ: String
-  tokenIn: [String!]
-  tokenNotIn: [String!]
-  tokenGT: String
-  tokenGTE: String
-  tokenLT: String
-  tokenLTE: String
-  tokenContains: String
-  tokenHasPrefix: String
-  tokenHasSuffix: String
-  tokenEqualFold: String
-  tokenContainsFold: String
   """expiration_at field predicates"""
   expirationAt: Time
   expirationAtNEQ: Time
