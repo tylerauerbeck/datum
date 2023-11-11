@@ -30,6 +30,12 @@ const (
 	FieldVisibility = "visibility"
 	// FieldJoinPolicy holds the string denoting the join_policy field in the database.
 	FieldJoinPolicy = "join_policy"
+	// FieldTags holds the string denoting the tags field in the database.
+	FieldTags = "tags"
+	// FieldSyncToSlack holds the string denoting the sync_to_slack field in the database.
+	FieldSyncToSlack = "sync_to_slack"
+	// FieldSyncToGithub holds the string denoting the sync_to_github field in the database.
+	FieldSyncToGithub = "sync_to_github"
 	// EdgeGroup holds the string denoting the group edge name in mutations.
 	EdgeGroup = "group"
 	// Table holds the table name of the groupsettings in the database.
@@ -52,6 +58,9 @@ var Columns = []string{
 	FieldUpdatedBy,
 	FieldVisibility,
 	FieldJoinPolicy,
+	FieldTags,
+	FieldSyncToSlack,
+	FieldSyncToGithub,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "group_settings"
@@ -88,6 +97,12 @@ var (
 	DefaultUpdatedAt func() time.Time
 	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
 	UpdateDefaultUpdatedAt func() time.Time
+	// DefaultTags holds the default value on creation for the "tags" field.
+	DefaultTags []string
+	// DefaultSyncToSlack holds the default value on creation for the "sync_to_slack" field.
+	DefaultSyncToSlack bool
+	// DefaultSyncToGithub holds the default value on creation for the "sync_to_github" field.
+	DefaultSyncToGithub bool
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() string
 )
@@ -182,6 +197,16 @@ func ByVisibility(opts ...sql.OrderTermOption) OrderOption {
 // ByJoinPolicy orders the results by the join_policy field.
 func ByJoinPolicy(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldJoinPolicy, opts...).ToFunc()
+}
+
+// BySyncToSlack orders the results by the sync_to_slack field.
+func BySyncToSlack(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSyncToSlack, opts...).ToFunc()
+}
+
+// BySyncToGithub orders the results by the sync_to_github field.
+func BySyncToGithub(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSyncToGithub, opts...).ToFunc()
 }
 
 // ByGroupField orders the results by group field.

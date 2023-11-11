@@ -3,6 +3,7 @@
 package generated
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -30,6 +31,12 @@ type GroupSettings struct {
 	Visibility groupsettings.Visibility `json:"visibility,omitempty"`
 	// JoinPolicy holds the value of the "join_policy" field.
 	JoinPolicy groupsettings.JoinPolicy `json:"join_policy,omitempty"`
+	// tags associated with the object
+	Tags []string `json:"tags,omitempty"`
+	// SyncToSlack holds the value of the "sync_to_slack" field.
+	SyncToSlack bool `json:"sync_to_slack,omitempty"`
+	// SyncToGithub holds the value of the "sync_to_github" field.
+	SyncToGithub bool `json:"sync_to_github,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the GroupSettingsQuery when eager-loading is set.
 	Edges         GroupSettingsEdges `json:"edges"`
@@ -64,6 +71,10 @@ func (*GroupSettings) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case groupsettings.FieldTags:
+			values[i] = new([]byte)
+		case groupsettings.FieldSyncToSlack, groupsettings.FieldSyncToGithub:
+			values[i] = new(sql.NullBool)
 		case groupsettings.FieldID, groupsettings.FieldCreatedBy, groupsettings.FieldUpdatedBy, groupsettings.FieldVisibility, groupsettings.FieldJoinPolicy:
 			values[i] = new(sql.NullString)
 		case groupsettings.FieldCreatedAt, groupsettings.FieldUpdatedAt:
@@ -126,6 +137,26 @@ func (gs *GroupSettings) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field join_policy", values[i])
 			} else if value.Valid {
 				gs.JoinPolicy = groupsettings.JoinPolicy(value.String)
+			}
+		case groupsettings.FieldTags:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field tags", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &gs.Tags); err != nil {
+					return fmt.Errorf("unmarshal field tags: %w", err)
+				}
+			}
+		case groupsettings.FieldSyncToSlack:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field sync_to_slack", values[i])
+			} else if value.Valid {
+				gs.SyncToSlack = value.Bool
+			}
+		case groupsettings.FieldSyncToGithub:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field sync_to_github", values[i])
+			} else if value.Valid {
+				gs.SyncToGithub = value.Bool
 			}
 		case groupsettings.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -192,6 +223,15 @@ func (gs *GroupSettings) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("join_policy=")
 	builder.WriteString(fmt.Sprintf("%v", gs.JoinPolicy))
+	builder.WriteString(", ")
+	builder.WriteString("tags=")
+	builder.WriteString(fmt.Sprintf("%v", gs.Tags))
+	builder.WriteString(", ")
+	builder.WriteString("sync_to_slack=")
+	builder.WriteString(fmt.Sprintf("%v", gs.SyncToSlack))
+	builder.WriteString(", ")
+	builder.WriteString("sync_to_github=")
+	builder.WriteString(fmt.Sprintf("%v", gs.SyncToGithub))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/entitlement"
 	"github.com/datumforge/datum/internal/ent/generated/groupsettings"
 	"github.com/datumforge/datum/internal/ent/generated/session"
+	"github.com/datumforge/datum/internal/ent/generated/usersettings"
 )
 
 // CreateEntitlementInput represents a mutation input for creating entitlements.
@@ -141,6 +142,7 @@ type CreateGroupInput struct {
 	Name        string
 	Description *string
 	LogoURL     string
+	DisplayName *string
 	SettingID   string
 	UserIDs     []string
 	OwnerID     *string
@@ -165,6 +167,9 @@ func (i *CreateGroupInput) Mutate(m *GroupMutation) {
 		m.SetDescription(*v)
 	}
 	m.SetLogoURL(i.LogoURL)
+	if v := i.DisplayName; v != nil {
+		m.SetDisplayName(*v)
+	}
 	m.SetSettingID(i.SettingID)
 	if v := i.UserIDs; len(v) > 0 {
 		m.AddUserIDs(v...)
@@ -190,6 +195,7 @@ type UpdateGroupInput struct {
 	Name           *string
 	Description    *string
 	LogoURL        *string
+	DisplayName    *string
 	SettingID      *string
 	ClearUsers     bool
 	AddUserIDs     []string
@@ -223,6 +229,9 @@ func (i *UpdateGroupInput) Mutate(m *GroupMutation) {
 	}
 	if v := i.LogoURL; v != nil {
 		m.SetLogoURL(*v)
+	}
+	if v := i.DisplayName; v != nil {
+		m.SetDisplayName(*v)
 	}
 	if v := i.SettingID; v != nil {
 		m.SetSettingID(*v)
@@ -258,12 +267,15 @@ func (c *GroupUpdateOne) SetInput(i UpdateGroupInput) *GroupUpdateOne {
 
 // CreateGroupSettingsInput represents a mutation input for creating groupsettingsslice.
 type CreateGroupSettingsInput struct {
-	CreatedAt  *time.Time
-	UpdatedAt  *time.Time
-	CreatedBy  *string
-	UpdatedBy  *string
-	Visibility *groupsettings.Visibility
-	JoinPolicy *groupsettings.JoinPolicy
+	CreatedAt    *time.Time
+	UpdatedAt    *time.Time
+	CreatedBy    *string
+	UpdatedBy    *string
+	Visibility   *groupsettings.Visibility
+	JoinPolicy   *groupsettings.JoinPolicy
+	Tags         []string
+	SyncToSlack  *bool
+	SyncToGithub *bool
 }
 
 // Mutate applies the CreateGroupSettingsInput on the GroupSettingsMutation builder.
@@ -286,6 +298,15 @@ func (i *CreateGroupSettingsInput) Mutate(m *GroupSettingsMutation) {
 	if v := i.JoinPolicy; v != nil {
 		m.SetJoinPolicy(*v)
 	}
+	if v := i.Tags; v != nil {
+		m.SetTags(v)
+	}
+	if v := i.SyncToSlack; v != nil {
+		m.SetSyncToSlack(*v)
+	}
+	if v := i.SyncToGithub; v != nil {
+		m.SetSyncToGithub(*v)
+	}
 }
 
 // SetInput applies the change-set in the CreateGroupSettingsInput on the GroupSettingsCreate builder.
@@ -303,6 +324,10 @@ type UpdateGroupSettingsInput struct {
 	UpdatedBy      *string
 	Visibility     *groupsettings.Visibility
 	JoinPolicy     *groupsettings.JoinPolicy
+	Tags           []string
+	AppendTags     []string
+	SyncToSlack    *bool
+	SyncToGithub   *bool
 }
 
 // Mutate applies the UpdateGroupSettingsInput on the GroupSettingsMutation builder.
@@ -327,6 +352,18 @@ func (i *UpdateGroupSettingsInput) Mutate(m *GroupSettingsMutation) {
 	}
 	if v := i.JoinPolicy; v != nil {
 		m.SetJoinPolicy(*v)
+	}
+	if v := i.Tags; v != nil {
+		m.SetTags(v)
+	}
+	if i.AppendTags != nil {
+		m.AppendTags(i.Tags)
+	}
+	if v := i.SyncToSlack; v != nil {
+		m.SetSyncToSlack(*v)
+	}
+	if v := i.SyncToGithub; v != nil {
+		m.SetSyncToGithub(*v)
 	}
 }
 
@@ -577,11 +614,13 @@ type CreateOrganizationInput struct {
 	CreatedBy      *string
 	UpdatedBy      *string
 	Name           string
+	DisplayName    *string
 	Description    *string
 	ParentID       *string
 	UserIDs        []string
 	GroupIDs       []string
 	IntegrationIDs []string
+	SettingID      *string
 }
 
 // Mutate applies the CreateOrganizationInput on the OrganizationMutation builder.
@@ -599,6 +638,9 @@ func (i *CreateOrganizationInput) Mutate(m *OrganizationMutation) {
 		m.SetUpdatedBy(*v)
 	}
 	m.SetName(i.Name)
+	if v := i.DisplayName; v != nil {
+		m.SetDisplayName(*v)
+	}
 	if v := i.Description; v != nil {
 		m.SetDescription(*v)
 	}
@@ -613,6 +655,9 @@ func (i *CreateOrganizationInput) Mutate(m *OrganizationMutation) {
 	}
 	if v := i.IntegrationIDs; len(v) > 0 {
 		m.AddIntegrationIDs(v...)
+	}
+	if v := i.SettingID; v != nil {
+		m.SetSettingID(*v)
 	}
 }
 
@@ -630,6 +675,7 @@ type UpdateOrganizationInput struct {
 	ClearUpdatedBy       bool
 	UpdatedBy            *string
 	Name                 *string
+	DisplayName          *string
 	ClearDescription     bool
 	Description          *string
 	ClearUsers           bool
@@ -641,6 +687,8 @@ type UpdateOrganizationInput struct {
 	ClearIntegrations    bool
 	AddIntegrationIDs    []string
 	RemoveIntegrationIDs []string
+	ClearSetting         bool
+	SettingID            *string
 }
 
 // Mutate applies the UpdateOrganizationInput on the OrganizationMutation builder.
@@ -662,6 +710,9 @@ func (i *UpdateOrganizationInput) Mutate(m *OrganizationMutation) {
 	}
 	if v := i.Name; v != nil {
 		m.SetName(*v)
+	}
+	if v := i.DisplayName; v != nil {
+		m.SetDisplayName(*v)
 	}
 	if i.ClearDescription {
 		m.ClearDescription()
@@ -696,6 +747,12 @@ func (i *UpdateOrganizationInput) Mutate(m *OrganizationMutation) {
 	if v := i.RemoveIntegrationIDs; len(v) > 0 {
 		m.RemoveIntegrationIDs(v...)
 	}
+	if i.ClearSetting {
+		m.ClearSetting()
+	}
+	if v := i.SettingID; v != nil {
+		m.SetSettingID(*v)
+	}
 }
 
 // SetInput applies the change-set in the UpdateOrganizationInput on the OrganizationUpdate builder.
@@ -725,6 +782,7 @@ type CreateOrganizationSettingsInput struct {
 	BillingPhone   string
 	BillingAddress string
 	TaxIdentifier  string
+	Tags           []string
 }
 
 // Mutate applies the CreateOrganizationSettingsInput on the OrganizationSettingsMutation builder.
@@ -758,6 +816,9 @@ func (i *CreateOrganizationSettingsInput) Mutate(m *OrganizationSettingsMutation
 	m.SetBillingPhone(i.BillingPhone)
 	m.SetBillingAddress(i.BillingAddress)
 	m.SetTaxIdentifier(i.TaxIdentifier)
+	if v := i.Tags; v != nil {
+		m.SetTags(v)
+	}
 }
 
 // SetInput applies the change-set in the CreateOrganizationSettingsInput on the OrganizationSettingsCreate builder.
@@ -783,6 +844,9 @@ type UpdateOrganizationSettingsInput struct {
 	BillingPhone   *string
 	BillingAddress *string
 	TaxIdentifier  *string
+	ClearTags      bool
+	Tags           []string
+	AppendTags     []string
 }
 
 // Mutate applies the UpdateOrganizationSettingsInput on the OrganizationSettingsMutation builder.
@@ -831,6 +895,15 @@ func (i *UpdateOrganizationSettingsInput) Mutate(m *OrganizationSettingsMutation
 	}
 	if v := i.TaxIdentifier; v != nil {
 		m.SetTaxIdentifier(*v)
+	}
+	if i.ClearTags {
+		m.ClearTags()
+	}
+	if v := i.Tags; v != nil {
+		m.SetTags(v)
+	}
+	if i.AppendTags != nil {
+		m.AppendTags(i.Tags)
 	}
 }
 
@@ -1090,17 +1163,16 @@ type CreateUserInput struct {
 	FirstName              string
 	LastName               string
 	DisplayName            *string
-	Locked                 *bool
 	AvatarRemoteURL        *string
 	AvatarLocalFile        *string
 	AvatarUpdatedAt        *time.Time
-	SilencedAt             *time.Time
-	SuspendedAt            *time.Time
-	RecoveryCode           *string
+	LastSeen               *time.Time
+	PasswordHash           *string
 	OrganizationIDs        []string
 	SessionIDs             []string
 	GroupIDs               []string
 	PersonalAccessTokenIDs []string
+	SettingID              string
 }
 
 // Mutate applies the CreateUserInput on the UserMutation builder.
@@ -1123,9 +1195,6 @@ func (i *CreateUserInput) Mutate(m *UserMutation) {
 	if v := i.DisplayName; v != nil {
 		m.SetDisplayName(*v)
 	}
-	if v := i.Locked; v != nil {
-		m.SetLocked(*v)
-	}
 	if v := i.AvatarRemoteURL; v != nil {
 		m.SetAvatarRemoteURL(*v)
 	}
@@ -1135,14 +1204,11 @@ func (i *CreateUserInput) Mutate(m *UserMutation) {
 	if v := i.AvatarUpdatedAt; v != nil {
 		m.SetAvatarUpdatedAt(*v)
 	}
-	if v := i.SilencedAt; v != nil {
-		m.SetSilencedAt(*v)
+	if v := i.LastSeen; v != nil {
+		m.SetLastSeen(*v)
 	}
-	if v := i.SuspendedAt; v != nil {
-		m.SetSuspendedAt(*v)
-	}
-	if v := i.RecoveryCode; v != nil {
-		m.SetRecoveryCode(*v)
+	if v := i.PasswordHash; v != nil {
+		m.SetPasswordHash(*v)
 	}
 	if v := i.OrganizationIDs; len(v) > 0 {
 		m.AddOrganizationIDs(v...)
@@ -1156,6 +1222,7 @@ func (i *CreateUserInput) Mutate(m *UserMutation) {
 	if v := i.PersonalAccessTokenIDs; len(v) > 0 {
 		m.AddPersonalAccessTokenIDs(v...)
 	}
+	m.SetSettingID(i.SettingID)
 }
 
 // SetInput applies the change-set in the CreateUserInput on the UserCreate builder.
@@ -1175,19 +1242,16 @@ type UpdateUserInput struct {
 	FirstName                    *string
 	LastName                     *string
 	DisplayName                  *string
-	Locked                       *bool
 	ClearAvatarRemoteURL         bool
 	AvatarRemoteURL              *string
 	ClearAvatarLocalFile         bool
 	AvatarLocalFile              *string
 	ClearAvatarUpdatedAt         bool
 	AvatarUpdatedAt              *time.Time
-	ClearSilencedAt              bool
-	SilencedAt                   *time.Time
-	ClearSuspendedAt             bool
-	SuspendedAt                  *time.Time
-	ClearRecoveryCode            bool
-	RecoveryCode                 *string
+	ClearLastSeen                bool
+	LastSeen                     *time.Time
+	ClearPasswordHash            bool
+	PasswordHash                 *string
 	ClearOrganizations           bool
 	AddOrganizationIDs           []string
 	RemoveOrganizationIDs        []string
@@ -1200,6 +1264,7 @@ type UpdateUserInput struct {
 	ClearPersonalAccessTokens    bool
 	AddPersonalAccessTokenIDs    []string
 	RemovePersonalAccessTokenIDs []string
+	SettingID                    *string
 }
 
 // Mutate applies the UpdateUserInput on the UserMutation builder.
@@ -1231,9 +1296,6 @@ func (i *UpdateUserInput) Mutate(m *UserMutation) {
 	if v := i.DisplayName; v != nil {
 		m.SetDisplayName(*v)
 	}
-	if v := i.Locked; v != nil {
-		m.SetLocked(*v)
-	}
 	if i.ClearAvatarRemoteURL {
 		m.ClearAvatarRemoteURL()
 	}
@@ -1252,23 +1314,17 @@ func (i *UpdateUserInput) Mutate(m *UserMutation) {
 	if v := i.AvatarUpdatedAt; v != nil {
 		m.SetAvatarUpdatedAt(*v)
 	}
-	if i.ClearSilencedAt {
-		m.ClearSilencedAt()
+	if i.ClearLastSeen {
+		m.ClearLastSeen()
 	}
-	if v := i.SilencedAt; v != nil {
-		m.SetSilencedAt(*v)
+	if v := i.LastSeen; v != nil {
+		m.SetLastSeen(*v)
 	}
-	if i.ClearSuspendedAt {
-		m.ClearSuspendedAt()
+	if i.ClearPasswordHash {
+		m.ClearPasswordHash()
 	}
-	if v := i.SuspendedAt; v != nil {
-		m.SetSuspendedAt(*v)
-	}
-	if i.ClearRecoveryCode {
-		m.ClearRecoveryCode()
-	}
-	if v := i.RecoveryCode; v != nil {
-		m.SetRecoveryCode(*v)
+	if v := i.PasswordHash; v != nil {
+		m.SetPasswordHash(*v)
 	}
 	if i.ClearOrganizations {
 		m.ClearOrganizations()
@@ -1306,6 +1362,9 @@ func (i *UpdateUserInput) Mutate(m *UserMutation) {
 	if v := i.RemovePersonalAccessTokenIDs; len(v) > 0 {
 		m.RemovePersonalAccessTokenIDs(v...)
 	}
+	if v := i.SettingID; v != nil {
+		m.SetSettingID(*v)
+	}
 }
 
 // SetInput applies the change-set in the UpdateUserInput on the UserUpdate builder.
@@ -1316,6 +1375,168 @@ func (c *UserUpdate) SetInput(i UpdateUserInput) *UserUpdate {
 
 // SetInput applies the change-set in the UpdateUserInput on the UserUpdateOne builder.
 func (c *UserUpdateOne) SetInput(i UpdateUserInput) *UserUpdateOne {
+	i.Mutate(c.Mutation())
+	return c
+}
+
+// CreateUserSettingsInput represents a mutation input for creating usersettingsslice.
+type CreateUserSettingsInput struct {
+	CreatedAt      *time.Time
+	UpdatedAt      *time.Time
+	CreatedBy      *string
+	UpdatedBy      *string
+	Locked         *bool
+	SilencedAt     *time.Time
+	SuspendedAt    *time.Time
+	RecoveryCode   *string
+	Status         *usersettings.Status
+	Role           *usersettings.Role
+	Permissions    []string
+	EmailConfirmed *bool
+	Tags           []string
+}
+
+// Mutate applies the CreateUserSettingsInput on the UserSettingsMutation builder.
+func (i *CreateUserSettingsInput) Mutate(m *UserSettingsMutation) {
+	if v := i.CreatedAt; v != nil {
+		m.SetCreatedAt(*v)
+	}
+	if v := i.UpdatedAt; v != nil {
+		m.SetUpdatedAt(*v)
+	}
+	if v := i.CreatedBy; v != nil {
+		m.SetCreatedBy(*v)
+	}
+	if v := i.UpdatedBy; v != nil {
+		m.SetUpdatedBy(*v)
+	}
+	if v := i.Locked; v != nil {
+		m.SetLocked(*v)
+	}
+	if v := i.SilencedAt; v != nil {
+		m.SetSilencedAt(*v)
+	}
+	if v := i.SuspendedAt; v != nil {
+		m.SetSuspendedAt(*v)
+	}
+	if v := i.RecoveryCode; v != nil {
+		m.SetRecoveryCode(*v)
+	}
+	if v := i.Status; v != nil {
+		m.SetStatus(*v)
+	}
+	if v := i.Role; v != nil {
+		m.SetRole(*v)
+	}
+	if v := i.Permissions; v != nil {
+		m.SetPermissions(v)
+	}
+	if v := i.EmailConfirmed; v != nil {
+		m.SetEmailConfirmed(*v)
+	}
+	if v := i.Tags; v != nil {
+		m.SetTags(v)
+	}
+}
+
+// SetInput applies the change-set in the CreateUserSettingsInput on the UserSettingsCreate builder.
+func (c *UserSettingsCreate) SetInput(i CreateUserSettingsInput) *UserSettingsCreate {
+	i.Mutate(c.Mutation())
+	return c
+}
+
+// UpdateUserSettingsInput represents a mutation input for updating usersettingsslice.
+type UpdateUserSettingsInput struct {
+	UpdatedAt         *time.Time
+	ClearCreatedBy    bool
+	CreatedBy         *string
+	ClearUpdatedBy    bool
+	UpdatedBy         *string
+	Locked            *bool
+	ClearSilencedAt   bool
+	SilencedAt        *time.Time
+	ClearSuspendedAt  bool
+	SuspendedAt       *time.Time
+	ClearRecoveryCode bool
+	RecoveryCode      *string
+	Status            *usersettings.Status
+	Role              *usersettings.Role
+	Permissions       []string
+	AppendPermissions []string
+	EmailConfirmed    *bool
+	Tags              []string
+	AppendTags        []string
+}
+
+// Mutate applies the UpdateUserSettingsInput on the UserSettingsMutation builder.
+func (i *UpdateUserSettingsInput) Mutate(m *UserSettingsMutation) {
+	if v := i.UpdatedAt; v != nil {
+		m.SetUpdatedAt(*v)
+	}
+	if i.ClearCreatedBy {
+		m.ClearCreatedBy()
+	}
+	if v := i.CreatedBy; v != nil {
+		m.SetCreatedBy(*v)
+	}
+	if i.ClearUpdatedBy {
+		m.ClearUpdatedBy()
+	}
+	if v := i.UpdatedBy; v != nil {
+		m.SetUpdatedBy(*v)
+	}
+	if v := i.Locked; v != nil {
+		m.SetLocked(*v)
+	}
+	if i.ClearSilencedAt {
+		m.ClearSilencedAt()
+	}
+	if v := i.SilencedAt; v != nil {
+		m.SetSilencedAt(*v)
+	}
+	if i.ClearSuspendedAt {
+		m.ClearSuspendedAt()
+	}
+	if v := i.SuspendedAt; v != nil {
+		m.SetSuspendedAt(*v)
+	}
+	if i.ClearRecoveryCode {
+		m.ClearRecoveryCode()
+	}
+	if v := i.RecoveryCode; v != nil {
+		m.SetRecoveryCode(*v)
+	}
+	if v := i.Status; v != nil {
+		m.SetStatus(*v)
+	}
+	if v := i.Role; v != nil {
+		m.SetRole(*v)
+	}
+	if v := i.Permissions; v != nil {
+		m.SetPermissions(v)
+	}
+	if i.AppendPermissions != nil {
+		m.AppendPermissions(i.Permissions)
+	}
+	if v := i.EmailConfirmed; v != nil {
+		m.SetEmailConfirmed(*v)
+	}
+	if v := i.Tags; v != nil {
+		m.SetTags(v)
+	}
+	if i.AppendTags != nil {
+		m.AppendTags(i.Tags)
+	}
+}
+
+// SetInput applies the change-set in the UpdateUserSettingsInput on the UserSettingsUpdate builder.
+func (c *UserSettingsUpdate) SetInput(i UpdateUserSettingsInput) *UserSettingsUpdate {
+	i.Mutate(c.Mutation())
+	return c
+}
+
+// SetInput applies the change-set in the UpdateUserSettingsInput on the UserSettingsUpdateOne builder.
+func (c *UserSettingsUpdateOne) SetInput(i UpdateUserSettingsInput) *UserSettingsUpdateOne {
 	i.Mutate(c.Mutation())
 	return c
 }

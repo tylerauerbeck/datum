@@ -3,6 +3,7 @@ package schema
 import (
 	"net/mail"
 	"net/url"
+	"strings"
 
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
@@ -63,20 +64,15 @@ func (User) Fields() []ent.Field {
 			Default("unknown").
 			Annotations(
 				entgql.OrderField("display_name"),
+			).
+			Validate(
+				func(s string) error {
+					if strings.Contains(s, " ") {
+						return ErrContainsSpaces
+					}
+					return nil
+				},
 			),
-		field.Bool("locked").
-			Comment("user account is locked if unconfirmed or explicitly locked").
-			Default(false),
-		// TO DO figure out the right models to use to pass bytes
-		//		field.Bytes("pubkey").
-		//			Comment("user public key").
-		//			NotEmpty().
-		//			Default([]byte{}),
-		//		field.Bytes("privkey").
-		//			Comment("user private key").
-		//			Optional().
-		//			Sensitive().
-		//			Nillable(),
 		field.String("avatar_remote_url").
 			Comment("URL of the user's remote avatar").
 			MaxLen(urlMaxLen).
@@ -95,43 +91,14 @@ func (User) Fields() []ent.Field {
 			Comment("The time the user's (local) avatar was last updated").
 			Optional().
 			Nillable(),
-		field.Time("silenced_at").
-			Comment("The time the user was silenced").
-			Optional().
-			Nillable(),
-		field.Time("suspended_at").
-			Comment("The time the user was suspended").
-			Optional().
-			Nillable(),
-		//
-		// Fields present in local account types but not remote accounts
-		//
-		//		field.Bytes("passwordHash").
-		//			Comment("user bcrypt password hash").
-		//			Sensitive().
-		//			Nillable().
-		//			Optional(). // only local accounts have hashes. empty hashes will fail bcrypt.ConstantTimeCompare() regardless
-		//			MaxLen(60). // All hashes have a len of 60. MinLen not set (for non-local accounts)
-		//			Validate(func(b []byte) error {
-		//				if !bytes.HasPrefix(b, []byte("$2a$")) {
-		//					return fmt.Errorf("invalid bcrypt password hash")
-		//				}
-		//				return nil
-		//			}),
-		field.String("recovery_code").
-			// BIP words?
-			Comment("local Actor password recovery code generated during account creation").
-			// TODO: specify len, validate
+		field.Time("last_seen").
+			Comment("the time the user was last seen").
+			Optional(),
+		field.String("passwordHash").
+			Comment("user bcrypt password hash").
 			Sensitive().
 			Nillable().
 			Optional(),
-		// TO DO figure out what model to use for this
-		//		field.Enum("locale").
-		//			Comment("local user locale").
-		//			Values(
-		//				language.AmericanEnglish.String(),
-		//				// TODO: additional languages at some point, probably.
-		//			),
 	}
 }
 
@@ -156,6 +123,7 @@ func (User) Edges() []ent.Edge {
 			Annotations(entsql.Annotation{
 				OnDelete: entsql.Cascade,
 			}),
+		edge.To("setting", UserSettings.Type).Required().Unique(),
 	}
 }
 

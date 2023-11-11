@@ -10,6 +10,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 	"github.com/datumforge/datum/internal/ent/generated/group"
 	"github.com/datumforge/datum/internal/ent/generated/groupsettings"
@@ -101,6 +102,46 @@ func (gsu *GroupSettingsUpdate) SetJoinPolicy(gp groupsettings.JoinPolicy) *Grou
 func (gsu *GroupSettingsUpdate) SetNillableJoinPolicy(gp *groupsettings.JoinPolicy) *GroupSettingsUpdate {
 	if gp != nil {
 		gsu.SetJoinPolicy(*gp)
+	}
+	return gsu
+}
+
+// SetTags sets the "tags" field.
+func (gsu *GroupSettingsUpdate) SetTags(s []string) *GroupSettingsUpdate {
+	gsu.mutation.SetTags(s)
+	return gsu
+}
+
+// AppendTags appends s to the "tags" field.
+func (gsu *GroupSettingsUpdate) AppendTags(s []string) *GroupSettingsUpdate {
+	gsu.mutation.AppendTags(s)
+	return gsu
+}
+
+// SetSyncToSlack sets the "sync_to_slack" field.
+func (gsu *GroupSettingsUpdate) SetSyncToSlack(b bool) *GroupSettingsUpdate {
+	gsu.mutation.SetSyncToSlack(b)
+	return gsu
+}
+
+// SetNillableSyncToSlack sets the "sync_to_slack" field if the given value is not nil.
+func (gsu *GroupSettingsUpdate) SetNillableSyncToSlack(b *bool) *GroupSettingsUpdate {
+	if b != nil {
+		gsu.SetSyncToSlack(*b)
+	}
+	return gsu
+}
+
+// SetSyncToGithub sets the "sync_to_github" field.
+func (gsu *GroupSettingsUpdate) SetSyncToGithub(b bool) *GroupSettingsUpdate {
+	gsu.mutation.SetSyncToGithub(b)
+	return gsu
+}
+
+// SetNillableSyncToGithub sets the "sync_to_github" field if the given value is not nil.
+func (gsu *GroupSettingsUpdate) SetNillableSyncToGithub(b *bool) *GroupSettingsUpdate {
+	if b != nil {
+		gsu.SetSyncToGithub(*b)
 	}
 	return gsu
 }
@@ -225,6 +266,20 @@ func (gsu *GroupSettingsUpdate) sqlSave(ctx context.Context) (n int, err error) 
 	if value, ok := gsu.mutation.JoinPolicy(); ok {
 		_spec.SetField(groupsettings.FieldJoinPolicy, field.TypeEnum, value)
 	}
+	if value, ok := gsu.mutation.Tags(); ok {
+		_spec.SetField(groupsettings.FieldTags, field.TypeJSON, value)
+	}
+	if value, ok := gsu.mutation.AppendedTags(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, groupsettings.FieldTags, value)
+		})
+	}
+	if value, ok := gsu.mutation.SyncToSlack(); ok {
+		_spec.SetField(groupsettings.FieldSyncToSlack, field.TypeBool, value)
+	}
+	if value, ok := gsu.mutation.SyncToGithub(); ok {
+		_spec.SetField(groupsettings.FieldSyncToGithub, field.TypeBool, value)
+	}
 	if gsu.mutation.GroupCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2O,
@@ -348,6 +403,46 @@ func (gsuo *GroupSettingsUpdateOne) SetJoinPolicy(gp groupsettings.JoinPolicy) *
 func (gsuo *GroupSettingsUpdateOne) SetNillableJoinPolicy(gp *groupsettings.JoinPolicy) *GroupSettingsUpdateOne {
 	if gp != nil {
 		gsuo.SetJoinPolicy(*gp)
+	}
+	return gsuo
+}
+
+// SetTags sets the "tags" field.
+func (gsuo *GroupSettingsUpdateOne) SetTags(s []string) *GroupSettingsUpdateOne {
+	gsuo.mutation.SetTags(s)
+	return gsuo
+}
+
+// AppendTags appends s to the "tags" field.
+func (gsuo *GroupSettingsUpdateOne) AppendTags(s []string) *GroupSettingsUpdateOne {
+	gsuo.mutation.AppendTags(s)
+	return gsuo
+}
+
+// SetSyncToSlack sets the "sync_to_slack" field.
+func (gsuo *GroupSettingsUpdateOne) SetSyncToSlack(b bool) *GroupSettingsUpdateOne {
+	gsuo.mutation.SetSyncToSlack(b)
+	return gsuo
+}
+
+// SetNillableSyncToSlack sets the "sync_to_slack" field if the given value is not nil.
+func (gsuo *GroupSettingsUpdateOne) SetNillableSyncToSlack(b *bool) *GroupSettingsUpdateOne {
+	if b != nil {
+		gsuo.SetSyncToSlack(*b)
+	}
+	return gsuo
+}
+
+// SetSyncToGithub sets the "sync_to_github" field.
+func (gsuo *GroupSettingsUpdateOne) SetSyncToGithub(b bool) *GroupSettingsUpdateOne {
+	gsuo.mutation.SetSyncToGithub(b)
+	return gsuo
+}
+
+// SetNillableSyncToGithub sets the "sync_to_github" field if the given value is not nil.
+func (gsuo *GroupSettingsUpdateOne) SetNillableSyncToGithub(b *bool) *GroupSettingsUpdateOne {
+	if b != nil {
+		gsuo.SetSyncToGithub(*b)
 	}
 	return gsuo
 }
@@ -501,6 +596,20 @@ func (gsuo *GroupSettingsUpdateOne) sqlSave(ctx context.Context) (_node *GroupSe
 	}
 	if value, ok := gsuo.mutation.JoinPolicy(); ok {
 		_spec.SetField(groupsettings.FieldJoinPolicy, field.TypeEnum, value)
+	}
+	if value, ok := gsuo.mutation.Tags(); ok {
+		_spec.SetField(groupsettings.FieldTags, field.TypeJSON, value)
+	}
+	if value, ok := gsuo.mutation.AppendedTags(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, groupsettings.FieldTags, value)
+		})
+	}
+	if value, ok := gsuo.mutation.SyncToSlack(); ok {
+		_spec.SetField(groupsettings.FieldSyncToSlack, field.TypeBool, value)
+	}
+	if value, ok := gsuo.mutation.SyncToGithub(); ok {
+		_spec.SetField(groupsettings.FieldSyncToGithub, field.TypeBool, value)
 	}
 	if gsuo.mutation.GroupCleared() {
 		edge := &sqlgraph.EdgeSpec{
