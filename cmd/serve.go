@@ -16,6 +16,7 @@ import (
 	"github.com/datumforge/datum/internal/echox"
 	ent "github.com/datumforge/datum/internal/ent/generated"
 	"github.com/datumforge/datum/internal/entdb"
+	"github.com/datumforge/datum/internal/jwtx"
 )
 
 const (
@@ -78,7 +79,7 @@ func init() {
 
 	// echo-jwt flags
 	serveCmd.Flags().String("jwt-secretkey", "", "secret key for echojwt config")
-	viperBindFlag("jtw.secretkey", serveCmd.Flags().Lookup("jwt-secretkey"))
+	viperBindFlag("jwt.secretkey", serveCmd.Flags().Lookup("jwt-secretkey"))
 
 	// OIDC Flags
 	serveCmd.Flags().Bool("oidc", true, "use oidc auth")
@@ -135,17 +136,10 @@ func serve(ctx context.Context) error {
 		enablePlayground = true
 	}
 
-	// add jwt middleware
-	if viper.GetBool("oidc.enabled") {
-		secretKey := viper.GetString("jtw.secretkey")
-		jwtConfig := createJwtMiddleware([]byte(secretKey))
-
-		mw = append(mw, jwtConfig)
-	}
-
 	// create default server config
 	httpsEnabled := viper.GetBool("server.https")
 	serverConfig := echox.Config{}.WithDefaults()
+	oidcEnabled := viper.GetBool("oidc.enabled")
 
 	// override with flags
 	serverConfig = serverConfig.WithListen(viper.GetString("server.listen")).
@@ -169,6 +163,11 @@ func serve(ctx context.Context) error {
 		}
 	}
 
+	if oidcEnabled {
+		jwtConfig := createJwtMiddleware()
+		mw = append(mw, jwtConfig)
+	}
+
 	srv, err := echox.NewServer(logger.Desugar(), serverConfig)
 	if err != nil {
 		logger.Error("failed to create server", zap.Error(err))
@@ -187,12 +186,15 @@ func serve(ctx context.Context) error {
 }
 
 // createJwtMiddleware, TODO expand the config settings
-func createJwtMiddleware(secret []byte) echo.MiddlewareFunc {
-	config := echojwt.Config{
-		SigningKey: secret,
+func createJwtMiddleware() echo.MiddlewareFunc {
+	jwtConfig := jwtx.JWTConfig{
+		SecretKey:      viper.GetString("jwt.secretkey"),
+		ExpiresDuraton: 1,
 	}
 
-	return echojwt.WithConfig(config)
+	authConfig := jwtConfig.Init()
+
+	return echojwt.WithConfig(authConfig)
 }
 
 // getCertFiles for https enabled echo server

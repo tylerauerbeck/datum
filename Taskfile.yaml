@@ -85,6 +85,10 @@ tasks:
     desc: runs the datum server with oidc disabled for easy local testing / querying
     cmds:
       - go run main.go serve  --debug --pretty --dev --oidc=false
+  run-dev-auth:
+    desc: runs the datum server with oidc disabled for easy local testing / querying
+    cmds:
+      - go run main.go serve  --debug --pretty --dev --oidc=true --jwt-secretkey=mattisthebest
   go:lint:
     desc: runs golangci-lint, the most annoying opininated linter ever
     cmds:
