@@ -44,12 +44,12 @@ type Query struct {
 	Entitlement               Entitlement                    "json:\"entitlement\" graphql:\"entitlement\""
 	Group                     Group                          "json:\"group\" graphql:\"group\""
 	Integration               Integration                    "json:\"integration\" graphql:\"integration\""
-	OauthProvider             OauthProvider                  "json:\"OauthProvider\" graphql:\"OauthProvider\""
+	OauthProvider             OauthProvider                  "json:\"oauthProvider\" graphql:\"oauthProvider\""
 	Organization              Organization                   "json:\"organization\" graphql:\"organization\""
-	PersonalAccessToken       PersonalAccessToken            "json:\"PersonalAccessToken\" graphql:\"PersonalAccessToken\""
+	PersonalAccessToken       PersonalAccessToken            "json:\"personalAccessToken\" graphql:\"personalAccessToken\""
 	Session                   Session                        "json:\"session\" graphql:\"session\""
 	User                      User                           "json:\"user\" graphql:\"user\""
-	UserSettings              UserSettings                   "json:\"UserSettings\" graphql:\"UserSettings\""
+	UserSettings              UserSettings                   "json:\"userSettings\" graphql:\"userSettings\""
 	Service                   Service                        "json:\"_service\" graphql:\"_service\""
 }
 type Mutation struct {
@@ -77,9 +77,9 @@ type Mutation struct {
 	CreateUser                UserCreatePayload                "json:\"createUser\" graphql:\"createUser\""
 	UpdateUser                UserUpdatePayload                "json:\"updateUser\" graphql:\"updateUser\""
 	DeleteUser                UserDeletePayload                "json:\"deleteUser\" graphql:\"deleteUser\""
-	CreateUserSettingsInput   UserSettingsCreatePayload        "json:\"CreateUserSettingsInput\" graphql:\"CreateUserSettingsInput\""
-	UpdateUserSettingsInput   UserSettingsUpdatePayload        "json:\"UpdateUserSettingsInput\" graphql:\"UpdateUserSettingsInput\""
-	DeleteUserSettings        UserSettingsDeletePayload        "json:\"DeleteUserSettings\" graphql:\"DeleteUserSettings\""
+	CreateUserSettings        UserSettingsCreatePayload        "json:\"createUserSettings\" graphql:\"createUserSettings\""
+	PdateUserSettings         UserSettingsUpdatePayload        "json:\"pdateUserSettings\" graphql:\"pdateUserSettings\""
+	DeleteUserSettings        UserSettingsDeletePayload        "json:\"deleteUserSettings\" graphql:\"deleteUserSettings\""
 }
 type GetOrganizationByID_Organization_Parent struct {
 	ID   string "json:\"id\" graphql:\"id\""
