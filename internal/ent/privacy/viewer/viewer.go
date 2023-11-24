@@ -2,47 +2,22 @@ package viewer
 
 import (
 	"context"
-
-	"github.com/datumforge/datum/internal/ent/generated"
-)
-
-// Role for viewer actions.
-type Role int
-
-// List of roles.
-const (
-	_ Role = 1 << iota
-	Admin
-	View
 )
 
 // Viewer describes the query/mutation viewer-context.
 type Viewer interface {
-	GetUser() UserViewer
-	GetUserID() string
-	Admin() bool // If viewer is admin.
+	// GetObjectID returns the object ID from the context
+	GetObjectID() string
 }
 
 // UserViewer describes a user-viewer.
 type UserViewer struct {
-	UserID string
-	T      *generated.Organization
-	Role   Role // Attached roles.
+	ObjectID string
 }
 
-// GetUser returns the user information.
-func (u UserViewer) GetUser() UserViewer {
-	return u
-}
-
-// GetUserID returns the ID of the user.
-func (u UserViewer) GetUserID() string {
-	return u.UserID
-}
-
-// Admin of the UserViewer
-func (u UserViewer) Admin() bool {
-	return u.Role&Admin != 0
+// GetObjectID returns the ID of the object.
+func (u UserViewer) GetObjectID() string {
+	return u.ObjectID
 }
 
 type ctxKey struct{}

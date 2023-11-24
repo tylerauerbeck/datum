@@ -26,16 +26,30 @@ var (
 
 // Resolver provides a graph response resolver
 type Resolver struct {
-	client *ent.Client
-	logger *zap.SugaredLogger
+	client       *ent.Client
+	logger       *zap.SugaredLogger
+	authDisabled bool
 }
 
 // NewResolver returns a resolver configured with the given ent client
-func NewResolver(client *ent.Client, logger *zap.SugaredLogger) *Resolver {
+func NewResolver(client *ent.Client) *Resolver {
 	return &Resolver{
 		client: client,
-		logger: logger,
+		// do not disabled auth by default
+		authDisabled: false,
 	}
+}
+
+func (r Resolver) WithLogger(l *zap.SugaredLogger) *Resolver {
+	r.logger = l
+
+	return &r
+}
+
+func (r Resolver) WithAuthDisabled(authDisabled bool) *Resolver {
+	r.authDisabled = authDisabled
+
+	return &r
 }
 
 // Handler is an http handler wrapping a Resolver

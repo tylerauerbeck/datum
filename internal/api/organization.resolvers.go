@@ -6,14 +6,20 @@ package api
 
 import (
 	"context"
+	"errors"
 
 	"github.com/datumforge/datum/internal/ent/generated"
+	"github.com/datumforge/datum/internal/ent/generated/privacy"
 	_ "github.com/datumforge/datum/internal/ent/generated/runtime"
+	"github.com/datumforge/datum/internal/ent/privacy/viewer"
 )
 
 // CreateOrganization is the resolver for the createOrganization field.
 func (r *mutationResolver) CreateOrganization(ctx context.Context, input generated.CreateOrganizationInput) (*OrganizationCreatePayload, error) {
-	// TODO - add permissions checks
+	if r.authDisabled {
+		ctx = privacy.DecisionContext(context.Background(), privacy.Allow)
+	}
+
 	org, err := r.client.Organization.Create().SetInput(input).Save(ctx)
 	if err != nil {
 		if generated.IsValidationError(err) {
@@ -32,6 +38,10 @@ func (r *mutationResolver) CreateOrganization(ctx context.Context, input generat
 			return nil, constraintError
 		}
 
+		if errors.Is(err, privacy.Deny) {
+			return nil, ErrPermissionDenied
+		}
+
 		r.logger.Errorw("failed to create organization", "error", err)
 		return nil, ErrInternalServerError
 	}
@@ -41,12 +51,27 @@ func (r *mutationResolver) CreateOrganization(ctx context.Context, input generat
 
 // UpdateOrganization is the resolver for the updateOrganization field.
 func (r *mutationResolver) UpdateOrganization(ctx context.Context, id string, input generated.UpdateOrganizationInput) (*OrganizationUpdatePayload, error) {
-	// TODO - add permissions checks
+	// check permissions if authz is enabled
+	// if auth is disabled, policy decisions will be skipped
+	if r.authDisabled {
+		ctx = privacy.DecisionContext(context.Background(), privacy.Allow)
+	} else {
+		// setup view context
+		v := viewer.UserViewer{
+			ObjectID: id,
+		}
+
+		ctx = viewer.NewContext(ctx, v)
+	}
 
 	org, err := r.client.Organization.Get(ctx, id)
 	if err != nil {
 		if generated.IsNotFound(err) {
 			return nil, err
+		}
+
+		if errors.Is(err, privacy.Deny) {
+			return nil, ErrPermissionDenied
 		}
 
 		r.logger.Errorw("failed to get organization", "error", err)
@@ -59,6 +84,10 @@ func (r *mutationResolver) UpdateOrganization(ctx context.Context, id string, in
 			return nil, err
 		}
 
+		if errors.Is(err, privacy.Deny) {
+			return nil, ErrPermissionDenied
+		}
+
 		r.logger.Errorw("failed to update organization", "error", err)
 		return nil, ErrInternalServerError
 	}
@@ -68,11 +97,26 @@ func (r *mutationResolver) UpdateOrganization(ctx context.Context, id string, in
 
 // DeleteOrganization is the resolver for the deleteOrganization field.
 func (r *mutationResolver) DeleteOrganization(ctx context.Context, id string) (*OrganizationDeletePayload, error) {
-	// TODO - add permissions checks
+	// check permissions if authz is enabled
+	// if auth is disabled, policy decisions will be skipped
+	if r.authDisabled {
+		ctx = privacy.DecisionContext(context.Background(), privacy.Allow)
+	} else {
+		// setup view context
+		v := viewer.UserViewer{
+			ObjectID: id,
+		}
+
+		ctx = viewer.NewContext(ctx, v)
+	}
 
 	if err := r.client.Organization.DeleteOneID(id).Exec(ctx); err != nil {
 		if generated.IsNotFound(err) {
 			return nil, err
+		}
+
+		if errors.Is(err, privacy.Deny) {
+			return nil, ErrPermissionDenied
 		}
 
 		r.logger.Errorw("failed to delete organization", "error", err)
@@ -84,15 +128,31 @@ func (r *mutationResolver) DeleteOrganization(ctx context.Context, id string) (*
 
 // Organization is the resolver for the organization field.
 func (r *queryResolver) Organization(ctx context.Context, id string) (*generated.Organization, error) {
-	// TODO - add permissions checks
+	// check permissions if authz is enabled
+	// if auth is disabled, policy decisions will be skipped
+	if r.authDisabled {
+		ctx = privacy.DecisionContext(context.Background(), privacy.Allow)
+	} else {
+		// setup view context
+		v := viewer.UserViewer{
+			ObjectID: id,
+		}
+
+		ctx = viewer.NewContext(ctx, v)
+	}
 
 	org, err := r.client.Organization.Get(ctx, id)
 	if err != nil {
+		r.logger.Errorw("failed to get organization", "error", err)
+
 		if generated.IsNotFound(err) {
 			return nil, err
 		}
 
-		r.logger.Errorw("failed to get organization", "error", err)
+		if errors.Is(err, privacy.Deny) {
+			return nil, ErrPermissionDenied
+		}
+
 		return nil, ErrInternalServerError
 	}
 

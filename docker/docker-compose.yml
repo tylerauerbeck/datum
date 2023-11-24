@@ -9,8 +9,13 @@ services:
       - --debug
       - --pretty
       - --dev
-      - --jwt-secretkey=mysupersecretkey
+      - --jwt-secretkey
+      - mysupersecretkey
       # - --oidc=false # uncomment to bypass auth checks
+      - --fga-host
+      - openfga:8080
+      - --fga-scheme
+      - "http"
     ports:
       - "17608:17608"
     restart: unless-stopped
