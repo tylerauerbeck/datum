@@ -657,6 +657,8 @@ type CreateOrganizationInput struct {
 	UpdatedAt        *time.Time
 	CreatedBy        *string
 	UpdatedBy        *string
+	DeletedAt        *time.Time
+	DeletedBy        *string
 	Name             string
 	DisplayName      *string
 	Description      *string
@@ -682,6 +684,12 @@ func (i *CreateOrganizationInput) Mutate(m *OrganizationMutation) {
 	}
 	if v := i.UpdatedBy; v != nil {
 		m.SetUpdatedBy(*v)
+	}
+	if v := i.DeletedAt; v != nil {
+		m.SetDeletedAt(*v)
+	}
+	if v := i.DeletedBy; v != nil {
+		m.SetDeletedBy(*v)
 	}
 	m.SetName(i.Name)
 	if v := i.DisplayName; v != nil {
@@ -724,6 +732,10 @@ type UpdateOrganizationInput struct {
 	UpdatedAt              *time.Time
 	ClearUpdatedBy         bool
 	UpdatedBy              *string
+	ClearDeletedAt         bool
+	DeletedAt              *time.Time
+	ClearDeletedBy         bool
+	DeletedBy              *string
 	Name                   *string
 	DisplayName            *string
 	ClearDescription       bool
@@ -757,6 +769,18 @@ func (i *UpdateOrganizationInput) Mutate(m *OrganizationMutation) {
 	}
 	if v := i.UpdatedBy; v != nil {
 		m.SetUpdatedBy(*v)
+	}
+	if i.ClearDeletedAt {
+		m.ClearDeletedAt()
+	}
+	if v := i.DeletedAt; v != nil {
+		m.SetDeletedAt(*v)
+	}
+	if i.ClearDeletedBy {
+		m.ClearDeletedBy()
+	}
+	if v := i.DeletedBy; v != nil {
+		m.SetDeletedBy(*v)
 	}
 	if v := i.Name; v != nil {
 		m.SetName(*v)
