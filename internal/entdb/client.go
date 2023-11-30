@@ -4,13 +4,19 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
 
+	"ariga.io/entcache"
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"go.uber.org/zap"
 
 	ent "github.com/datumforge/datum/internal/ent/generated"
 	"github.com/datumforge/datum/internal/ent/interceptors"
+)
+
+const (
+	cacheTTL = 60 * time.Second
 )
 
 // EntClientConfig configures the entsql drivers
@@ -49,7 +55,13 @@ func (c *EntClientConfig) NewEntDBDriver(ctx context.Context, opts []ent.Option)
 		return nil, err
 	}
 
-	cOpts := []ent.Option{ent.Driver(db)}
+	// Decorates the sql.Driver with entcache.Driver.
+	drv := entcache.NewDriver(
+		db,
+		entcache.TTL(cacheTTL), // set the TTL on the cache
+	)
+
+	cOpts := []ent.Option{ent.Driver(drv)}
 
 	cOpts = append(cOpts, opts...)
 
@@ -81,6 +93,12 @@ func (c *EntClientConfig) NewMultiDriverDBClient(ctx context.Context, opts []ent
 		return nil, err
 	}
 
+	// Decorates the sql.Driver with entcache.Driver on the primaryDB
+	drvPrimary := entcache.NewDriver(
+		primaryDB,
+		entcache.TTL(cacheTTL), // set the TTL on the cache
+	)
+
 	if err := c.createSchema(ctx, primaryDB); err != nil {
 		return nil, err
 	}
@@ -90,18 +108,25 @@ func (c *EntClientConfig) NewMultiDriverDBClient(ctx context.Context, opts []ent
 		return nil, err
 	}
 
+	// Decorates the sql.Driver with entcache.Driver on the primaryDB
+	drvSecondary := entcache.NewDriver(
+		secondaryDB,
+		entcache.TTL(cacheTTL), // set the TTL on the cache
+	)
+
 	if err := c.createSchema(ctx, secondaryDB); err != nil {
 		return nil, err
 	}
 
 	// Create Multiwrite driver
-	cOpts := []ent.Option{ent.Driver(&MultiWriteDriver{Wp: primaryDB, Ws: secondaryDB})}
+	cOpts := []ent.Option{ent.Driver(&MultiWriteDriver{Wp: drvPrimary, Ws: drvSecondary})}
 
 	cOpts = append(cOpts, opts...)
 	if c.Debug {
 		cOpts = append(cOpts,
 			ent.Log(c.Logger.Named("ent").Debugln),
 			ent.Debug(),
+			ent.Driver(drvPrimary),
 		)
 	}
 
@@ -129,7 +154,8 @@ func (c *EntClientConfig) createSchema(ctx context.Context, db *entsql.Driver) e
 	client := c.createEntDBClient(db)
 
 	// Run the automatic migration tool to create all schema resources.
-	if err := client.Schema.Create(ctx); err != nil {
+	// entcache.Driver will skip the caching layer when running the schema migration
+	if err := client.Schema.Create(entcache.Skip(ctx)); err != nil {
 		c.Logger.Errorf("failed creating schema resources", zap.Error(err))
 
 		return err
