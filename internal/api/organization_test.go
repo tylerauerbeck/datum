@@ -12,6 +12,7 @@ import (
 	"github.com/datumforge/datum/internal/datumclient"
 	"github.com/datumforge/datum/internal/echox"
 	ent "github.com/datumforge/datum/internal/ent/generated"
+	"github.com/datumforge/datum/internal/ent/mixin"
 	mock_client "github.com/datumforge/datum/internal/fga/mocks"
 )
 
@@ -434,7 +435,7 @@ func TestMutation_DeleteOrganization(t *testing.T) {
 		t.Run("Delete "+tc.name, func(t *testing.T) {
 			// mock read of tuple
 			mockCheckAny(mockCtrl, mc, reqCtx, true)
-			mockReadAny(mockCtrl, mc, reqCtx)
+			mockCheckAny(mockCtrl, mc, reqCtx, true)
 
 			// delete org
 			resp, err := client.DeleteOrganization(reqCtx, tc.orgID)
@@ -453,6 +454,25 @@ func TestMutation_DeleteOrganization(t *testing.T) {
 
 			// make sure the deletedID matches the ID we wanted to delete
 			assert.Equal(t, tc.orgID, resp.DeleteOrganization.DeletedID)
+
+			// make sure the org isn't returned
+			mockCheckAny(mockCtrl, mc, reqCtx, true)
+
+			o, err := client.GetOrganizationByID(reqCtx, tc.orgID)
+
+			require.Nil(t, o)
+			require.Error(t, err)
+			assert.ErrorContains(t, err, "not found")
+
+			// check that the soft delete occurred
+			mockCheckAny(mockCtrl, mc, reqCtx, true)
+
+			ctx := mixin.SkipSoftDelete(reqCtx)
+
+			o, err = client.GetOrganizationByID(ctx, tc.orgID)
+
+			require.Equal(t, o.Organization.ID, tc.orgID)
+			require.NoError(t, err)
 		})
 	}
 }

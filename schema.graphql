@@ -1482,6 +1482,8 @@ type Organization implements Node {
 	updatedAt: Time!
 	createdBy: String
 	updatedBy: String
+	deletedAt: Time
+	deletedBy: String
 	name: String!
 	"""The organization's displayed 'friendly' name"""
 	displayName: String!
@@ -1864,6 +1866,33 @@ input OrganizationWhereInput {
 	updatedByNotNil: Boolean
 	updatedByEqualFold: String
 	updatedByContainsFold: String
+	"""deleted_at field predicates"""
+	deletedAt: Time
+	deletedAtNEQ: Time
+	deletedAtIn: [Time!]
+	deletedAtNotIn: [Time!]
+	deletedAtGT: Time
+	deletedAtGTE: Time
+	deletedAtLT: Time
+	deletedAtLTE: Time
+	deletedAtIsNil: Boolean
+	deletedAtNotNil: Boolean
+	"""deleted_by field predicates"""
+	deletedBy: String
+	deletedByNEQ: String
+	deletedByIn: [String!]
+	deletedByNotIn: [String!]
+	deletedByGT: String
+	deletedByGTE: String
+	deletedByLT: String
+	deletedByLTE: String
+	deletedByContains: String
+	deletedByHasPrefix: String
+	deletedByHasSuffix: String
+	deletedByIsNil: Boolean
+	deletedByNotNil: Boolean
+	deletedByEqualFold: String
+	deletedByContainsFold: String
 	"""display_name field predicates"""
 	displayName: String
 	displayNameNEQ: String

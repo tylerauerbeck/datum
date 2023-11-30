@@ -909,6 +909,16 @@ func (o *OrganizationQuery) collectField(ctx context.Context, opCtx *graphql.Ope
 				selectedFields = append(selectedFields, organization.FieldUpdatedBy)
 				fieldSeen[organization.FieldUpdatedBy] = struct{}{}
 			}
+		case "deletedAt":
+			if _, ok := fieldSeen[organization.FieldDeletedAt]; !ok {
+				selectedFields = append(selectedFields, organization.FieldDeletedAt)
+				fieldSeen[organization.FieldDeletedAt] = struct{}{}
+			}
+		case "deletedBy":
+			if _, ok := fieldSeen[organization.FieldDeletedBy]; !ok {
+				selectedFields = append(selectedFields, organization.FieldDeletedBy)
+				fieldSeen[organization.FieldDeletedBy] = struct{}{}
+			}
 		case "name":
 			if _, ok := fieldSeen[organization.FieldName]; !ok {
 				selectedFields = append(selectedFields, organization.FieldName)

@@ -157,6 +157,8 @@ var schemaGraph = func() *sqlgraph.Schema {
 			organization.FieldUpdatedAt:            {Type: field.TypeTime, Column: organization.FieldUpdatedAt},
 			organization.FieldCreatedBy:            {Type: field.TypeString, Column: organization.FieldCreatedBy},
 			organization.FieldUpdatedBy:            {Type: field.TypeString, Column: organization.FieldUpdatedBy},
+			organization.FieldDeletedAt:            {Type: field.TypeTime, Column: organization.FieldDeletedAt},
+			organization.FieldDeletedBy:            {Type: field.TypeString, Column: organization.FieldDeletedBy},
 			organization.FieldName:                 {Type: field.TypeString, Column: organization.FieldName},
 			organization.FieldDisplayName:          {Type: field.TypeString, Column: organization.FieldDisplayName},
 			organization.FieldDescription:          {Type: field.TypeString, Column: organization.FieldDescription},
@@ -1248,6 +1250,16 @@ func (f *OrganizationFilter) WhereCreatedBy(p entql.StringP) {
 // WhereUpdatedBy applies the entql string predicate on the updated_by field.
 func (f *OrganizationFilter) WhereUpdatedBy(p entql.StringP) {
 	f.Where(p.Field(organization.FieldUpdatedBy))
+}
+
+// WhereDeletedAt applies the entql time.Time predicate on the deleted_at field.
+func (f *OrganizationFilter) WhereDeletedAt(p entql.TimeP) {
+	f.Where(p.Field(organization.FieldDeletedAt))
+}
+
+// WhereDeletedBy applies the entql string predicate on the deleted_by field.
+func (f *OrganizationFilter) WhereDeletedBy(p entql.StringP) {
+	f.Where(p.Field(organization.FieldDeletedBy))
 }
 
 // WhereName applies the entql string predicate on the name field.
