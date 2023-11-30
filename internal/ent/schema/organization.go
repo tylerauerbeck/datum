@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 	"github.com/ogen-go/ogen"
 
 	"github.com/datumforge/datum/internal/ent/generated/privacy"
@@ -30,7 +31,7 @@ type Organization struct {
 // Fields of the Organization
 func (Organization) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name").Unique().
+		field.String("name").
 			MaxLen(orgNameMaxLen).
 			NotEmpty().
 			Annotations(
@@ -88,6 +89,14 @@ func (Organization) Edges() []ent.Edge {
 		edge.To("setting", OrganizationSetting.Type).Unique().Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
 		edge.To("entitlements", Entitlement.Type),
 		edge.To("oauthprovider", OauthProvider.Type),
+	}
+}
+
+func (Organization) Indexes() []ent.Index {
+	return []ent.Index{
+		// names should be unique, but ignore deleted names
+		index.Fields("name").
+			Unique().Annotations(entsql.IndexWhere("deleted_at is NULL")),
 	}
 }
 
