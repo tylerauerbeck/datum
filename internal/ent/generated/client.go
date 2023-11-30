@@ -1409,7 +1409,8 @@ func (c *OrganizationClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *OrganizationClient) Interceptors() []Interceptor {
-	return c.inters.Organization
+	inters := c.inters.Organization
+	return append(inters[:len(inters):len(inters)], organization.Interceptors[:]...)
 }
 
 func (c *OrganizationClient) mutate(ctx context.Context, m *OrganizationMutation) (Value, error) {

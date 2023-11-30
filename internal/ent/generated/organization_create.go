@@ -82,6 +82,34 @@ func (oc *OrganizationCreate) SetNillableUpdatedBy(s *string) *OrganizationCreat
 	return oc
 }
 
+// SetDeletedAt sets the "deleted_at" field.
+func (oc *OrganizationCreate) SetDeletedAt(t time.Time) *OrganizationCreate {
+	oc.mutation.SetDeletedAt(t)
+	return oc
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (oc *OrganizationCreate) SetNillableDeletedAt(t *time.Time) *OrganizationCreate {
+	if t != nil {
+		oc.SetDeletedAt(*t)
+	}
+	return oc
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (oc *OrganizationCreate) SetDeletedBy(s string) *OrganizationCreate {
+	oc.mutation.SetDeletedBy(s)
+	return oc
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (oc *OrganizationCreate) SetNillableDeletedBy(s *string) *OrganizationCreate {
+	if s != nil {
+		oc.SetDeletedBy(*s)
+	}
+	return oc
+}
+
 // SetName sets the "name" field.
 func (oc *OrganizationCreate) SetName(s string) *OrganizationCreate {
 	oc.mutation.SetName(s)
@@ -412,6 +440,14 @@ func (oc *OrganizationCreate) createSpec() (*Organization, *sqlgraph.CreateSpec)
 	if value, ok := oc.mutation.UpdatedBy(); ok {
 		_spec.SetField(organization.FieldUpdatedBy, field.TypeString, value)
 		_node.UpdatedBy = value
+	}
+	if value, ok := oc.mutation.DeletedAt(); ok {
+		_spec.SetField(organization.FieldDeletedAt, field.TypeTime, value)
+		_node.DeletedAt = value
+	}
+	if value, ok := oc.mutation.DeletedBy(); ok {
+		_spec.SetField(organization.FieldDeletedBy, field.TypeString, value)
+		_node.DeletedBy = value
 	}
 	if value, ok := oc.mutation.Name(); ok {
 		_spec.SetField(organization.FieldName, field.TypeString, value)

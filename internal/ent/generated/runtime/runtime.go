@@ -207,11 +207,16 @@ func init() {
 		})
 	}
 	organizationMixinHooks0 := organizationMixin[0].Hooks()
+	organizationMixinHooks2 := organizationMixin[2].Hooks()
 	organizationHooks := schema.Organization{}.Hooks()
 
 	organization.Hooks[1] = organizationMixinHooks0[0]
 
-	organization.Hooks[2] = organizationHooks[0]
+	organization.Hooks[2] = organizationMixinHooks2[0]
+
+	organization.Hooks[3] = organizationHooks[0]
+	organizationMixinInters2 := organizationMixin[2].Interceptors()
+	organization.Interceptors[0] = organizationMixinInters2[0]
 	organizationMixinFields0 := organizationMixin[0].Fields()
 	_ = organizationMixinFields0
 	organizationMixinFields1 := organizationMixin[1].Fields()
