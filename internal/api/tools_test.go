@@ -78,6 +78,7 @@ func setupDB() {
 	}
 
 	errPanic("failed creating db schema", c.Schema.Create(ctx))
+
 	EntClient = c
 }
 
@@ -241,6 +242,21 @@ func mockCheckAny(mockCtrl *gomock.Controller, c *mock_client.MockSdkClient, ctx
 	mockBody.EXPECT().Body(gomock.Any()).Return(mockExecute)
 
 	c.EXPECT().Check(gomock.Any()).Return(mockBody)
+}
+
+func mockListAny(mockCtrl *gomock.Controller, c *mock_client.MockSdkClient, ctx context.Context, allowedObjects []string) {
+	mockExecute := mock_client.NewMockSdkClientListObjectsRequestInterface(mockCtrl)
+
+	resp := ofgaclient.ClientListObjectsResponse{}
+	resp.SetObjects(allowedObjects)
+
+	mockExecute.EXPECT().Execute().Return(&resp, nil)
+
+	mockBody := mock_client.NewMockSdkClientListObjectsRequestInterface(mockCtrl)
+
+	mockBody.EXPECT().Body(gomock.Any()).Return(mockExecute)
+
+	c.EXPECT().ListObjects(gomock.Any()).Return(mockBody)
 }
 
 func mockReadAny(mockCtrl *gomock.Controller, c *mock_client.MockSdkClient, ctx context.Context) {
