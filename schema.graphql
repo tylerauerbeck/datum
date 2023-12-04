@@ -40,7 +40,7 @@ input CreateGroupInput {
 	displayName: String
 	settingID: ID!
 	userIDs: [ID!]
-	ownerID: ID
+	ownerID: ID!
 }
 """
 CreateGroupSettingInput is used for create GroupSetting object.
@@ -515,6 +515,8 @@ type Group implements Node {
 	updatedAt: Time!
 	createdBy: String
 	updatedBy: String
+	deletedAt: Time
+	deletedBy: String
 	name: String!
 	description: String!
 	logoURL: String!
@@ -522,7 +524,7 @@ type Group implements Node {
 	displayName: String!
 	setting: GroupSetting!
 	users: [User!]
-	owner: Organization
+	owner: Organization!
 }
 """A connection to a list of items."""
 type GroupConnection {
@@ -782,6 +784,33 @@ input GroupWhereInput {
 	updatedByNotNil: Boolean
 	updatedByEqualFold: String
 	updatedByContainsFold: String
+	"""deleted_at field predicates"""
+	deletedAt: Time
+	deletedAtNEQ: Time
+	deletedAtIn: [Time!]
+	deletedAtNotIn: [Time!]
+	deletedAtGT: Time
+	deletedAtGTE: Time
+	deletedAtLT: Time
+	deletedAtLTE: Time
+	deletedAtIsNil: Boolean
+	deletedAtNotNil: Boolean
+	"""deleted_by field predicates"""
+	deletedBy: String
+	deletedByNEQ: String
+	deletedByIn: [String!]
+	deletedByNotIn: [String!]
+	deletedByGT: String
+	deletedByGTE: String
+	deletedByLT: String
+	deletedByLTE: String
+	deletedByContains: String
+	deletedByHasPrefix: String
+	deletedByHasSuffix: String
+	deletedByIsNil: Boolean
+	deletedByNotNil: Boolean
+	deletedByEqualFold: String
+	deletedByContainsFold: String
 	"""name field predicates"""
 	name: String
 	nameNEQ: String
@@ -2848,7 +2877,6 @@ input UpdateGroupInput {
 	removeUserIDs: [ID!]
 	clearUsers: Boolean
 	ownerID: ID
-	clearOwner: Boolean
 }
 """
 UpdateGroupSettingInput is used for update GroupSetting object.
@@ -3121,6 +3149,8 @@ type User implements Node {
 	updatedAt: Time!
 	createdBy: String
 	updatedBy: String
+	deletedAt: Time
+	deletedBy: String
 	email: String!
 	firstName: String!
 	lastName: String!
@@ -3433,6 +3463,33 @@ input UserWhereInput {
 	updatedByNotNil: Boolean
 	updatedByEqualFold: String
 	updatedByContainsFold: String
+	"""deleted_at field predicates"""
+	deletedAt: Time
+	deletedAtNEQ: Time
+	deletedAtIn: [Time!]
+	deletedAtNotIn: [Time!]
+	deletedAtGT: Time
+	deletedAtGTE: Time
+	deletedAtLT: Time
+	deletedAtLTE: Time
+	deletedAtIsNil: Boolean
+	deletedAtNotNil: Boolean
+	"""deleted_by field predicates"""
+	deletedBy: String
+	deletedByNEQ: String
+	deletedByIn: [String!]
+	deletedByNotIn: [String!]
+	deletedByGT: String
+	deletedByGTE: String
+	deletedByLT: String
+	deletedByLTE: String
+	deletedByContains: String
+	deletedByHasPrefix: String
+	deletedByHasSuffix: String
+	deletedByIsNil: Boolean
+	deletedByNotNil: Boolean
+	deletedByEqualFold: String
+	deletedByContainsFold: String
 	"""email field predicates"""
 	email: String
 	emailNEQ: String
