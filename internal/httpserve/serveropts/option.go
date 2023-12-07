@@ -6,6 +6,8 @@ import (
 	"entgo.io/ent/dialect"
 	"go.uber.org/zap"
 
+	"github.com/datumforge/datum/internal/entdb"
+	"github.com/datumforge/datum/internal/fga"
 	"github.com/datumforge/datum/internal/httpserve/config"
 	"github.com/datumforge/datum/internal/httpserve/handlers"
 	"github.com/datumforge/datum/internal/httpserve/server"
@@ -158,8 +160,22 @@ func WithAuth(settings map[string]any) ServerOption {
 }
 
 // WithReadyChecks adds readiness checks to the server
-func WithReadyChecks(c handlers.Checks) ServerOption {
+func WithReadyChecks(c *entdb.EntClientConfig, f *fga.Client) ServerOption {
 	return newApplyFunc(func(s *ServerOptions) {
-		s.Config.Server.Checks = c
+		// Initialize checks
+		s.Config.Server.Checks = handlers.Checks{}
+
+		// Always add a check to the primary db connection
+		s.Config.Server.Checks.AddReadinessCheck("sqlite_db_primary", entdb.Healthcheck(c.GetPrimaryDB()))
+
+		// Check the secondary db, if enabled
+		if s.Config.DB.MultiWrite {
+			s.Config.Server.Checks.AddReadinessCheck("sqlite_db_secondary", entdb.Healthcheck(c.GetSecondaryDB()))
+		}
+
+		// Check the connection to openFGA, if enabled
+		if s.Config.Authz.Enabled {
+			s.Config.Server.Checks.AddReadinessCheck("fga", fga.Healthcheck(*f))
+		}
 	})
 }
