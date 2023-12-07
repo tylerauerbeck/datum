@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/labstack/echo/v4"
+	echo "github.com/datumforge/echox"
 	"github.com/wundergraph/graphql-go-tools/pkg/playground"
 	"go.uber.org/zap"
 
@@ -38,22 +38,16 @@ type Resolver struct {
 }
 
 // NewResolver returns a resolver configured with the given ent client
-func NewResolver(client *ent.Client) *Resolver {
+func NewResolver(client *ent.Client, authEnabled bool) *Resolver {
 	return &Resolver{
 		client: client,
-		// do not disabled auth by default
-		authDisabled: false,
+		// do not disable auth by default
+		authDisabled: !authEnabled,
 	}
 }
 
 func (r Resolver) WithLogger(l *zap.SugaredLogger) *Resolver {
 	r.logger = l
-
-	return &r
-}
-
-func (r Resolver) WithAuthDisabled(authDisabled bool) *Resolver {
-	r.authDisabled = authDisabled
 
 	return &r
 }

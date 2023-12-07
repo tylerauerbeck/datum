@@ -1,10 +1,9 @@
-package echox
+package echocontext
 
 import (
 	"context"
 
-	"github.com/golang-jwt/jwt/v5"
-	"github.com/labstack/echo/v4"
+	echo "github.com/datumforge/echox"
 )
 
 // EchoContextKey is the context key for the echo.Context
@@ -51,33 +50,4 @@ func EchoContextFromContext(ctx context.Context) (*echo.Context, error) {
 	}
 
 	return &ec, nil
-}
-
-// GetActorSubject returns the user from the echo.Context
-func GetActorSubject(c echo.Context) (string, error) {
-	token, ok := c.Get("user").(*jwt.Token)
-	if !ok {
-		return "", ErrJWTMissingInvalid
-	}
-
-	claims, ok := token.Claims.(jwt.MapClaims) // by default claims is of type `jwt.MapClaims`
-	if !ok {
-		return "", ErrJWTClaimsInvalid
-	}
-
-	sub, ok := claims["sub"].(string)
-	if !ok {
-		return "", ErrSubjectNotFound
-	}
-
-	return sub, nil
-}
-
-func GetUserIDFromContext(ctx context.Context) (string, error) {
-	ec, err := EchoContextFromContext(ctx)
-	if err != nil {
-		return "", err
-	}
-
-	return GetActorSubject(*ec)
 }

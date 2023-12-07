@@ -24,6 +24,7 @@ import (
 	"github.com/datumforge/datum/internal/fga"
 	mock_client "github.com/datumforge/datum/internal/fga/mocks"
 	"github.com/datumforge/datum/internal/graphapi"
+	"github.com/datumforge/datum/internal/httpserve/config"
 )
 
 var (
@@ -61,18 +62,19 @@ func setupDB() {
 		testDBURI = defaultDBURI
 	}
 
-	entConfig := entdb.EntClientConfig{
+	dbconf := config.DB{
 		Debug:           true,
 		DriverName:      dialect.SQLite,
-		Logger:          *logger,
 		PrimaryDBSource: testDBURI,
 	}
+
+	entConfig := entdb.NewDBConfig(dbconf, logger)
 
 	ctx := context.Background()
 
 	opts := []ent.Option{ent.Logger(*logger)}
 
-	c, err := entConfig.NewEntDBDriver(ctx, opts)
+	c, err := entConfig.NewMultiDriverDBClient(ctx, opts)
 	if err != nil {
 		errPanic("failed opening connection to database:", err)
 	}
@@ -96,18 +98,19 @@ func setupAuthEntDB(t *testing.T, mockCtrl *gomock.Controller, mc *mock_client.M
 		testDBURI = defaultDBURI
 	}
 
-	entConfig := entdb.EntClientConfig{
+	dbconf := config.DB{
 		Debug:           true,
 		DriverName:      dialect.SQLite,
-		Logger:          *logger,
 		PrimaryDBSource: testDBURI,
 	}
+
+	entConfig := entdb.NewDBConfig(dbconf, logger)
 
 	ctx := context.Background()
 
 	opts := []ent.Option{ent.Logger(*logger), ent.Authz(*fc)}
 
-	c, err := entConfig.NewEntDBDriver(ctx, opts)
+	c, err := entConfig.NewMultiDriverDBClient(ctx, opts)
 	if err != nil {
 		errPanic("failed opening connection to database:", err)
 	}
@@ -139,7 +142,7 @@ func graphTestClient(c *ent.Client) datumclient.DatumClient {
 		srvURL: "query",
 		httpClient: &http.Client{Transport: localRoundTripper{handler: handler.NewDefaultServer(
 			graphapi.NewExecutableSchema(
-				graphapi.Config{Resolvers: graphapi.NewResolver(c).WithLogger(zap.NewNop().Sugar())},
+				graphapi.Config{Resolvers: graphapi.NewResolver(c, true).WithLogger(zap.NewNop().Sugar())},
 			))}},
 	}
 
@@ -159,7 +162,7 @@ func graphTestClientNoAuth(c *ent.Client) datumclient.DatumClient {
 		srvURL: "query",
 		httpClient: &http.Client{Transport: localRoundTripper{handler: handler.NewDefaultServer(
 			graphapi.NewExecutableSchema(
-				graphapi.Config{Resolvers: graphapi.NewResolver(c).WithLogger(zap.NewNop().Sugar()).WithAuthDisabled(true)},
+				graphapi.Config{Resolvers: graphapi.NewResolver(c, false).WithLogger(zap.NewNop().Sugar())},
 			))}},
 	}
 

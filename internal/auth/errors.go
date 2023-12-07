@@ -1,4 +1,4 @@
-package echox
+package auth
 
 import (
 	"errors"
@@ -13,7 +13,4 @@ var (
 
 	// ErrSubjectNotFound is returned when the sub is not found in the JWT claims
 	ErrSubjectNotFound = errors.New("JWT claims missing subject")
-
-	// ErrUnableToRetrieveEchoContext is returned when the echo context is unable to be parsed from parent context
-	ErrUnableToRetrieveEchoContext = errors.New("unable to retrieve echo context")
 )
