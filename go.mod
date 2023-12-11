@@ -16,7 +16,6 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/google/uuid v1.4.0
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/jaevor/go-nanoid v1.3.0
 	github.com/mattn/go-sqlite3 v1.14.18
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/ogen-go/ogen v0.80.1
