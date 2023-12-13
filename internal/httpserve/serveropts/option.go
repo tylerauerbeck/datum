@@ -214,13 +214,10 @@ func WithGeneratedKeys(settings map[string]any) ServerOption {
 	})
 }
 
-// WithAuth supplies the authn config for the server
-// TODO: expand these settings
+// WithAuth supplies the authn and jwt config for the server
 func WithAuth(settings map[string]any) ServerOption {
 	return newApplyFunc(func(s *ServerOptions) {
 		authEnabled := settings["auth"].(bool)
-
-		// Commenting out until this is implemented
 		jwtSettings := settings["jwt"].(map[string]any)
 
 		s.Config.Auth.Enabled = authEnabled
@@ -228,6 +225,11 @@ func WithAuth(settings map[string]any) ServerOption {
 		s.Config.Server.Token.Issuer = jwtSettings["issuer"].(string)
 		s.Config.Server.Token.Audience = jwtSettings["audience"].(string)
 		s.Config.Server.Token.CookieDomain = jwtSettings["cookie-domain"].(string)
+
+		// Set durations, flags have defaults values set
+		s.Config.Server.Token.AccessDuration = jwtSettings["access-duration"].(time.Duration)
+		s.Config.Server.Token.RefreshDuration = jwtSettings["refresh-duration"].(time.Duration)
+		s.Config.Server.Token.RefreshOverlap = jwtSettings["refresh-overlap"].(time.Duration)
 	})
 }
 
