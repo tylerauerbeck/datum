@@ -382,34 +382,6 @@ func init() {
 	organizationsetting.DefaultUpdatedAt = organizationsettingDescUpdatedAt.Default.(func() time.Time)
 	// organizationsetting.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	organizationsetting.UpdateDefaultUpdatedAt = organizationsettingDescUpdatedAt.UpdateDefault.(func() time.Time)
-	// organizationsettingDescSSOCert is the schema descriptor for sso_cert field.
-	organizationsettingDescSSOCert := organizationsettingFields[1].Descriptor()
-	// organizationsetting.DefaultSSOCert holds the default value on creation for the sso_cert field.
-	organizationsetting.DefaultSSOCert = organizationsettingDescSSOCert.Default.(string)
-	// organizationsettingDescSSOEntrypoint is the schema descriptor for sso_entrypoint field.
-	organizationsettingDescSSOEntrypoint := organizationsettingFields[2].Descriptor()
-	// organizationsetting.DefaultSSOEntrypoint holds the default value on creation for the sso_entrypoint field.
-	organizationsetting.DefaultSSOEntrypoint = organizationsettingDescSSOEntrypoint.Default.(string)
-	// organizationsettingDescSSOIssuer is the schema descriptor for sso_issuer field.
-	organizationsettingDescSSOIssuer := organizationsettingFields[3].Descriptor()
-	// organizationsetting.DefaultSSOIssuer holds the default value on creation for the sso_issuer field.
-	organizationsetting.DefaultSSOIssuer = organizationsettingDescSSOIssuer.Default.(string)
-	// organizationsettingDescBillingContact is the schema descriptor for billing_contact field.
-	organizationsettingDescBillingContact := organizationsettingFields[4].Descriptor()
-	// organizationsetting.BillingContactValidator is a validator for the "billing_contact" field. It is called by the builders before save.
-	organizationsetting.BillingContactValidator = organizationsettingDescBillingContact.Validators[0].(func(string) error)
-	// organizationsettingDescBillingEmail is the schema descriptor for billing_email field.
-	organizationsettingDescBillingEmail := organizationsettingFields[5].Descriptor()
-	// organizationsetting.BillingEmailValidator is a validator for the "billing_email" field. It is called by the builders before save.
-	organizationsetting.BillingEmailValidator = organizationsettingDescBillingEmail.Validators[0].(func(string) error)
-	// organizationsettingDescBillingPhone is the schema descriptor for billing_phone field.
-	organizationsettingDescBillingPhone := organizationsettingFields[6].Descriptor()
-	// organizationsetting.BillingPhoneValidator is a validator for the "billing_phone" field. It is called by the builders before save.
-	organizationsetting.BillingPhoneValidator = organizationsettingDescBillingPhone.Validators[0].(func(string) error)
-	// organizationsettingDescBillingAddress is the schema descriptor for billing_address field.
-	organizationsettingDescBillingAddress := organizationsettingFields[7].Descriptor()
-	// organizationsetting.BillingAddressValidator is a validator for the "billing_address" field. It is called by the builders before save.
-	organizationsetting.BillingAddressValidator = organizationsettingDescBillingAddress.Validators[0].(func(string) error)
 	// organizationsettingDescTags is the schema descriptor for tags field.
 	organizationsettingDescTags := organizationsettingFields[9].Descriptor()
 	// organizationsetting.DefaultTags holds the default value on creation for the tags field.

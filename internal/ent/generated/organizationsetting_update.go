@@ -70,6 +70,12 @@ func (osu *OrganizationSettingUpdate) AppendDomains(s []string) *OrganizationSet
 	return osu
 }
 
+// ClearDomains clears the value of the "domains" field.
+func (osu *OrganizationSettingUpdate) ClearDomains() *OrganizationSettingUpdate {
+	osu.mutation.ClearDomains()
+	return osu
+}
+
 // SetSSOCert sets the "sso_cert" field.
 func (osu *OrganizationSettingUpdate) SetSSOCert(s string) *OrganizationSettingUpdate {
 	osu.mutation.SetSSOCert(s)
@@ -81,6 +87,12 @@ func (osu *OrganizationSettingUpdate) SetNillableSSOCert(s *string) *Organizatio
 	if s != nil {
 		osu.SetSSOCert(*s)
 	}
+	return osu
+}
+
+// ClearSSOCert clears the value of the "sso_cert" field.
+func (osu *OrganizationSettingUpdate) ClearSSOCert() *OrganizationSettingUpdate {
+	osu.mutation.ClearSSOCert()
 	return osu
 }
 
@@ -98,6 +110,12 @@ func (osu *OrganizationSettingUpdate) SetNillableSSOEntrypoint(s *string) *Organ
 	return osu
 }
 
+// ClearSSOEntrypoint clears the value of the "sso_entrypoint" field.
+func (osu *OrganizationSettingUpdate) ClearSSOEntrypoint() *OrganizationSettingUpdate {
+	osu.mutation.ClearSSOEntrypoint()
+	return osu
+}
+
 // SetSSOIssuer sets the "sso_issuer" field.
 func (osu *OrganizationSettingUpdate) SetSSOIssuer(s string) *OrganizationSettingUpdate {
 	osu.mutation.SetSSOIssuer(s)
@@ -109,6 +127,12 @@ func (osu *OrganizationSettingUpdate) SetNillableSSOIssuer(s *string) *Organizat
 	if s != nil {
 		osu.SetSSOIssuer(*s)
 	}
+	return osu
+}
+
+// ClearSSOIssuer clears the value of the "sso_issuer" field.
+func (osu *OrganizationSettingUpdate) ClearSSOIssuer() *OrganizationSettingUpdate {
+	osu.mutation.ClearSSOIssuer()
 	return osu
 }
 
@@ -126,6 +150,12 @@ func (osu *OrganizationSettingUpdate) SetNillableBillingContact(s *string) *Orga
 	return osu
 }
 
+// ClearBillingContact clears the value of the "billing_contact" field.
+func (osu *OrganizationSettingUpdate) ClearBillingContact() *OrganizationSettingUpdate {
+	osu.mutation.ClearBillingContact()
+	return osu
+}
+
 // SetBillingEmail sets the "billing_email" field.
 func (osu *OrganizationSettingUpdate) SetBillingEmail(s string) *OrganizationSettingUpdate {
 	osu.mutation.SetBillingEmail(s)
@@ -137,6 +167,12 @@ func (osu *OrganizationSettingUpdate) SetNillableBillingEmail(s *string) *Organi
 	if s != nil {
 		osu.SetBillingEmail(*s)
 	}
+	return osu
+}
+
+// ClearBillingEmail clears the value of the "billing_email" field.
+func (osu *OrganizationSettingUpdate) ClearBillingEmail() *OrganizationSettingUpdate {
+	osu.mutation.ClearBillingEmail()
 	return osu
 }
 
@@ -154,6 +190,12 @@ func (osu *OrganizationSettingUpdate) SetNillableBillingPhone(s *string) *Organi
 	return osu
 }
 
+// ClearBillingPhone clears the value of the "billing_phone" field.
+func (osu *OrganizationSettingUpdate) ClearBillingPhone() *OrganizationSettingUpdate {
+	osu.mutation.ClearBillingPhone()
+	return osu
+}
+
 // SetBillingAddress sets the "billing_address" field.
 func (osu *OrganizationSettingUpdate) SetBillingAddress(s string) *OrganizationSettingUpdate {
 	osu.mutation.SetBillingAddress(s)
@@ -168,6 +210,12 @@ func (osu *OrganizationSettingUpdate) SetNillableBillingAddress(s *string) *Orga
 	return osu
 }
 
+// ClearBillingAddress clears the value of the "billing_address" field.
+func (osu *OrganizationSettingUpdate) ClearBillingAddress() *OrganizationSettingUpdate {
+	osu.mutation.ClearBillingAddress()
+	return osu
+}
+
 // SetTaxIdentifier sets the "tax_identifier" field.
 func (osu *OrganizationSettingUpdate) SetTaxIdentifier(s string) *OrganizationSettingUpdate {
 	osu.mutation.SetTaxIdentifier(s)
@@ -179,6 +227,12 @@ func (osu *OrganizationSettingUpdate) SetNillableTaxIdentifier(s *string) *Organ
 	if s != nil {
 		osu.SetTaxIdentifier(*s)
 	}
+	return osu
+}
+
+// ClearTaxIdentifier clears the value of the "tax_identifier" field.
+func (osu *OrganizationSettingUpdate) ClearTaxIdentifier() *OrganizationSettingUpdate {
+	osu.mutation.ClearTaxIdentifier()
 	return osu
 }
 
@@ -272,35 +326,7 @@ func (osu *OrganizationSettingUpdate) defaults() error {
 	return nil
 }
 
-// check runs all checks and user-defined validators on the builder.
-func (osu *OrganizationSettingUpdate) check() error {
-	if v, ok := osu.mutation.BillingContact(); ok {
-		if err := organizationsetting.BillingContactValidator(v); err != nil {
-			return &ValidationError{Name: "billing_contact", err: fmt.Errorf(`generated: validator failed for field "OrganizationSetting.billing_contact": %w`, err)}
-		}
-	}
-	if v, ok := osu.mutation.BillingEmail(); ok {
-		if err := organizationsetting.BillingEmailValidator(v); err != nil {
-			return &ValidationError{Name: "billing_email", err: fmt.Errorf(`generated: validator failed for field "OrganizationSetting.billing_email": %w`, err)}
-		}
-	}
-	if v, ok := osu.mutation.BillingPhone(); ok {
-		if err := organizationsetting.BillingPhoneValidator(v); err != nil {
-			return &ValidationError{Name: "billing_phone", err: fmt.Errorf(`generated: validator failed for field "OrganizationSetting.billing_phone": %w`, err)}
-		}
-	}
-	if v, ok := osu.mutation.BillingAddress(); ok {
-		if err := organizationsetting.BillingAddressValidator(v); err != nil {
-			return &ValidationError{Name: "billing_address", err: fmt.Errorf(`generated: validator failed for field "OrganizationSetting.billing_address": %w`, err)}
-		}
-	}
-	return nil
-}
-
 func (osu *OrganizationSettingUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := osu.check(); err != nil {
-		return n, err
-	}
 	_spec := sqlgraph.NewUpdateSpec(organizationsetting.Table, organizationsetting.Columns, sqlgraph.NewFieldSpec(organizationsetting.FieldID, field.TypeString))
 	if ps := osu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -329,29 +355,56 @@ func (osu *OrganizationSettingUpdate) sqlSave(ctx context.Context) (n int, err e
 			sqljson.Append(u, organizationsetting.FieldDomains, value)
 		})
 	}
+	if osu.mutation.DomainsCleared() {
+		_spec.ClearField(organizationsetting.FieldDomains, field.TypeJSON)
+	}
 	if value, ok := osu.mutation.SSOCert(); ok {
 		_spec.SetField(organizationsetting.FieldSSOCert, field.TypeString, value)
+	}
+	if osu.mutation.SSOCertCleared() {
+		_spec.ClearField(organizationsetting.FieldSSOCert, field.TypeString)
 	}
 	if value, ok := osu.mutation.SSOEntrypoint(); ok {
 		_spec.SetField(organizationsetting.FieldSSOEntrypoint, field.TypeString, value)
 	}
+	if osu.mutation.SSOEntrypointCleared() {
+		_spec.ClearField(organizationsetting.FieldSSOEntrypoint, field.TypeString)
+	}
 	if value, ok := osu.mutation.SSOIssuer(); ok {
 		_spec.SetField(organizationsetting.FieldSSOIssuer, field.TypeString, value)
+	}
+	if osu.mutation.SSOIssuerCleared() {
+		_spec.ClearField(organizationsetting.FieldSSOIssuer, field.TypeString)
 	}
 	if value, ok := osu.mutation.BillingContact(); ok {
 		_spec.SetField(organizationsetting.FieldBillingContact, field.TypeString, value)
 	}
+	if osu.mutation.BillingContactCleared() {
+		_spec.ClearField(organizationsetting.FieldBillingContact, field.TypeString)
+	}
 	if value, ok := osu.mutation.BillingEmail(); ok {
 		_spec.SetField(organizationsetting.FieldBillingEmail, field.TypeString, value)
+	}
+	if osu.mutation.BillingEmailCleared() {
+		_spec.ClearField(organizationsetting.FieldBillingEmail, field.TypeString)
 	}
 	if value, ok := osu.mutation.BillingPhone(); ok {
 		_spec.SetField(organizationsetting.FieldBillingPhone, field.TypeString, value)
 	}
+	if osu.mutation.BillingPhoneCleared() {
+		_spec.ClearField(organizationsetting.FieldBillingPhone, field.TypeString)
+	}
 	if value, ok := osu.mutation.BillingAddress(); ok {
 		_spec.SetField(organizationsetting.FieldBillingAddress, field.TypeString, value)
 	}
+	if osu.mutation.BillingAddressCleared() {
+		_spec.ClearField(organizationsetting.FieldBillingAddress, field.TypeString)
+	}
 	if value, ok := osu.mutation.TaxIdentifier(); ok {
 		_spec.SetField(organizationsetting.FieldTaxIdentifier, field.TypeString, value)
+	}
+	if osu.mutation.TaxIdentifierCleared() {
+		_spec.ClearField(organizationsetting.FieldTaxIdentifier, field.TypeString)
 	}
 	if value, ok := osu.mutation.Tags(); ok {
 		_spec.SetField(organizationsetting.FieldTags, field.TypeJSON, value)
@@ -455,6 +508,12 @@ func (osuo *OrganizationSettingUpdateOne) AppendDomains(s []string) *Organizatio
 	return osuo
 }
 
+// ClearDomains clears the value of the "domains" field.
+func (osuo *OrganizationSettingUpdateOne) ClearDomains() *OrganizationSettingUpdateOne {
+	osuo.mutation.ClearDomains()
+	return osuo
+}
+
 // SetSSOCert sets the "sso_cert" field.
 func (osuo *OrganizationSettingUpdateOne) SetSSOCert(s string) *OrganizationSettingUpdateOne {
 	osuo.mutation.SetSSOCert(s)
@@ -466,6 +525,12 @@ func (osuo *OrganizationSettingUpdateOne) SetNillableSSOCert(s *string) *Organiz
 	if s != nil {
 		osuo.SetSSOCert(*s)
 	}
+	return osuo
+}
+
+// ClearSSOCert clears the value of the "sso_cert" field.
+func (osuo *OrganizationSettingUpdateOne) ClearSSOCert() *OrganizationSettingUpdateOne {
+	osuo.mutation.ClearSSOCert()
 	return osuo
 }
 
@@ -483,6 +548,12 @@ func (osuo *OrganizationSettingUpdateOne) SetNillableSSOEntrypoint(s *string) *O
 	return osuo
 }
 
+// ClearSSOEntrypoint clears the value of the "sso_entrypoint" field.
+func (osuo *OrganizationSettingUpdateOne) ClearSSOEntrypoint() *OrganizationSettingUpdateOne {
+	osuo.mutation.ClearSSOEntrypoint()
+	return osuo
+}
+
 // SetSSOIssuer sets the "sso_issuer" field.
 func (osuo *OrganizationSettingUpdateOne) SetSSOIssuer(s string) *OrganizationSettingUpdateOne {
 	osuo.mutation.SetSSOIssuer(s)
@@ -494,6 +565,12 @@ func (osuo *OrganizationSettingUpdateOne) SetNillableSSOIssuer(s *string) *Organ
 	if s != nil {
 		osuo.SetSSOIssuer(*s)
 	}
+	return osuo
+}
+
+// ClearSSOIssuer clears the value of the "sso_issuer" field.
+func (osuo *OrganizationSettingUpdateOne) ClearSSOIssuer() *OrganizationSettingUpdateOne {
+	osuo.mutation.ClearSSOIssuer()
 	return osuo
 }
 
@@ -511,6 +588,12 @@ func (osuo *OrganizationSettingUpdateOne) SetNillableBillingContact(s *string) *
 	return osuo
 }
 
+// ClearBillingContact clears the value of the "billing_contact" field.
+func (osuo *OrganizationSettingUpdateOne) ClearBillingContact() *OrganizationSettingUpdateOne {
+	osuo.mutation.ClearBillingContact()
+	return osuo
+}
+
 // SetBillingEmail sets the "billing_email" field.
 func (osuo *OrganizationSettingUpdateOne) SetBillingEmail(s string) *OrganizationSettingUpdateOne {
 	osuo.mutation.SetBillingEmail(s)
@@ -522,6 +605,12 @@ func (osuo *OrganizationSettingUpdateOne) SetNillableBillingEmail(s *string) *Or
 	if s != nil {
 		osuo.SetBillingEmail(*s)
 	}
+	return osuo
+}
+
+// ClearBillingEmail clears the value of the "billing_email" field.
+func (osuo *OrganizationSettingUpdateOne) ClearBillingEmail() *OrganizationSettingUpdateOne {
+	osuo.mutation.ClearBillingEmail()
 	return osuo
 }
 
@@ -539,6 +628,12 @@ func (osuo *OrganizationSettingUpdateOne) SetNillableBillingPhone(s *string) *Or
 	return osuo
 }
 
+// ClearBillingPhone clears the value of the "billing_phone" field.
+func (osuo *OrganizationSettingUpdateOne) ClearBillingPhone() *OrganizationSettingUpdateOne {
+	osuo.mutation.ClearBillingPhone()
+	return osuo
+}
+
 // SetBillingAddress sets the "billing_address" field.
 func (osuo *OrganizationSettingUpdateOne) SetBillingAddress(s string) *OrganizationSettingUpdateOne {
 	osuo.mutation.SetBillingAddress(s)
@@ -553,6 +648,12 @@ func (osuo *OrganizationSettingUpdateOne) SetNillableBillingAddress(s *string) *
 	return osuo
 }
 
+// ClearBillingAddress clears the value of the "billing_address" field.
+func (osuo *OrganizationSettingUpdateOne) ClearBillingAddress() *OrganizationSettingUpdateOne {
+	osuo.mutation.ClearBillingAddress()
+	return osuo
+}
+
 // SetTaxIdentifier sets the "tax_identifier" field.
 func (osuo *OrganizationSettingUpdateOne) SetTaxIdentifier(s string) *OrganizationSettingUpdateOne {
 	osuo.mutation.SetTaxIdentifier(s)
@@ -564,6 +665,12 @@ func (osuo *OrganizationSettingUpdateOne) SetNillableTaxIdentifier(s *string) *O
 	if s != nil {
 		osuo.SetTaxIdentifier(*s)
 	}
+	return osuo
+}
+
+// ClearTaxIdentifier clears the value of the "tax_identifier" field.
+func (osuo *OrganizationSettingUpdateOne) ClearTaxIdentifier() *OrganizationSettingUpdateOne {
+	osuo.mutation.ClearTaxIdentifier()
 	return osuo
 }
 
@@ -670,35 +777,7 @@ func (osuo *OrganizationSettingUpdateOne) defaults() error {
 	return nil
 }
 
-// check runs all checks and user-defined validators on the builder.
-func (osuo *OrganizationSettingUpdateOne) check() error {
-	if v, ok := osuo.mutation.BillingContact(); ok {
-		if err := organizationsetting.BillingContactValidator(v); err != nil {
-			return &ValidationError{Name: "billing_contact", err: fmt.Errorf(`generated: validator failed for field "OrganizationSetting.billing_contact": %w`, err)}
-		}
-	}
-	if v, ok := osuo.mutation.BillingEmail(); ok {
-		if err := organizationsetting.BillingEmailValidator(v); err != nil {
-			return &ValidationError{Name: "billing_email", err: fmt.Errorf(`generated: validator failed for field "OrganizationSetting.billing_email": %w`, err)}
-		}
-	}
-	if v, ok := osuo.mutation.BillingPhone(); ok {
-		if err := organizationsetting.BillingPhoneValidator(v); err != nil {
-			return &ValidationError{Name: "billing_phone", err: fmt.Errorf(`generated: validator failed for field "OrganizationSetting.billing_phone": %w`, err)}
-		}
-	}
-	if v, ok := osuo.mutation.BillingAddress(); ok {
-		if err := organizationsetting.BillingAddressValidator(v); err != nil {
-			return &ValidationError{Name: "billing_address", err: fmt.Errorf(`generated: validator failed for field "OrganizationSetting.billing_address": %w`, err)}
-		}
-	}
-	return nil
-}
-
 func (osuo *OrganizationSettingUpdateOne) sqlSave(ctx context.Context) (_node *OrganizationSetting, err error) {
-	if err := osuo.check(); err != nil {
-		return _node, err
-	}
 	_spec := sqlgraph.NewUpdateSpec(organizationsetting.Table, organizationsetting.Columns, sqlgraph.NewFieldSpec(organizationsetting.FieldID, field.TypeString))
 	id, ok := osuo.mutation.ID()
 	if !ok {
@@ -744,29 +823,56 @@ func (osuo *OrganizationSettingUpdateOne) sqlSave(ctx context.Context) (_node *O
 			sqljson.Append(u, organizationsetting.FieldDomains, value)
 		})
 	}
+	if osuo.mutation.DomainsCleared() {
+		_spec.ClearField(organizationsetting.FieldDomains, field.TypeJSON)
+	}
 	if value, ok := osuo.mutation.SSOCert(); ok {
 		_spec.SetField(organizationsetting.FieldSSOCert, field.TypeString, value)
+	}
+	if osuo.mutation.SSOCertCleared() {
+		_spec.ClearField(organizationsetting.FieldSSOCert, field.TypeString)
 	}
 	if value, ok := osuo.mutation.SSOEntrypoint(); ok {
 		_spec.SetField(organizationsetting.FieldSSOEntrypoint, field.TypeString, value)
 	}
+	if osuo.mutation.SSOEntrypointCleared() {
+		_spec.ClearField(organizationsetting.FieldSSOEntrypoint, field.TypeString)
+	}
 	if value, ok := osuo.mutation.SSOIssuer(); ok {
 		_spec.SetField(organizationsetting.FieldSSOIssuer, field.TypeString, value)
+	}
+	if osuo.mutation.SSOIssuerCleared() {
+		_spec.ClearField(organizationsetting.FieldSSOIssuer, field.TypeString)
 	}
 	if value, ok := osuo.mutation.BillingContact(); ok {
 		_spec.SetField(organizationsetting.FieldBillingContact, field.TypeString, value)
 	}
+	if osuo.mutation.BillingContactCleared() {
+		_spec.ClearField(organizationsetting.FieldBillingContact, field.TypeString)
+	}
 	if value, ok := osuo.mutation.BillingEmail(); ok {
 		_spec.SetField(organizationsetting.FieldBillingEmail, field.TypeString, value)
+	}
+	if osuo.mutation.BillingEmailCleared() {
+		_spec.ClearField(organizationsetting.FieldBillingEmail, field.TypeString)
 	}
 	if value, ok := osuo.mutation.BillingPhone(); ok {
 		_spec.SetField(organizationsetting.FieldBillingPhone, field.TypeString, value)
 	}
+	if osuo.mutation.BillingPhoneCleared() {
+		_spec.ClearField(organizationsetting.FieldBillingPhone, field.TypeString)
+	}
 	if value, ok := osuo.mutation.BillingAddress(); ok {
 		_spec.SetField(organizationsetting.FieldBillingAddress, field.TypeString, value)
 	}
+	if osuo.mutation.BillingAddressCleared() {
+		_spec.ClearField(organizationsetting.FieldBillingAddress, field.TypeString)
+	}
 	if value, ok := osuo.mutation.TaxIdentifier(); ok {
 		_spec.SetField(organizationsetting.FieldTaxIdentifier, field.TypeString, value)
+	}
+	if osuo.mutation.TaxIdentifierCleared() {
+		_spec.ClearField(organizationsetting.FieldTaxIdentifier, field.TypeString)
 	}
 	if value, ok := osuo.mutation.Tags(); ok {
 		_spec.SetField(organizationsetting.FieldTags, field.TypeJSON, value)

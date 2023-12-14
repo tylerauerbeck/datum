@@ -357,6 +357,16 @@ func UpdatedByContainsFold(v string) predicate.OrganizationSetting {
 	return predicate.OrganizationSetting(sql.FieldContainsFold(FieldUpdatedBy, v))
 }
 
+// DomainsIsNil applies the IsNil predicate on the "domains" field.
+func DomainsIsNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldIsNull(FieldDomains))
+}
+
+// DomainsNotNil applies the NotNil predicate on the "domains" field.
+func DomainsNotNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldNotNull(FieldDomains))
+}
+
 // SSOCertEQ applies the EQ predicate on the "sso_cert" field.
 func SSOCertEQ(v string) predicate.OrganizationSetting {
 	return predicate.OrganizationSetting(sql.FieldEQ(FieldSSOCert, v))
@@ -410,6 +420,16 @@ func SSOCertHasPrefix(v string) predicate.OrganizationSetting {
 // SSOCertHasSuffix applies the HasSuffix predicate on the "sso_cert" field.
 func SSOCertHasSuffix(v string) predicate.OrganizationSetting {
 	return predicate.OrganizationSetting(sql.FieldHasSuffix(FieldSSOCert, v))
+}
+
+// SSOCertIsNil applies the IsNil predicate on the "sso_cert" field.
+func SSOCertIsNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldIsNull(FieldSSOCert))
+}
+
+// SSOCertNotNil applies the NotNil predicate on the "sso_cert" field.
+func SSOCertNotNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldNotNull(FieldSSOCert))
 }
 
 // SSOCertEqualFold applies the EqualFold predicate on the "sso_cert" field.
@@ -477,6 +497,16 @@ func SSOEntrypointHasSuffix(v string) predicate.OrganizationSetting {
 	return predicate.OrganizationSetting(sql.FieldHasSuffix(FieldSSOEntrypoint, v))
 }
 
+// SSOEntrypointIsNil applies the IsNil predicate on the "sso_entrypoint" field.
+func SSOEntrypointIsNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldIsNull(FieldSSOEntrypoint))
+}
+
+// SSOEntrypointNotNil applies the NotNil predicate on the "sso_entrypoint" field.
+func SSOEntrypointNotNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldNotNull(FieldSSOEntrypoint))
+}
+
 // SSOEntrypointEqualFold applies the EqualFold predicate on the "sso_entrypoint" field.
 func SSOEntrypointEqualFold(v string) predicate.OrganizationSetting {
 	return predicate.OrganizationSetting(sql.FieldEqualFold(FieldSSOEntrypoint, v))
@@ -540,6 +570,16 @@ func SSOIssuerHasPrefix(v string) predicate.OrganizationSetting {
 // SSOIssuerHasSuffix applies the HasSuffix predicate on the "sso_issuer" field.
 func SSOIssuerHasSuffix(v string) predicate.OrganizationSetting {
 	return predicate.OrganizationSetting(sql.FieldHasSuffix(FieldSSOIssuer, v))
+}
+
+// SSOIssuerIsNil applies the IsNil predicate on the "sso_issuer" field.
+func SSOIssuerIsNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldIsNull(FieldSSOIssuer))
+}
+
+// SSOIssuerNotNil applies the NotNil predicate on the "sso_issuer" field.
+func SSOIssuerNotNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldNotNull(FieldSSOIssuer))
 }
 
 // SSOIssuerEqualFold applies the EqualFold predicate on the "sso_issuer" field.
@@ -607,6 +647,16 @@ func BillingContactHasSuffix(v string) predicate.OrganizationSetting {
 	return predicate.OrganizationSetting(sql.FieldHasSuffix(FieldBillingContact, v))
 }
 
+// BillingContactIsNil applies the IsNil predicate on the "billing_contact" field.
+func BillingContactIsNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldIsNull(FieldBillingContact))
+}
+
+// BillingContactNotNil applies the NotNil predicate on the "billing_contact" field.
+func BillingContactNotNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldNotNull(FieldBillingContact))
+}
+
 // BillingContactEqualFold applies the EqualFold predicate on the "billing_contact" field.
 func BillingContactEqualFold(v string) predicate.OrganizationSetting {
 	return predicate.OrganizationSetting(sql.FieldEqualFold(FieldBillingContact, v))
@@ -670,6 +720,16 @@ func BillingEmailHasPrefix(v string) predicate.OrganizationSetting {
 // BillingEmailHasSuffix applies the HasSuffix predicate on the "billing_email" field.
 func BillingEmailHasSuffix(v string) predicate.OrganizationSetting {
 	return predicate.OrganizationSetting(sql.FieldHasSuffix(FieldBillingEmail, v))
+}
+
+// BillingEmailIsNil applies the IsNil predicate on the "billing_email" field.
+func BillingEmailIsNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldIsNull(FieldBillingEmail))
+}
+
+// BillingEmailNotNil applies the NotNil predicate on the "billing_email" field.
+func BillingEmailNotNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldNotNull(FieldBillingEmail))
 }
 
 // BillingEmailEqualFold applies the EqualFold predicate on the "billing_email" field.
@@ -737,6 +797,16 @@ func BillingPhoneHasSuffix(v string) predicate.OrganizationSetting {
 	return predicate.OrganizationSetting(sql.FieldHasSuffix(FieldBillingPhone, v))
 }
 
+// BillingPhoneIsNil applies the IsNil predicate on the "billing_phone" field.
+func BillingPhoneIsNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldIsNull(FieldBillingPhone))
+}
+
+// BillingPhoneNotNil applies the NotNil predicate on the "billing_phone" field.
+func BillingPhoneNotNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldNotNull(FieldBillingPhone))
+}
+
 // BillingPhoneEqualFold applies the EqualFold predicate on the "billing_phone" field.
 func BillingPhoneEqualFold(v string) predicate.OrganizationSetting {
 	return predicate.OrganizationSetting(sql.FieldEqualFold(FieldBillingPhone, v))
@@ -802,6 +872,16 @@ func BillingAddressHasSuffix(v string) predicate.OrganizationSetting {
 	return predicate.OrganizationSetting(sql.FieldHasSuffix(FieldBillingAddress, v))
 }
 
+// BillingAddressIsNil applies the IsNil predicate on the "billing_address" field.
+func BillingAddressIsNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldIsNull(FieldBillingAddress))
+}
+
+// BillingAddressNotNil applies the NotNil predicate on the "billing_address" field.
+func BillingAddressNotNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldNotNull(FieldBillingAddress))
+}
+
 // BillingAddressEqualFold applies the EqualFold predicate on the "billing_address" field.
 func BillingAddressEqualFold(v string) predicate.OrganizationSetting {
 	return predicate.OrganizationSetting(sql.FieldEqualFold(FieldBillingAddress, v))
@@ -865,6 +945,16 @@ func TaxIdentifierHasPrefix(v string) predicate.OrganizationSetting {
 // TaxIdentifierHasSuffix applies the HasSuffix predicate on the "tax_identifier" field.
 func TaxIdentifierHasSuffix(v string) predicate.OrganizationSetting {
 	return predicate.OrganizationSetting(sql.FieldHasSuffix(FieldTaxIdentifier, v))
+}
+
+// TaxIdentifierIsNil applies the IsNil predicate on the "tax_identifier" field.
+func TaxIdentifierIsNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldIsNull(FieldTaxIdentifier))
+}
+
+// TaxIdentifierNotNil applies the NotNil predicate on the "tax_identifier" field.
+func TaxIdentifierNotNil() predicate.OrganizationSetting {
+	return predicate.OrganizationSetting(sql.FieldNotNull(FieldTaxIdentifier))
 }
 
 // TaxIdentifierEqualFold applies the EqualFold predicate on the "tax_identifier" field.

@@ -109,20 +109,6 @@ var (
 	DefaultUpdatedAt func() time.Time
 	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
 	UpdateDefaultUpdatedAt func() time.Time
-	// DefaultSSOCert holds the default value on creation for the "sso_cert" field.
-	DefaultSSOCert string
-	// DefaultSSOEntrypoint holds the default value on creation for the "sso_entrypoint" field.
-	DefaultSSOEntrypoint string
-	// DefaultSSOIssuer holds the default value on creation for the "sso_issuer" field.
-	DefaultSSOIssuer string
-	// BillingContactValidator is a validator for the "billing_contact" field. It is called by the builders before save.
-	BillingContactValidator func(string) error
-	// BillingEmailValidator is a validator for the "billing_email" field. It is called by the builders before save.
-	BillingEmailValidator func(string) error
-	// BillingPhoneValidator is a validator for the "billing_phone" field. It is called by the builders before save.
-	BillingPhoneValidator func(string) error
-	// BillingAddressValidator is a validator for the "billing_address" field. It is called by the builders before save.
-	BillingAddressValidator func(string) error
 	// DefaultTags holds the default value on creation for the "tags" field.
 	DefaultTags []string
 	// DefaultID holds the default value on creation for the "id" field.

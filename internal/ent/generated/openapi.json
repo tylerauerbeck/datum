@@ -2796,16 +2796,7 @@
                 },
                 "required": [
                   "created_at",
-                  "updated_at",
-                  "domains",
-                  "sso_cert",
-                  "sso_entrypoint",
-                  "sso_issuer",
-                  "billing_contact",
-                  "billing_email",
-                  "billing_phone",
-                  "billing_address",
-                  "tax_identifier"
+                  "updated_at"
                 ]
               }
             }
@@ -8949,16 +8940,7 @@
         "required": [
           "id",
           "created_at",
-          "updated_at",
-          "domains",
-          "sso_cert",
-          "sso_entrypoint",
-          "sso_issuer",
-          "billing_contact",
-          "billing_email",
-          "billing_phone",
-          "billing_address",
-          "tax_identifier"
+          "updated_at"
         ]
       },
       "OrganizationSettingCreate": {
@@ -9021,16 +9003,7 @@
         "required": [
           "id",
           "created_at",
-          "updated_at",
-          "domains",
-          "sso_cert",
-          "sso_entrypoint",
-          "sso_issuer",
-          "billing_contact",
-          "billing_email",
-          "billing_phone",
-          "billing_address",
-          "tax_identifier"
+          "updated_at"
         ]
       },
       "OrganizationSettingList": {
@@ -9093,16 +9066,7 @@
         "required": [
           "id",
           "created_at",
-          "updated_at",
-          "domains",
-          "sso_cert",
-          "sso_entrypoint",
-          "sso_issuer",
-          "billing_contact",
-          "billing_email",
-          "billing_phone",
-          "billing_address",
-          "tax_identifier"
+          "updated_at"
         ]
       },
       "OrganizationSettingRead": {
@@ -9165,16 +9129,7 @@
         "required": [
           "id",
           "created_at",
-          "updated_at",
-          "domains",
-          "sso_cert",
-          "sso_entrypoint",
-          "sso_issuer",
-          "billing_contact",
-          "billing_email",
-          "billing_phone",
-          "billing_address",
-          "tax_identifier"
+          "updated_at"
         ]
       },
       "OrganizationSettingUpdate": {
@@ -9237,16 +9192,7 @@
         "required": [
           "id",
           "created_at",
-          "updated_at",
-          "domains",
-          "sso_cert",
-          "sso_entrypoint",
-          "sso_issuer",
-          "billing_contact",
-          "billing_email",
-          "billing_phone",
-          "billing_address",
-          "tax_identifier"
+          "updated_at"
         ]
       },
       "OrganizationSetting_OrganizationRead": {
@@ -9720,16 +9666,7 @@
         "required": [
           "id",
           "created_at",
-          "updated_at",
-          "domains",
-          "sso_cert",
-          "sso_entrypoint",
-          "sso_issuer",
-          "billing_contact",
-          "billing_email",
-          "billing_phone",
-          "billing_address",
-          "tax_identifier"
+          "updated_at"
         ]
       },
       "Organization_UsersList": {

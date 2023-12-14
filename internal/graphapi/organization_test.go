@@ -369,6 +369,12 @@ func TestMutation_CreateOrganization(t *testing.T) {
 				assert.Equal(t, tc.parentOrgID, parent.ID)
 			}
 
+			// Ensure org settings is not null
+			assert.NotNil(t, resp.CreateOrganization.Organization.Setting.ID)
+
+			// Ensure display name is not unknown
+			assert.NotEqual(t, "unknown", resp.CreateOrganization.Organization.DisplayName)
+
 			// cleanup org
 			(&OrganizationCleanup{OrgID: resp.CreateOrganization.Organization.ID}).MustDelete(reqCtx)
 		})
@@ -511,7 +517,7 @@ func TestMutation_UpdateOrganization(t *testing.T) {
 			expectedRes: datumclient.UpdateOrganization_UpdateOrganization_Organization{
 				ID:          org.ID,
 				Name:        nameUpdate,
-				DisplayName: "unknown", // this is the default if not set
+				DisplayName: org.DisplayName,
 				Description: &org.Description,
 			},
 		},
@@ -523,7 +529,7 @@ func TestMutation_UpdateOrganization(t *testing.T) {
 			expectedRes: datumclient.UpdateOrganization_UpdateOrganization_Organization{
 				ID:          org.ID,
 				Name:        nameUpdate, // this would have been updated on the prior test
-				DisplayName: "unknown",  // this is the default if not set
+				DisplayName: org.DisplayName,
 				Description: &descriptionUpdate,
 			},
 		},

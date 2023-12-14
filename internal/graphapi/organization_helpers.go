@@ -3,12 +3,37 @@ package graphapi
 import (
 	"context"
 	"errors"
+	"regexp"
+
+	"github.com/stoewer/go-strcase"
 
 	"github.com/datumforge/datum/internal/ent/generated"
 	"github.com/datumforge/datum/internal/ent/generated/privacy"
 )
 
+var nonAlphanumericRegex = regexp.MustCompile(`[^a-zA-Z0-9 ]+`)
+
 func (r *mutationResolver) createOrg(ctx context.Context, input generated.CreateOrganizationInput) (*OrganizationCreatePayload, error) {
+	// if this is empty generate a default org setting schema
+	if input.SettingID == nil {
+		// sets up default org settings using schema defaults
+		orgSettingID, err := r.defaultOrganizationSettings(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		// add the org setting ID to the input
+		input.SettingID = &orgSettingID
+	}
+
+	// default the display name to the name if not provided
+	if input.DisplayName == nil {
+		displayName := strcase.LowerCamelCase(input.Name)
+		displayName = nonAlphanumericRegex.ReplaceAllString(displayName, "")
+
+		input.DisplayName = &displayName
+	}
+
 	org, err := r.client.Organization.Create().SetInput(input).Save(ctx)
 	if err != nil {
 		if generated.IsValidationError(err) {
