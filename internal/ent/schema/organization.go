@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"strings"
-
 	"entgo.io/contrib/entgql"
 	"entgo.io/contrib/entoas"
 	"entgo.io/ent"
@@ -42,18 +40,9 @@ func (Organization) Fields() []ent.Field {
 		field.String("display_name").
 			Comment("The organization's displayed 'friendly' name").
 			MaxLen(nameMaxLen).
-			NotEmpty().
-			Default("unknown").
+			Default("").
 			Annotations(
 				entgql.OrderField("display_name"),
-			).
-			Validate(
-				func(s string) error {
-					if strings.Contains(s, " ") {
-						return ErrContainsSpaces
-					}
-					return nil
-				},
 			),
 		field.String("description").
 			Comment("An optional description of the organization").
@@ -134,16 +123,17 @@ func (Organization) Policy() ent.Policy {
 	}
 }
 
-// Hooks of the Organization
-func (Organization) Hooks() []ent.Hook {
-	return []ent.Hook{
-		hooks.HookOrganization(),
-	}
-}
-
 // Interceptors of the Organization
 func (Organization) Interceptors() []ent.Interceptor {
 	return []ent.Interceptor{
 		interceptors.InterceptorOrganization(),
+	}
+}
+
+// Hooks of the Organization
+func (Organization) Hooks() []ent.Hook {
+	return []ent.Hook{
+		hooks.HookOrganizationAuthz(),
+		hooks.HookOrganization(),
 	}
 }

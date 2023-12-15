@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"strings"
-
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
@@ -12,10 +10,11 @@ import (
 	"entgo.io/ent/schema/index"
 
 	"github.com/datumforge/datum/internal/ent/generated/privacy"
+	"github.com/datumforge/datum/internal/ent/hooks"
 	"github.com/datumforge/datum/internal/ent/mixin"
 )
 
-// Group holds the schema definition for the Group entity.
+// Group holds the schema definition for the Group entity
 type Group struct {
 	ent.Schema
 }
@@ -30,7 +29,7 @@ func (Group) Mixin() []ent.Mixin {
 	}
 }
 
-// Fields of the Group.
+// Fields of the Group
 func (Group) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").
@@ -47,23 +46,14 @@ func (Group) Fields() []ent.Field {
 		field.String("display_name").
 			Comment("The group's displayed 'friendly' name").
 			MaxLen(nameMaxLen).
-			NotEmpty().
-			Default("unknown").
+			Default("").
 			Annotations(
 				entgql.OrderField("display_name"),
-			).
-			Validate(
-				func(s string) error {
-					if strings.Contains(s, " ") {
-						return ErrContainsSpaces
-					}
-					return nil
-				},
 			),
 	}
 }
 
-// Edges of the Group.
+// Edges of the Group
 func (Group) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("setting", GroupSetting.Type).
@@ -100,9 +90,17 @@ func (Group) Annotations() []schema.Annotation {
 	}
 }
 
+// Policy of the group
 func (Group) Policy() ent.Policy {
 	return privacy.Policy{
 		Mutation: privacy.MutationPolicy{},
 		Query:    privacy.QueryPolicy{},
+	}
+}
+
+// Hooks of the Group
+func (Group) Hooks() []ent.Hook {
+	return []ent.Hook{
+		hooks.HookGroup(),
 	}
 }

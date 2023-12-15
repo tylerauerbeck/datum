@@ -1,7 +1,6 @@
 package schema
 
 import (
-	"context"
 	"net/mail"
 	"net/url"
 	"strings"
@@ -15,13 +14,9 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 
-	"github.com/datumforge/datum/internal/ent/generated"
-	"github.com/datumforge/datum/internal/ent/generated/hook"
 	"github.com/datumforge/datum/internal/ent/generated/privacy"
+	"github.com/datumforge/datum/internal/ent/hooks"
 	"github.com/datumforge/datum/internal/ent/mixin"
-	"github.com/datumforge/datum/internal/httpserve/middleware/auth"
-	"github.com/datumforge/datum/internal/passwd"
-	"github.com/datumforge/datum/internal/utils/gravatar"
 )
 
 const (
@@ -70,7 +65,7 @@ func (User) Fields() []ent.Field {
 			Comment("The user's displayed 'friendly' name").
 			MaxLen(nameMaxLen).
 			NotEmpty().
-			Default("unknown").
+			Default("").
 			Annotations(
 				entgql.OrderField("display_name"),
 			).
@@ -168,29 +163,6 @@ func (User) Policy() ent.Policy {
 
 func (User) Hooks() []ent.Hook {
 	return []ent.Hook{
-		hook.On(func(next ent.Mutator) ent.Mutator {
-			return hook.UserFunc(func(ctx context.Context, mutation *generated.UserMutation) (generated.Value, error) {
-				if password, ok := mutation.Password(); ok {
-					// validate password before its encrypted
-					if passwd.Strength(password) < passwd.Moderate {
-						return nil, auth.ErrPasswordTooWeak
-					}
-
-					hash, err := passwd.CreateDerivedKey(password)
-					if err != nil {
-						return nil, err
-					}
-
-					mutation.SetPassword(hash)
-				}
-
-				if email, ok := mutation.Email(); ok {
-					url := gravatar.New(email, nil)
-					mutation.SetAvatarRemoteURL(url)
-				}
-
-				return next.Mutate(ctx, mutation)
-			})
-		}, ent.OpCreate|ent.OpUpdateOne),
+		hooks.HookUser(),
 	}
 }
