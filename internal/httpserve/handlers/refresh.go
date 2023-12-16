@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"entgo.io/ent/dialect/sql"
 	echo "github.com/datumforge/echox"
 
 	"github.com/datumforge/datum/internal/httpserve/middleware/auth"
@@ -34,6 +35,24 @@ func (h *Handler) RefreshHandler(ctx echo.Context) error {
 		auth.Unauthorized(ctx) //nolint:errcheck
 		return err
 	}
+
+	// check user in the database, sub == claims subject and ensure only one record is returned
+	user, err := h.DBClient.User.Query().WithSetting().Where(func(s *sql.Selector) {
+		s.Where(sql.EQ("sub", claims.Subject))
+	}).Only(ctx.Request().Context())
+	if err != nil {
+		auth.Unauthorized(ctx) //nolint:errcheck
+		return auth.ErrNoAuthUser
+	}
+
+	// ensure the user is still active
+	if user.Edges.Setting.Status != "ACTIVE" {
+		auth.Unauthorized(ctx) //nolint:errcheck
+		return auth.ErrNoAuthUser
+	}
+
+	// UserID is not on the refresh token, so we need to set it now
+	claims.UserID = user.ID
 
 	accessToken, refreshToken, err := h.TM.CreateTokenPair(claims)
 	if err != nil {
