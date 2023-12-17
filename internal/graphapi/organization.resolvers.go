@@ -128,6 +128,10 @@ func (r *mutationResolver) DeleteOrganization(ctx context.Context, id string) (*
 		return nil, err
 	}
 
+	if err := generated.OrganizationEdgeCleanup(ctx, r.client, id); err != nil {
+		return nil, newCascadeDeleteError(err)
+	}
+
 	return &OrganizationDeletePayload{DeletedID: id}, nil
 }
 
