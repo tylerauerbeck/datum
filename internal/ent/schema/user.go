@@ -99,9 +99,10 @@ func (User) Fields() []ent.Field {
 		field.Time("last_seen").
 			Comment("the time the user was last seen").
 			UpdateDefault(time.Now).
-			Optional(),
+			Optional().
+			Nillable(),
 		field.String("password").
-			Comment("user bcrypt password hash").
+			Comment("user password hash").
 			Nillable().
 			Optional(),
 		field.String("sub").
@@ -126,10 +127,7 @@ func (User) Indexes() []ent.Index {
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("organizations", Organization.Type),
-		edge.To("sessions", Session.Type).
-			Annotations(entsql.Annotation{
-				// When a user is deleted, delete the sessions
-				OnDelete: entsql.Cascade}),
+		edge.To("sessions", Session.Type),
 		edge.From("groups", Group.Type).Ref("users"),
 		edge.To("personal_access_tokens", PersonalAccessToken.Type),
 		edge.To("setting", UserSetting.Type).
@@ -138,8 +136,6 @@ func (User) Edges() []ent.Edge {
 			Annotations(entsql.Annotation{
 				OnDelete: entsql.Cascade,
 			}),
-		edge.To("refresh_token", RefreshToken.Type),
-		edge.To("access_token", AccessToken.Type),
 	}
 }
 

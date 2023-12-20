@@ -103,9 +103,9 @@ func (patc *PersonalAccessTokenCreate) SetAbilities(s []string) *PersonalAccessT
 	return patc
 }
 
-// SetExpirationAt sets the "expiration_at" field.
-func (patc *PersonalAccessTokenCreate) SetExpirationAt(t time.Time) *PersonalAccessTokenCreate {
-	patc.mutation.SetExpirationAt(t)
+// SetExpiresAt sets the "expires_at" field.
+func (patc *PersonalAccessTokenCreate) SetExpiresAt(t time.Time) *PersonalAccessTokenCreate {
+	patc.mutation.SetExpiresAt(t)
 	return patc
 }
 
@@ -248,11 +248,8 @@ func (patc *PersonalAccessTokenCreate) check() error {
 	if _, ok := patc.mutation.Token(); !ok {
 		return &ValidationError{Name: "token", err: errors.New(`generated: missing required field "PersonalAccessToken.token"`)}
 	}
-	if _, ok := patc.mutation.ExpirationAt(); !ok {
-		return &ValidationError{Name: "expiration_at", err: errors.New(`generated: missing required field "PersonalAccessToken.expiration_at"`)}
-	}
-	if _, ok := patc.mutation.Description(); !ok {
-		return &ValidationError{Name: "description", err: errors.New(`generated: missing required field "PersonalAccessToken.description"`)}
+	if _, ok := patc.mutation.ExpiresAt(); !ok {
+		return &ValidationError{Name: "expires_at", err: errors.New(`generated: missing required field "PersonalAccessToken.expires_at"`)}
 	}
 	if _, ok := patc.mutation.OwnerID(); !ok {
 		return &ValidationError{Name: "owner", err: errors.New(`generated: missing required edge "PersonalAccessToken.owner"`)}
@@ -321,9 +318,9 @@ func (patc *PersonalAccessTokenCreate) createSpec() (*PersonalAccessToken, *sqlg
 		_spec.SetField(personalaccesstoken.FieldAbilities, field.TypeJSON, value)
 		_node.Abilities = value
 	}
-	if value, ok := patc.mutation.ExpirationAt(); ok {
-		_spec.SetField(personalaccesstoken.FieldExpirationAt, field.TypeTime, value)
-		_node.ExpirationAt = value
+	if value, ok := patc.mutation.ExpiresAt(); ok {
+		_spec.SetField(personalaccesstoken.FieldExpiresAt, field.TypeTime, value)
+		_node.ExpiresAt = &value
 	}
 	if value, ok := patc.mutation.Description(); ok {
 		_spec.SetField(personalaccesstoken.FieldDescription, field.TypeString, value)

@@ -10,110 +10,6 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/usersetting"
 )
 
-// CreateAccessTokenInput represents a mutation input for creating accesstokens.
-type CreateAccessTokenInput struct {
-	CreatedAt      *time.Time
-	UpdatedAt      *time.Time
-	CreatedBy      *string
-	UpdatedBy      *string
-	AccessToken    string
-	ExpiresAt      *time.Time
-	IssuedAt       *time.Time
-	LastUsedAt     *time.Time
-	OrganizationID string
-	OwnerID        string
-}
-
-// Mutate applies the CreateAccessTokenInput on the AccessTokenMutation builder.
-func (i *CreateAccessTokenInput) Mutate(m *AccessTokenMutation) {
-	if v := i.CreatedAt; v != nil {
-		m.SetCreatedAt(*v)
-	}
-	if v := i.UpdatedAt; v != nil {
-		m.SetUpdatedAt(*v)
-	}
-	if v := i.CreatedBy; v != nil {
-		m.SetCreatedBy(*v)
-	}
-	if v := i.UpdatedBy; v != nil {
-		m.SetUpdatedBy(*v)
-	}
-	m.SetAccessToken(i.AccessToken)
-	if v := i.ExpiresAt; v != nil {
-		m.SetExpiresAt(*v)
-	}
-	if v := i.IssuedAt; v != nil {
-		m.SetIssuedAt(*v)
-	}
-	if v := i.LastUsedAt; v != nil {
-		m.SetLastUsedAt(*v)
-	}
-	m.SetOrganizationID(i.OrganizationID)
-	m.SetOwnerID(i.OwnerID)
-}
-
-// SetInput applies the change-set in the CreateAccessTokenInput on the AccessTokenCreate builder.
-func (c *AccessTokenCreate) SetInput(i CreateAccessTokenInput) *AccessTokenCreate {
-	i.Mutate(c.Mutation())
-	return c
-}
-
-// UpdateAccessTokenInput represents a mutation input for updating accesstokens.
-type UpdateAccessTokenInput struct {
-	UpdatedAt       *time.Time
-	ClearUpdatedBy  bool
-	UpdatedBy       *string
-	ExpiresAt       *time.Time
-	IssuedAt        *time.Time
-	ClearLastUsedAt bool
-	LastUsedAt      *time.Time
-	OrganizationID  *string
-	OwnerID         *string
-}
-
-// Mutate applies the UpdateAccessTokenInput on the AccessTokenMutation builder.
-func (i *UpdateAccessTokenInput) Mutate(m *AccessTokenMutation) {
-	if v := i.UpdatedAt; v != nil {
-		m.SetUpdatedAt(*v)
-	}
-	if i.ClearUpdatedBy {
-		m.ClearUpdatedBy()
-	}
-	if v := i.UpdatedBy; v != nil {
-		m.SetUpdatedBy(*v)
-	}
-	if v := i.ExpiresAt; v != nil {
-		m.SetExpiresAt(*v)
-	}
-	if v := i.IssuedAt; v != nil {
-		m.SetIssuedAt(*v)
-	}
-	if i.ClearLastUsedAt {
-		m.ClearLastUsedAt()
-	}
-	if v := i.LastUsedAt; v != nil {
-		m.SetLastUsedAt(*v)
-	}
-	if v := i.OrganizationID; v != nil {
-		m.SetOrganizationID(*v)
-	}
-	if v := i.OwnerID; v != nil {
-		m.SetOwnerID(*v)
-	}
-}
-
-// SetInput applies the change-set in the UpdateAccessTokenInput on the AccessTokenUpdate builder.
-func (c *AccessTokenUpdate) SetInput(i UpdateAccessTokenInput) *AccessTokenUpdate {
-	i.Mutate(c.Mutation())
-	return c
-}
-
-// SetInput applies the change-set in the UpdateAccessTokenInput on the AccessTokenUpdateOne builder.
-func (c *AccessTokenUpdateOne) SetInput(i UpdateAccessTokenInput) *AccessTokenUpdateOne {
-	i.Mutate(c.Mutation())
-	return c
-}
-
 // CreateEntitlementInput represents a mutation input for creating entitlements.
 type CreateEntitlementInput struct {
 	CreatedAt              *time.Time
@@ -123,11 +19,8 @@ type CreateEntitlementInput struct {
 	Tier                   *entitlement.Tier
 	ExternalCustomerID     *string
 	ExternalSubscriptionID *string
+	Expires                *bool
 	ExpiresAt              *time.Time
-	UpgradedAt             *time.Time
-	UpgradedTier           *string
-	DowngradedAt           *time.Time
-	DowngradedTier         *string
 	Cancelled              *bool
 	OwnerID                *string
 }
@@ -155,20 +48,11 @@ func (i *CreateEntitlementInput) Mutate(m *EntitlementMutation) {
 	if v := i.ExternalSubscriptionID; v != nil {
 		m.SetExternalSubscriptionID(*v)
 	}
+	if v := i.Expires; v != nil {
+		m.SetExpires(*v)
+	}
 	if v := i.ExpiresAt; v != nil {
 		m.SetExpiresAt(*v)
-	}
-	if v := i.UpgradedAt; v != nil {
-		m.SetUpgradedAt(*v)
-	}
-	if v := i.UpgradedTier; v != nil {
-		m.SetUpgradedTier(*v)
-	}
-	if v := i.DowngradedAt; v != nil {
-		m.SetDowngradedAt(*v)
-	}
-	if v := i.DowngradedTier; v != nil {
-		m.SetDowngradedTier(*v)
 	}
 	if v := i.Cancelled; v != nil {
 		m.SetCancelled(*v)
@@ -194,16 +78,9 @@ type UpdateEntitlementInput struct {
 	ExternalCustomerID          *string
 	ClearExternalSubscriptionID bool
 	ExternalSubscriptionID      *string
+	Expires                     *bool
 	ClearExpiresAt              bool
 	ExpiresAt                   *time.Time
-	ClearUpgradedAt             bool
-	UpgradedAt                  *time.Time
-	ClearUpgradedTier           bool
-	UpgradedTier                *string
-	ClearDowngradedAt           bool
-	DowngradedAt                *time.Time
-	ClearDowngradedTier         bool
-	DowngradedTier              *string
 	Cancelled                   *bool
 	ClearOwner                  bool
 	OwnerID                     *string
@@ -235,35 +112,14 @@ func (i *UpdateEntitlementInput) Mutate(m *EntitlementMutation) {
 	if v := i.ExternalSubscriptionID; v != nil {
 		m.SetExternalSubscriptionID(*v)
 	}
+	if v := i.Expires; v != nil {
+		m.SetExpires(*v)
+	}
 	if i.ClearExpiresAt {
 		m.ClearExpiresAt()
 	}
 	if v := i.ExpiresAt; v != nil {
 		m.SetExpiresAt(*v)
-	}
-	if i.ClearUpgradedAt {
-		m.ClearUpgradedAt()
-	}
-	if v := i.UpgradedAt; v != nil {
-		m.SetUpgradedAt(*v)
-	}
-	if i.ClearUpgradedTier {
-		m.ClearUpgradedTier()
-	}
-	if v := i.UpgradedTier; v != nil {
-		m.SetUpgradedTier(*v)
-	}
-	if i.ClearDowngradedAt {
-		m.ClearDowngradedAt()
-	}
-	if v := i.DowngradedAt; v != nil {
-		m.SetDowngradedAt(*v)
-	}
-	if i.ClearDowngradedTier {
-		m.ClearDowngradedTier()
-	}
-	if v := i.DowngradedTier; v != nil {
-		m.SetDowngradedTier(*v)
 	}
 	if v := i.Cancelled; v != nil {
 		m.SetCancelled(*v)
@@ -290,17 +146,18 @@ func (c *EntitlementUpdateOne) SetInput(i UpdateEntitlementInput) *EntitlementUp
 
 // CreateGroupInput represents a mutation input for creating groups.
 type CreateGroupInput struct {
-	CreatedAt   *time.Time
-	UpdatedAt   *time.Time
-	CreatedBy   *string
-	UpdatedBy   *string
-	Name        string
-	Description *string
-	LogoURL     *string
-	DisplayName *string
-	SettingID   string
-	UserIDs     []string
-	OwnerID     string
+	CreatedAt       *time.Time
+	UpdatedAt       *time.Time
+	CreatedBy       *string
+	UpdatedBy       *string
+	Name            string
+	Description     *string
+	GravatarLogoURL *string
+	LogoURL         *string
+	DisplayName     *string
+	SettingID       string
+	UserIDs         []string
+	OwnerID         string
 }
 
 // Mutate applies the CreateGroupInput on the GroupMutation builder.
@@ -320,6 +177,9 @@ func (i *CreateGroupInput) Mutate(m *GroupMutation) {
 	m.SetName(i.Name)
 	if v := i.Description; v != nil {
 		m.SetDescription(*v)
+	}
+	if v := i.GravatarLogoURL; v != nil {
+		m.SetGravatarLogoURL(*v)
 	}
 	if v := i.LogoURL; v != nil {
 		m.SetLogoURL(*v)
@@ -342,20 +202,22 @@ func (c *GroupCreate) SetInput(i CreateGroupInput) *GroupCreate {
 
 // UpdateGroupInput represents a mutation input for updating groups.
 type UpdateGroupInput struct {
-	UpdatedAt        *time.Time
-	ClearUpdatedBy   bool
-	UpdatedBy        *string
-	Name             *string
-	ClearDescription bool
-	Description      *string
-	ClearLogoURL     bool
-	LogoURL          *string
-	DisplayName      *string
-	SettingID        *string
-	ClearUsers       bool
-	AddUserIDs       []string
-	RemoveUserIDs    []string
-	OwnerID          *string
+	UpdatedAt            *time.Time
+	ClearUpdatedBy       bool
+	UpdatedBy            *string
+	Name                 *string
+	ClearDescription     bool
+	Description          *string
+	ClearGravatarLogoURL bool
+	GravatarLogoURL      *string
+	ClearLogoURL         bool
+	LogoURL              *string
+	DisplayName          *string
+	SettingID            *string
+	ClearUsers           bool
+	AddUserIDs           []string
+	RemoveUserIDs        []string
+	OwnerID              *string
 }
 
 // Mutate applies the UpdateGroupInput on the GroupMutation builder.
@@ -377,6 +239,12 @@ func (i *UpdateGroupInput) Mutate(m *GroupMutation) {
 	}
 	if v := i.Description; v != nil {
 		m.SetDescription(*v)
+	}
+	if i.ClearGravatarLogoURL {
+		m.ClearGravatarLogoURL()
+	}
+	if v := i.GravatarLogoURL; v != nil {
+		m.SetGravatarLogoURL(*v)
 	}
 	if i.ClearLogoURL {
 		m.ClearLogoURL()
@@ -541,8 +409,8 @@ type CreateIntegrationInput struct {
 	CreatedBy   *string
 	UpdatedBy   *string
 	Name        string
-	Kind        string
 	Description *string
+	Kind        *string
 	SecretName  string
 	OwnerID     *string
 }
@@ -562,9 +430,11 @@ func (i *CreateIntegrationInput) Mutate(m *IntegrationMutation) {
 		m.SetUpdatedBy(*v)
 	}
 	m.SetName(i.Name)
-	m.SetKind(i.Kind)
 	if v := i.Description; v != nil {
 		m.SetDescription(*v)
+	}
+	if v := i.Kind; v != nil {
+		m.SetKind(*v)
 	}
 	m.SetSecretName(i.SecretName)
 	if v := i.OwnerID; v != nil {
@@ -586,6 +456,8 @@ type UpdateIntegrationInput struct {
 	Name             *string
 	ClearDescription bool
 	Description      *string
+	ClearKind        bool
+	Kind             *string
 	ClearOwner       bool
 	OwnerID          *string
 }
@@ -609,6 +481,12 @@ func (i *UpdateIntegrationInput) Mutate(m *IntegrationMutation) {
 	}
 	if v := i.Description; v != nil {
 		m.SetDescription(*v)
+	}
+	if i.ClearKind {
+		m.ClearKind()
+	}
+	if v := i.Kind; v != nil {
+		m.SetKind(*v)
 	}
 	if i.ClearOwner {
 		m.ClearOwner()
@@ -1284,17 +1162,17 @@ func (c *OrganizationSettingUpdateOne) SetInput(i UpdateOrganizationSettingInput
 
 // CreatePersonalAccessTokenInput represents a mutation input for creating personalaccesstokens.
 type CreatePersonalAccessTokenInput struct {
-	CreatedAt    *time.Time
-	UpdatedAt    *time.Time
-	CreatedBy    *string
-	UpdatedBy    *string
-	Name         string
-	Token        *string
-	Abilities    []string
-	ExpirationAt time.Time
-	Description  *string
-	LastUsedAt   *time.Time
-	OwnerID      string
+	CreatedAt   *time.Time
+	UpdatedAt   *time.Time
+	CreatedBy   *string
+	UpdatedBy   *string
+	Name        string
+	Token       *string
+	Abilities   []string
+	ExpiresAt   time.Time
+	Description *string
+	LastUsedAt  *time.Time
+	OwnerID     string
 }
 
 // Mutate applies the CreatePersonalAccessTokenInput on the PersonalAccessTokenMutation builder.
@@ -1318,7 +1196,7 @@ func (i *CreatePersonalAccessTokenInput) Mutate(m *PersonalAccessTokenMutation) 
 	if v := i.Abilities; v != nil {
 		m.SetAbilities(v)
 	}
-	m.SetExpirationAt(i.ExpirationAt)
+	m.SetExpiresAt(i.ExpiresAt)
 	if v := i.Description; v != nil {
 		m.SetDescription(*v)
 	}
@@ -1336,18 +1214,19 @@ func (c *PersonalAccessTokenCreate) SetInput(i CreatePersonalAccessTokenInput) *
 
 // UpdatePersonalAccessTokenInput represents a mutation input for updating personalaccesstokens.
 type UpdatePersonalAccessTokenInput struct {
-	UpdatedAt       *time.Time
-	ClearUpdatedBy  bool
-	UpdatedBy       *string
-	Name            *string
-	ClearAbilities  bool
-	Abilities       []string
-	AppendAbilities []string
-	ExpirationAt    *time.Time
-	Description     *string
-	ClearLastUsedAt bool
-	LastUsedAt      *time.Time
-	OwnerID         *string
+	UpdatedAt        *time.Time
+	ClearUpdatedBy   bool
+	UpdatedBy        *string
+	Name             *string
+	ClearAbilities   bool
+	Abilities        []string
+	AppendAbilities  []string
+	ExpiresAt        *time.Time
+	ClearDescription bool
+	Description      *string
+	ClearLastUsedAt  bool
+	LastUsedAt       *time.Time
+	OwnerID          *string
 }
 
 // Mutate applies the UpdatePersonalAccessTokenInput on the PersonalAccessTokenMutation builder.
@@ -1373,8 +1252,11 @@ func (i *UpdatePersonalAccessTokenInput) Mutate(m *PersonalAccessTokenMutation) 
 	if i.AppendAbilities != nil {
 		m.AppendAbilities(i.Abilities)
 	}
-	if v := i.ExpirationAt; v != nil {
-		m.SetExpirationAt(*v)
+	if v := i.ExpiresAt; v != nil {
+		m.SetExpiresAt(*v)
+	}
+	if i.ClearDescription {
+		m.ClearDescription()
 	}
 	if v := i.Description; v != nil {
 		m.SetDescription(*v)
@@ -1402,70 +1284,6 @@ func (c *PersonalAccessTokenUpdateOne) SetInput(i UpdatePersonalAccessTokenInput
 	return c
 }
 
-// CreateRefreshTokenInput represents a mutation input for creating refreshtokens.
-type CreateRefreshTokenInput struct {
-	RefreshToken   string
-	ExpiresAt      *time.Time
-	IssuedAt       *time.Time
-	OrganizationID string
-	UserID         string
-}
-
-// Mutate applies the CreateRefreshTokenInput on the RefreshTokenMutation builder.
-func (i *CreateRefreshTokenInput) Mutate(m *RefreshTokenMutation) {
-	m.SetRefreshToken(i.RefreshToken)
-	if v := i.ExpiresAt; v != nil {
-		m.SetExpiresAt(*v)
-	}
-	if v := i.IssuedAt; v != nil {
-		m.SetIssuedAt(*v)
-	}
-	m.SetOrganizationID(i.OrganizationID)
-	m.SetUserID(i.UserID)
-}
-
-// SetInput applies the change-set in the CreateRefreshTokenInput on the RefreshTokenCreate builder.
-func (c *RefreshTokenCreate) SetInput(i CreateRefreshTokenInput) *RefreshTokenCreate {
-	i.Mutate(c.Mutation())
-	return c
-}
-
-// UpdateRefreshTokenInput represents a mutation input for updating refreshtokens.
-type UpdateRefreshTokenInput struct {
-	ExpiresAt      *time.Time
-	IssuedAt       *time.Time
-	OrganizationID *string
-	UserID         *string
-}
-
-// Mutate applies the UpdateRefreshTokenInput on the RefreshTokenMutation builder.
-func (i *UpdateRefreshTokenInput) Mutate(m *RefreshTokenMutation) {
-	if v := i.ExpiresAt; v != nil {
-		m.SetExpiresAt(*v)
-	}
-	if v := i.IssuedAt; v != nil {
-		m.SetIssuedAt(*v)
-	}
-	if v := i.OrganizationID; v != nil {
-		m.SetOrganizationID(*v)
-	}
-	if v := i.UserID; v != nil {
-		m.SetUserID(*v)
-	}
-}
-
-// SetInput applies the change-set in the UpdateRefreshTokenInput on the RefreshTokenUpdate builder.
-func (c *RefreshTokenUpdate) SetInput(i UpdateRefreshTokenInput) *RefreshTokenUpdate {
-	i.Mutate(c.Mutation())
-	return c
-}
-
-// SetInput applies the change-set in the UpdateRefreshTokenInput on the RefreshTokenUpdateOne builder.
-func (c *RefreshTokenUpdateOne) SetInput(i UpdateRefreshTokenInput) *RefreshTokenUpdateOne {
-	i.Mutate(c.Mutation())
-	return c
-}
-
 // CreateSessionInput represents a mutation input for creating sessions.
 type CreateSessionInput struct {
 	CreatedAt      *time.Time
@@ -1473,8 +1291,8 @@ type CreateSessionInput struct {
 	CreatedBy      *string
 	UpdatedBy      *string
 	SessionToken   string
-	IssuedAt       *time.Time
-	ExpiresAt      *time.Time
+	IssuedAt       time.Time
+	ExpiresAt      time.Time
 	OrganizationID string
 	OwnerID        string
 }
@@ -1494,12 +1312,8 @@ func (i *CreateSessionInput) Mutate(m *SessionMutation) {
 		m.SetUpdatedBy(*v)
 	}
 	m.SetSessionToken(i.SessionToken)
-	if v := i.IssuedAt; v != nil {
-		m.SetIssuedAt(*v)
-	}
-	if v := i.ExpiresAt; v != nil {
-		m.SetExpiresAt(*v)
-	}
+	m.SetIssuedAt(i.IssuedAt)
+	m.SetExpiresAt(i.ExpiresAt)
 	m.SetOrganizationID(i.OrganizationID)
 	m.SetOwnerID(i.OwnerID)
 }
@@ -1516,7 +1330,6 @@ type UpdateSessionInput struct {
 	ClearUpdatedBy bool
 	UpdatedBy      *string
 	IssuedAt       *time.Time
-	ClearExpiresAt bool
 	ExpiresAt      *time.Time
 	OrganizationID *string
 	OwnerID        *string
@@ -1535,9 +1348,6 @@ func (i *UpdateSessionInput) Mutate(m *SessionMutation) {
 	}
 	if v := i.IssuedAt; v != nil {
 		m.SetIssuedAt(*v)
-	}
-	if i.ClearExpiresAt {
-		m.ClearExpiresAt()
 	}
 	if v := i.ExpiresAt; v != nil {
 		m.SetExpiresAt(*v)
@@ -1584,8 +1394,6 @@ type CreateUserInput struct {
 	GroupIDs               []string
 	PersonalAccessTokenIDs []string
 	SettingID              string
-	RefreshTokenIDs        []string
-	AccessTokenIDs         []string
 }
 
 // Mutate applies the CreateUserInput on the UserMutation builder.
@@ -1642,12 +1450,6 @@ func (i *CreateUserInput) Mutate(m *UserMutation) {
 		m.AddPersonalAccessTokenIDs(v...)
 	}
 	m.SetSettingID(i.SettingID)
-	if v := i.RefreshTokenIDs; len(v) > 0 {
-		m.AddRefreshTokenIDs(v...)
-	}
-	if v := i.AccessTokenIDs; len(v) > 0 {
-		m.AddAccessTokenIDs(v...)
-	}
 }
 
 // SetInput applies the change-set in the CreateUserInput on the UserCreate builder.
@@ -1691,12 +1493,6 @@ type UpdateUserInput struct {
 	AddPersonalAccessTokenIDs    []string
 	RemovePersonalAccessTokenIDs []string
 	SettingID                    *string
-	ClearRefreshToken            bool
-	AddRefreshTokenIDs           []string
-	RemoveRefreshTokenIDs        []string
-	ClearAccessToken             bool
-	AddAccessTokenIDs            []string
-	RemoveAccessTokenIDs         []string
 }
 
 // Mutate applies the UpdateUserInput on the UserMutation builder.
@@ -1799,24 +1595,6 @@ func (i *UpdateUserInput) Mutate(m *UserMutation) {
 	}
 	if v := i.SettingID; v != nil {
 		m.SetSettingID(*v)
-	}
-	if i.ClearRefreshToken {
-		m.ClearRefreshToken()
-	}
-	if v := i.AddRefreshTokenIDs; len(v) > 0 {
-		m.AddRefreshTokenIDs(v...)
-	}
-	if v := i.RemoveRefreshTokenIDs; len(v) > 0 {
-		m.RemoveRefreshTokenIDs(v...)
-	}
-	if i.ClearAccessToken {
-		m.ClearAccessToken()
-	}
-	if v := i.AddAccessTokenIDs; len(v) > 0 {
-		m.AddAccessTokenIDs(v...)
-	}
-	if v := i.RemoveAccessTokenIDs; len(v) > 0 {
-		m.RemoveAccessTokenIDs(v...)
 	}
 }
 

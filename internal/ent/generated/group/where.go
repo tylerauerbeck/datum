@@ -107,6 +107,11 @@ func Description(v string) predicate.Group {
 	return predicate.Group(sql.FieldEQ(FieldDescription, v))
 }
 
+// GravatarLogoURL applies equality check predicate on the "gravatar_logo_url" field. It's identical to GravatarLogoURLEQ.
+func GravatarLogoURL(v string) predicate.Group {
+	return predicate.Group(sql.FieldEQ(FieldGravatarLogoURL, v))
+}
+
 // LogoURL applies equality check predicate on the "logo_url" field. It's identical to LogoURLEQ.
 func LogoURL(v string) predicate.Group {
 	return predicate.Group(sql.FieldEQ(FieldLogoURL, v))
@@ -610,6 +615,81 @@ func DescriptionEqualFold(v string) predicate.Group {
 // DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
 func DescriptionContainsFold(v string) predicate.Group {
 	return predicate.Group(sql.FieldContainsFold(FieldDescription, v))
+}
+
+// GravatarLogoURLEQ applies the EQ predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLEQ(v string) predicate.Group {
+	return predicate.Group(sql.FieldEQ(FieldGravatarLogoURL, v))
+}
+
+// GravatarLogoURLNEQ applies the NEQ predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLNEQ(v string) predicate.Group {
+	return predicate.Group(sql.FieldNEQ(FieldGravatarLogoURL, v))
+}
+
+// GravatarLogoURLIn applies the In predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLIn(vs ...string) predicate.Group {
+	return predicate.Group(sql.FieldIn(FieldGravatarLogoURL, vs...))
+}
+
+// GravatarLogoURLNotIn applies the NotIn predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLNotIn(vs ...string) predicate.Group {
+	return predicate.Group(sql.FieldNotIn(FieldGravatarLogoURL, vs...))
+}
+
+// GravatarLogoURLGT applies the GT predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLGT(v string) predicate.Group {
+	return predicate.Group(sql.FieldGT(FieldGravatarLogoURL, v))
+}
+
+// GravatarLogoURLGTE applies the GTE predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLGTE(v string) predicate.Group {
+	return predicate.Group(sql.FieldGTE(FieldGravatarLogoURL, v))
+}
+
+// GravatarLogoURLLT applies the LT predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLLT(v string) predicate.Group {
+	return predicate.Group(sql.FieldLT(FieldGravatarLogoURL, v))
+}
+
+// GravatarLogoURLLTE applies the LTE predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLLTE(v string) predicate.Group {
+	return predicate.Group(sql.FieldLTE(FieldGravatarLogoURL, v))
+}
+
+// GravatarLogoURLContains applies the Contains predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLContains(v string) predicate.Group {
+	return predicate.Group(sql.FieldContains(FieldGravatarLogoURL, v))
+}
+
+// GravatarLogoURLHasPrefix applies the HasPrefix predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLHasPrefix(v string) predicate.Group {
+	return predicate.Group(sql.FieldHasPrefix(FieldGravatarLogoURL, v))
+}
+
+// GravatarLogoURLHasSuffix applies the HasSuffix predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLHasSuffix(v string) predicate.Group {
+	return predicate.Group(sql.FieldHasSuffix(FieldGravatarLogoURL, v))
+}
+
+// GravatarLogoURLIsNil applies the IsNil predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLIsNil() predicate.Group {
+	return predicate.Group(sql.FieldIsNull(FieldGravatarLogoURL))
+}
+
+// GravatarLogoURLNotNil applies the NotNil predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLNotNil() predicate.Group {
+	return predicate.Group(sql.FieldNotNull(FieldGravatarLogoURL))
+}
+
+// GravatarLogoURLEqualFold applies the EqualFold predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLEqualFold(v string) predicate.Group {
+	return predicate.Group(sql.FieldEqualFold(FieldGravatarLogoURL, v))
+}
+
+// GravatarLogoURLContainsFold applies the ContainsFold predicate on the "gravatar_logo_url" field.
+func GravatarLogoURLContainsFold(v string) predicate.Group {
+	return predicate.Group(sql.FieldContainsFold(FieldGravatarLogoURL, v))
 }
 
 // LogoURLEQ applies the EQ predicate on the "logo_url" field.

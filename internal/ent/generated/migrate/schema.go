@@ -9,41 +9,6 @@ import (
 )
 
 var (
-	// AccessTokensColumns holds the columns for the "access_tokens" table.
-	AccessTokensColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString},
-		{Name: "created_at", Type: field.TypeTime},
-		{Name: "updated_at", Type: field.TypeTime},
-		{Name: "created_by", Type: field.TypeString, Nullable: true},
-		{Name: "updated_by", Type: field.TypeString, Nullable: true},
-		{Name: "access_token", Type: field.TypeString, Unique: true},
-		{Name: "expires_at", Type: field.TypeTime},
-		{Name: "issued_at", Type: field.TypeTime},
-		{Name: "last_used_at", Type: field.TypeTime, Nullable: true},
-		{Name: "organization_id", Type: field.TypeString},
-		{Name: "user_id", Type: field.TypeString},
-	}
-	// AccessTokensTable holds the schema information for the "access_tokens" table.
-	AccessTokensTable = &schema.Table{
-		Name:       "access_tokens",
-		Columns:    AccessTokensColumns,
-		PrimaryKey: []*schema.Column{AccessTokensColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:     "access_tokens_users_access_token",
-				Columns:    []*schema.Column{AccessTokensColumns[10]},
-				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.NoAction,
-			},
-		},
-		Indexes: []*schema.Index{
-			{
-				Name:    "accesstoken_access_token",
-				Unique:  false,
-				Columns: []*schema.Column{AccessTokensColumns[5]},
-			},
-		},
-	}
 	// EntitlementsColumns holds the columns for the "entitlements" table.
 	EntitlementsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
@@ -51,14 +16,13 @@ var (
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "created_by", Type: field.TypeString, Nullable: true},
 		{Name: "updated_by", Type: field.TypeString, Nullable: true},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "deleted_by", Type: field.TypeString, Nullable: true},
 		{Name: "tier", Type: field.TypeEnum, Enums: []string{"free", "pro", "enterprise"}, Default: "free"},
 		{Name: "external_customer_id", Type: field.TypeString, Nullable: true},
 		{Name: "external_subscription_id", Type: field.TypeString, Nullable: true},
+		{Name: "expires", Type: field.TypeBool, Default: false},
 		{Name: "expires_at", Type: field.TypeTime, Nullable: true},
-		{Name: "upgraded_at", Type: field.TypeTime, Nullable: true},
-		{Name: "upgraded_tier", Type: field.TypeString, Nullable: true},
-		{Name: "downgraded_at", Type: field.TypeTime, Nullable: true},
-		{Name: "downgraded_tier", Type: field.TypeString, Nullable: true},
 		{Name: "cancelled", Type: field.TypeBool, Default: false},
 		{Name: "organization_entitlements", Type: field.TypeString, Nullable: true},
 	}
@@ -70,7 +34,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "entitlements_organizations_entitlements",
-				Columns:    []*schema.Column{EntitlementsColumns[14]},
+				Columns:    []*schema.Column{EntitlementsColumns[13]},
 				RefColumns: []*schema.Column{OrganizationsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -87,6 +51,7 @@ var (
 		{Name: "deleted_by", Type: field.TypeString, Nullable: true},
 		{Name: "name", Type: field.TypeString},
 		{Name: "description", Type: field.TypeString, Nullable: true},
+		{Name: "gravatar_logo_url", Type: field.TypeString, Nullable: true},
 		{Name: "logo_url", Type: field.TypeString, Nullable: true},
 		{Name: "display_name", Type: field.TypeString, Size: 64, Default: ""},
 		{Name: "organization_groups", Type: field.TypeString},
@@ -99,7 +64,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "groups_organizations_groups",
-				Columns:    []*schema.Column{GroupsColumns[11]},
+				Columns:    []*schema.Column{GroupsColumns[12]},
 				RefColumns: []*schema.Column{OrganizationsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -108,7 +73,7 @@ var (
 			{
 				Name:    "group_name_organization_groups",
 				Unique:  true,
-				Columns: []*schema.Column{GroupsColumns[7], GroupsColumns[11]},
+				Columns: []*schema.Column{GroupsColumns[7], GroupsColumns[12]},
 				Annotation: &entsql.IndexAnnotation{
 					Where: "deleted_at is NULL",
 				},
@@ -122,8 +87,10 @@ var (
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "created_by", Type: field.TypeString, Nullable: true},
 		{Name: "updated_by", Type: field.TypeString, Nullable: true},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "deleted_by", Type: field.TypeString, Nullable: true},
 		{Name: "visibility", Type: field.TypeEnum, Enums: []string{"PUBLIC", "PRIVATE"}, Default: "PUBLIC"},
-		{Name: "join_policy", Type: field.TypeEnum, Enums: []string{"OPEN", "INVITE_ONLY", "APPLICATION_ONLY", "INVITE_OR_APPLICATION"}, Default: "OPEN"},
+		{Name: "join_policy", Type: field.TypeEnum, Enums: []string{"OPEN", "INVITE_ONLY", "APPLICATION_ONLY", "INVITE_OR_APPLICATION"}, Default: "INVITE_OR_APPLICATION"},
 		{Name: "tags", Type: field.TypeJSON},
 		{Name: "sync_to_slack", Type: field.TypeBool, Default: false},
 		{Name: "sync_to_github", Type: field.TypeBool, Default: false},
@@ -137,9 +104,9 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "group_settings_groups_setting",
-				Columns:    []*schema.Column{GroupSettingsColumns[10]},
+				Columns:    []*schema.Column{GroupSettingsColumns[12]},
 				RefColumns: []*schema.Column{GroupsColumns[0]},
-				OnDelete:   schema.Cascade,
+				OnDelete:   schema.SetNull,
 			},
 		},
 	}
@@ -150,9 +117,11 @@ var (
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "created_by", Type: field.TypeString, Nullable: true},
 		{Name: "updated_by", Type: field.TypeString, Nullable: true},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "deleted_by", Type: field.TypeString, Nullable: true},
 		{Name: "name", Type: field.TypeString},
-		{Name: "kind", Type: field.TypeString},
 		{Name: "description", Type: field.TypeString, Nullable: true},
+		{Name: "kind", Type: field.TypeString, Nullable: true},
 		{Name: "secret_name", Type: field.TypeString},
 		{Name: "organization_integrations", Type: field.TypeString, Nullable: true},
 	}
@@ -164,7 +133,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "integrations_organizations_integrations",
-				Columns:    []*schema.Column{IntegrationsColumns[9]},
+				Columns:    []*schema.Column{IntegrationsColumns[11]},
 				RefColumns: []*schema.Column{OrganizationsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -177,6 +146,8 @@ var (
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "created_by", Type: field.TypeString, Nullable: true},
 		{Name: "updated_by", Type: field.TypeString, Nullable: true},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "deleted_by", Type: field.TypeString, Nullable: true},
 		{Name: "name", Type: field.TypeString},
 		{Name: "client_id", Type: field.TypeString},
 		{Name: "client_secret", Type: field.TypeString},
@@ -196,7 +167,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "oauth_providers_organizations_oauthprovider",
-				Columns:    []*schema.Column{OauthProvidersColumns[14]},
+				Columns:    []*schema.Column{OauthProvidersColumns[16]},
 				RefColumns: []*schema.Column{OrganizationsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -269,6 +240,8 @@ var (
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "created_by", Type: field.TypeString, Nullable: true},
 		{Name: "updated_by", Type: field.TypeString, Nullable: true},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "deleted_by", Type: field.TypeString, Nullable: true},
 		{Name: "domains", Type: field.TypeJSON, Nullable: true},
 		{Name: "sso_cert", Type: field.TypeString, Nullable: true, Size: 2147483647},
 		{Name: "sso_entrypoint", Type: field.TypeString, Nullable: true},
@@ -289,7 +262,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "organization_settings_organizations_setting",
-				Columns:    []*schema.Column{OrganizationSettingsColumns[15]},
+				Columns:    []*schema.Column{OrganizationSettingsColumns[17]},
 				RefColumns: []*schema.Column{OrganizationsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -305,8 +278,8 @@ var (
 		{Name: "name", Type: field.TypeString},
 		{Name: "token", Type: field.TypeString, Unique: true},
 		{Name: "abilities", Type: field.TypeJSON, Nullable: true},
-		{Name: "expiration_at", Type: field.TypeTime},
-		{Name: "description", Type: field.TypeString, Default: ""},
+		{Name: "expires_at", Type: field.TypeTime},
+		{Name: "description", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "last_used_at", Type: field.TypeTime, Nullable: true},
 		{Name: "user_personal_access_tokens", Type: field.TypeString},
 	}
@@ -331,30 +304,6 @@ var (
 			},
 		},
 	}
-	// RefreshTokensColumns holds the columns for the "refresh_tokens" table.
-	RefreshTokensColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString},
-		{Name: "refresh_token", Type: field.TypeString, Unique: true},
-		{Name: "expires_at", Type: field.TypeTime},
-		{Name: "issued_at", Type: field.TypeTime},
-		{Name: "organization_id", Type: field.TypeString},
-		{Name: "user_id", Type: field.TypeString},
-		{Name: "user_refresh_token", Type: field.TypeString, Nullable: true},
-	}
-	// RefreshTokensTable holds the schema information for the "refresh_tokens" table.
-	RefreshTokensTable = &schema.Table{
-		Name:       "refresh_tokens",
-		Columns:    RefreshTokensColumns,
-		PrimaryKey: []*schema.Column{RefreshTokensColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:     "refresh_tokens_users_refresh_token",
-				Columns:    []*schema.Column{RefreshTokensColumns[6]},
-				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-		},
-	}
 	// SessionsColumns holds the columns for the "sessions" table.
 	SessionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
@@ -364,7 +313,7 @@ var (
 		{Name: "updated_by", Type: field.TypeString, Nullable: true},
 		{Name: "session_token", Type: field.TypeString, Unique: true},
 		{Name: "issued_at", Type: field.TypeTime},
-		{Name: "expires_at", Type: field.TypeTime, Nullable: true},
+		{Name: "expires_at", Type: field.TypeTime},
 		{Name: "organization_id", Type: field.TypeString},
 		{Name: "user_id", Type: field.TypeString},
 	}
@@ -378,7 +327,7 @@ var (
 				Symbol:     "sessions_users_sessions",
 				Columns:    []*schema.Column{SessionsColumns[9]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.Cascade,
+				OnDelete:   schema.NoAction,
 			},
 		},
 		Indexes: []*schema.Index{
@@ -430,6 +379,8 @@ var (
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "created_by", Type: field.TypeString, Nullable: true},
 		{Name: "updated_by", Type: field.TypeString, Nullable: true},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "deleted_by", Type: field.TypeString, Nullable: true},
 		{Name: "locked", Type: field.TypeBool, Default: false},
 		{Name: "silenced_at", Type: field.TypeTime, Nullable: true},
 		{Name: "suspended_at", Type: field.TypeTime, Nullable: true},
@@ -449,7 +400,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "user_settings_users_setting",
-				Columns:    []*schema.Column{UserSettingsColumns[14]},
+				Columns:    []*schema.Column{UserSettingsColumns[16]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
@@ -507,7 +458,6 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		AccessTokensTable,
 		EntitlementsTable,
 		GroupsTable,
 		GroupSettingsTable,
@@ -517,7 +467,6 @@ var (
 		OrganizationsTable,
 		OrganizationSettingsTable,
 		PersonalAccessTokensTable,
-		RefreshTokensTable,
 		SessionsTable,
 		UsersTable,
 		UserSettingsTable,
@@ -527,7 +476,6 @@ var (
 )
 
 func init() {
-	AccessTokensTable.ForeignKeys[0].RefTable = UsersTable
 	EntitlementsTable.ForeignKeys[0].RefTable = OrganizationsTable
 	GroupsTable.ForeignKeys[0].RefTable = OrganizationsTable
 	GroupSettingsTable.ForeignKeys[0].RefTable = GroupsTable
@@ -536,7 +484,6 @@ func init() {
 	OrganizationsTable.ForeignKeys[0].RefTable = OrganizationsTable
 	OrganizationSettingsTable.ForeignKeys[0].RefTable = OrganizationsTable
 	PersonalAccessTokensTable.ForeignKeys[0].RefTable = UsersTable
-	RefreshTokensTable.ForeignKeys[0].RefTable = UsersTable
 	SessionsTable.ForeignKeys[0].RefTable = UsersTable
 	UserSettingsTable.ForeignKeys[0].RefTable = UsersTable
 	GroupUsersTable.ForeignKeys[0].RefTable = GroupsTable

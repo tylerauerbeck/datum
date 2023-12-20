@@ -133,6 +133,26 @@ func (gu *GroupUpdate) ClearDescription() *GroupUpdate {
 	return gu
 }
 
+// SetGravatarLogoURL sets the "gravatar_logo_url" field.
+func (gu *GroupUpdate) SetGravatarLogoURL(s string) *GroupUpdate {
+	gu.mutation.SetGravatarLogoURL(s)
+	return gu
+}
+
+// SetNillableGravatarLogoURL sets the "gravatar_logo_url" field if the given value is not nil.
+func (gu *GroupUpdate) SetNillableGravatarLogoURL(s *string) *GroupUpdate {
+	if s != nil {
+		gu.SetGravatarLogoURL(*s)
+	}
+	return gu
+}
+
+// ClearGravatarLogoURL clears the value of the "gravatar_logo_url" field.
+func (gu *GroupUpdate) ClearGravatarLogoURL() *GroupUpdate {
+	gu.mutation.ClearGravatarLogoURL()
+	return gu
+}
+
 // SetLogoURL sets the "logo_url" field.
 func (gu *GroupUpdate) SetLogoURL(s string) *GroupUpdate {
 	gu.mutation.SetLogoURL(s)
@@ -349,6 +369,12 @@ func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if gu.mutation.DescriptionCleared() {
 		_spec.ClearField(group.FieldDescription, field.TypeString)
+	}
+	if value, ok := gu.mutation.GravatarLogoURL(); ok {
+		_spec.SetField(group.FieldGravatarLogoURL, field.TypeString, value)
+	}
+	if gu.mutation.GravatarLogoURLCleared() {
+		_spec.ClearField(group.FieldGravatarLogoURL, field.TypeString)
 	}
 	if value, ok := gu.mutation.LogoURL(); ok {
 		_spec.SetField(group.FieldLogoURL, field.TypeString, value)
@@ -588,6 +614,26 @@ func (guo *GroupUpdateOne) SetNillableDescription(s *string) *GroupUpdateOne {
 // ClearDescription clears the value of the "description" field.
 func (guo *GroupUpdateOne) ClearDescription() *GroupUpdateOne {
 	guo.mutation.ClearDescription()
+	return guo
+}
+
+// SetGravatarLogoURL sets the "gravatar_logo_url" field.
+func (guo *GroupUpdateOne) SetGravatarLogoURL(s string) *GroupUpdateOne {
+	guo.mutation.SetGravatarLogoURL(s)
+	return guo
+}
+
+// SetNillableGravatarLogoURL sets the "gravatar_logo_url" field if the given value is not nil.
+func (guo *GroupUpdateOne) SetNillableGravatarLogoURL(s *string) *GroupUpdateOne {
+	if s != nil {
+		guo.SetGravatarLogoURL(*s)
+	}
+	return guo
+}
+
+// ClearGravatarLogoURL clears the value of the "gravatar_logo_url" field.
+func (guo *GroupUpdateOne) ClearGravatarLogoURL() *GroupUpdateOne {
+	guo.mutation.ClearGravatarLogoURL()
 	return guo
 }
 
@@ -837,6 +883,12 @@ func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error
 	}
 	if guo.mutation.DescriptionCleared() {
 		_spec.ClearField(group.FieldDescription, field.TypeString)
+	}
+	if value, ok := guo.mutation.GravatarLogoURL(); ok {
+		_spec.SetField(group.FieldGravatarLogoURL, field.TypeString, value)
+	}
+	if guo.mutation.GravatarLogoURLCleared() {
+		_spec.ClearField(group.FieldGravatarLogoURL, field.TypeString)
 	}
 	if value, ok := guo.mutation.LogoURL(); ok {
 		_spec.SetField(group.FieldLogoURL, field.TypeString, value)

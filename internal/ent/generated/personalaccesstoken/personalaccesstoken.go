@@ -29,8 +29,8 @@ const (
 	FieldToken = "token"
 	// FieldAbilities holds the string denoting the abilities field in the database.
 	FieldAbilities = "abilities"
-	// FieldExpirationAt holds the string denoting the expiration_at field in the database.
-	FieldExpirationAt = "expiration_at"
+	// FieldExpiresAt holds the string denoting the expires_at field in the database.
+	FieldExpiresAt = "expires_at"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
 	// FieldLastUsedAt holds the string denoting the last_used_at field in the database.
@@ -58,7 +58,7 @@ var Columns = []string{
 	FieldName,
 	FieldToken,
 	FieldAbilities,
-	FieldExpirationAt,
+	FieldExpiresAt,
 	FieldDescription,
 	FieldLastUsedAt,
 }
@@ -90,7 +90,7 @@ func ValidColumn(column string) bool {
 //
 //	import _ "github.com/datumforge/datum/internal/ent/generated/runtime"
 var (
-	Hooks [1]ent.Hook
+	Hooks [2]ent.Hook
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
@@ -145,9 +145,9 @@ func ByToken(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldToken, opts...).ToFunc()
 }
 
-// ByExpirationAt orders the results by the expiration_at field.
-func ByExpirationAt(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldExpirationAt, opts...).ToFunc()
+// ByExpiresAt orders the results by the expires_at field.
+func ByExpiresAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldExpiresAt, opts...).ToFunc()
 }
 
 // ByDescription orders the results by the description field.

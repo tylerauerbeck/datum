@@ -10,7 +10,6 @@ import (
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/datumforge/datum/internal/ent/generated/accesstoken"
 	"github.com/datumforge/datum/internal/ent/generated/entitlement"
 	"github.com/datumforge/datum/internal/ent/generated/group"
 	"github.com/datumforge/datum/internal/ent/generated/groupsetting"
@@ -20,132 +19,10 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/organization"
 	"github.com/datumforge/datum/internal/ent/generated/organizationsetting"
 	"github.com/datumforge/datum/internal/ent/generated/personalaccesstoken"
-	"github.com/datumforge/datum/internal/ent/generated/refreshtoken"
 	"github.com/datumforge/datum/internal/ent/generated/session"
 	"github.com/datumforge/datum/internal/ent/generated/user"
 	"github.com/datumforge/datum/internal/ent/generated/usersetting"
 )
-
-// CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
-func (at *AccessTokenQuery) CollectFields(ctx context.Context, satisfies ...string) (*AccessTokenQuery, error) {
-	fc := graphql.GetFieldContext(ctx)
-	if fc == nil {
-		return at, nil
-	}
-	if err := at.collectField(ctx, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
-		return nil, err
-	}
-	return at, nil
-}
-
-func (at *AccessTokenQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
-	path = append([]string(nil), path...)
-	var (
-		unknownSeen    bool
-		fieldSeen      = make(map[string]struct{}, len(accesstoken.Columns))
-		selectedFields = []string{accesstoken.FieldID}
-	)
-	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
-		switch field.Name {
-		case "owner":
-			var (
-				alias = field.Alias
-				path  = append(path, alias)
-				query = (&UserClient{config: at.config}).Query()
-			)
-			if err := query.collectField(ctx, opCtx, field, path, satisfies...); err != nil {
-				return err
-			}
-			at.withOwner = query
-			if _, ok := fieldSeen[accesstoken.FieldUserID]; !ok {
-				selectedFields = append(selectedFields, accesstoken.FieldUserID)
-				fieldSeen[accesstoken.FieldUserID] = struct{}{}
-			}
-		case "createdAt":
-			if _, ok := fieldSeen[accesstoken.FieldCreatedAt]; !ok {
-				selectedFields = append(selectedFields, accesstoken.FieldCreatedAt)
-				fieldSeen[accesstoken.FieldCreatedAt] = struct{}{}
-			}
-		case "updatedAt":
-			if _, ok := fieldSeen[accesstoken.FieldUpdatedAt]; !ok {
-				selectedFields = append(selectedFields, accesstoken.FieldUpdatedAt)
-				fieldSeen[accesstoken.FieldUpdatedAt] = struct{}{}
-			}
-		case "createdBy":
-			if _, ok := fieldSeen[accesstoken.FieldCreatedBy]; !ok {
-				selectedFields = append(selectedFields, accesstoken.FieldCreatedBy)
-				fieldSeen[accesstoken.FieldCreatedBy] = struct{}{}
-			}
-		case "updatedBy":
-			if _, ok := fieldSeen[accesstoken.FieldUpdatedBy]; !ok {
-				selectedFields = append(selectedFields, accesstoken.FieldUpdatedBy)
-				fieldSeen[accesstoken.FieldUpdatedBy] = struct{}{}
-			}
-		case "expiresAt":
-			if _, ok := fieldSeen[accesstoken.FieldExpiresAt]; !ok {
-				selectedFields = append(selectedFields, accesstoken.FieldExpiresAt)
-				fieldSeen[accesstoken.FieldExpiresAt] = struct{}{}
-			}
-		case "issuedAt":
-			if _, ok := fieldSeen[accesstoken.FieldIssuedAt]; !ok {
-				selectedFields = append(selectedFields, accesstoken.FieldIssuedAt)
-				fieldSeen[accesstoken.FieldIssuedAt] = struct{}{}
-			}
-		case "lastUsedAt":
-			if _, ok := fieldSeen[accesstoken.FieldLastUsedAt]; !ok {
-				selectedFields = append(selectedFields, accesstoken.FieldLastUsedAt)
-				fieldSeen[accesstoken.FieldLastUsedAt] = struct{}{}
-			}
-		case "organizationID":
-			if _, ok := fieldSeen[accesstoken.FieldOrganizationID]; !ok {
-				selectedFields = append(selectedFields, accesstoken.FieldOrganizationID)
-				fieldSeen[accesstoken.FieldOrganizationID] = struct{}{}
-			}
-		case "userID":
-			if _, ok := fieldSeen[accesstoken.FieldUserID]; !ok {
-				selectedFields = append(selectedFields, accesstoken.FieldUserID)
-				fieldSeen[accesstoken.FieldUserID] = struct{}{}
-			}
-		case "id":
-		case "__typename":
-		default:
-			unknownSeen = true
-		}
-	}
-	if !unknownSeen {
-		at.Select(selectedFields...)
-	}
-	return nil
-}
-
-type accesstokenPaginateArgs struct {
-	first, last   *int
-	after, before *Cursor
-	opts          []AccessTokenPaginateOption
-}
-
-func newAccessTokenPaginateArgs(rv map[string]any) *accesstokenPaginateArgs {
-	args := &accesstokenPaginateArgs{}
-	if rv == nil {
-		return args
-	}
-	if v := rv[firstField]; v != nil {
-		args.first = v.(*int)
-	}
-	if v := rv[lastField]; v != nil {
-		args.last = v.(*int)
-	}
-	if v := rv[afterField]; v != nil {
-		args.after = v.(*Cursor)
-	}
-	if v := rv[beforeField]; v != nil {
-		args.before = v.(*Cursor)
-	}
-	if v, ok := rv[whereField].(*AccessTokenWhereInput); ok {
-		args.opts = append(args.opts, WithAccessTokenFilter(v.Filter))
-	}
-	return args
-}
 
 // CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
 func (e *EntitlementQuery) CollectFields(ctx context.Context, satisfies ...string) (*EntitlementQuery, error) {
@@ -198,6 +75,16 @@ func (e *EntitlementQuery) collectField(ctx context.Context, opCtx *graphql.Oper
 				selectedFields = append(selectedFields, entitlement.FieldUpdatedBy)
 				fieldSeen[entitlement.FieldUpdatedBy] = struct{}{}
 			}
+		case "deletedAt":
+			if _, ok := fieldSeen[entitlement.FieldDeletedAt]; !ok {
+				selectedFields = append(selectedFields, entitlement.FieldDeletedAt)
+				fieldSeen[entitlement.FieldDeletedAt] = struct{}{}
+			}
+		case "deletedBy":
+			if _, ok := fieldSeen[entitlement.FieldDeletedBy]; !ok {
+				selectedFields = append(selectedFields, entitlement.FieldDeletedBy)
+				fieldSeen[entitlement.FieldDeletedBy] = struct{}{}
+			}
 		case "tier":
 			if _, ok := fieldSeen[entitlement.FieldTier]; !ok {
 				selectedFields = append(selectedFields, entitlement.FieldTier)
@@ -213,30 +100,15 @@ func (e *EntitlementQuery) collectField(ctx context.Context, opCtx *graphql.Oper
 				selectedFields = append(selectedFields, entitlement.FieldExternalSubscriptionID)
 				fieldSeen[entitlement.FieldExternalSubscriptionID] = struct{}{}
 			}
+		case "expires":
+			if _, ok := fieldSeen[entitlement.FieldExpires]; !ok {
+				selectedFields = append(selectedFields, entitlement.FieldExpires)
+				fieldSeen[entitlement.FieldExpires] = struct{}{}
+			}
 		case "expiresAt":
 			if _, ok := fieldSeen[entitlement.FieldExpiresAt]; !ok {
 				selectedFields = append(selectedFields, entitlement.FieldExpiresAt)
 				fieldSeen[entitlement.FieldExpiresAt] = struct{}{}
-			}
-		case "upgradedAt":
-			if _, ok := fieldSeen[entitlement.FieldUpgradedAt]; !ok {
-				selectedFields = append(selectedFields, entitlement.FieldUpgradedAt)
-				fieldSeen[entitlement.FieldUpgradedAt] = struct{}{}
-			}
-		case "upgradedTier":
-			if _, ok := fieldSeen[entitlement.FieldUpgradedTier]; !ok {
-				selectedFields = append(selectedFields, entitlement.FieldUpgradedTier)
-				fieldSeen[entitlement.FieldUpgradedTier] = struct{}{}
-			}
-		case "downgradedAt":
-			if _, ok := fieldSeen[entitlement.FieldDowngradedAt]; !ok {
-				selectedFields = append(selectedFields, entitlement.FieldDowngradedAt)
-				fieldSeen[entitlement.FieldDowngradedAt] = struct{}{}
-			}
-		case "downgradedTier":
-			if _, ok := fieldSeen[entitlement.FieldDowngradedTier]; !ok {
-				selectedFields = append(selectedFields, entitlement.FieldDowngradedTier)
-				fieldSeen[entitlement.FieldDowngradedTier] = struct{}{}
 			}
 		case "cancelled":
 			if _, ok := fieldSeen[entitlement.FieldCancelled]; !ok {
@@ -377,6 +249,11 @@ func (gr *GroupQuery) collectField(ctx context.Context, opCtx *graphql.Operation
 				selectedFields = append(selectedFields, group.FieldDescription)
 				fieldSeen[group.FieldDescription] = struct{}{}
 			}
+		case "gravatarLogoURL":
+			if _, ok := fieldSeen[group.FieldGravatarLogoURL]; !ok {
+				selectedFields = append(selectedFields, group.FieldGravatarLogoURL)
+				fieldSeen[group.FieldGravatarLogoURL] = struct{}{}
+			}
 		case "logoURL":
 			if _, ok := fieldSeen[group.FieldLogoURL]; !ok {
 				selectedFields = append(selectedFields, group.FieldLogoURL)
@@ -501,6 +378,16 @@ func (gs *GroupSettingQuery) collectField(ctx context.Context, opCtx *graphql.Op
 				selectedFields = append(selectedFields, groupsetting.FieldUpdatedBy)
 				fieldSeen[groupsetting.FieldUpdatedBy] = struct{}{}
 			}
+		case "deletedAt":
+			if _, ok := fieldSeen[groupsetting.FieldDeletedAt]; !ok {
+				selectedFields = append(selectedFields, groupsetting.FieldDeletedAt)
+				fieldSeen[groupsetting.FieldDeletedAt] = struct{}{}
+			}
+		case "deletedBy":
+			if _, ok := fieldSeen[groupsetting.FieldDeletedBy]; !ok {
+				selectedFields = append(selectedFields, groupsetting.FieldDeletedBy)
+				fieldSeen[groupsetting.FieldDeletedBy] = struct{}{}
+			}
 		case "visibility":
 			if _, ok := fieldSeen[groupsetting.FieldVisibility]; !ok {
 				selectedFields = append(selectedFields, groupsetting.FieldVisibility)
@@ -618,20 +505,30 @@ func (i *IntegrationQuery) collectField(ctx context.Context, opCtx *graphql.Oper
 				selectedFields = append(selectedFields, integration.FieldUpdatedBy)
 				fieldSeen[integration.FieldUpdatedBy] = struct{}{}
 			}
+		case "deletedAt":
+			if _, ok := fieldSeen[integration.FieldDeletedAt]; !ok {
+				selectedFields = append(selectedFields, integration.FieldDeletedAt)
+				fieldSeen[integration.FieldDeletedAt] = struct{}{}
+			}
+		case "deletedBy":
+			if _, ok := fieldSeen[integration.FieldDeletedBy]; !ok {
+				selectedFields = append(selectedFields, integration.FieldDeletedBy)
+				fieldSeen[integration.FieldDeletedBy] = struct{}{}
+			}
 		case "name":
 			if _, ok := fieldSeen[integration.FieldName]; !ok {
 				selectedFields = append(selectedFields, integration.FieldName)
 				fieldSeen[integration.FieldName] = struct{}{}
 			}
-		case "kind":
-			if _, ok := fieldSeen[integration.FieldKind]; !ok {
-				selectedFields = append(selectedFields, integration.FieldKind)
-				fieldSeen[integration.FieldKind] = struct{}{}
-			}
 		case "description":
 			if _, ok := fieldSeen[integration.FieldDescription]; !ok {
 				selectedFields = append(selectedFields, integration.FieldDescription)
 				fieldSeen[integration.FieldDescription] = struct{}{}
+			}
+		case "kind":
+			if _, ok := fieldSeen[integration.FieldKind]; !ok {
+				selectedFields = append(selectedFields, integration.FieldKind)
+				fieldSeen[integration.FieldKind] = struct{}{}
 			}
 		case "secretName":
 			if _, ok := fieldSeen[integration.FieldSecretName]; !ok {
@@ -752,6 +649,16 @@ func (op *OauthProviderQuery) collectField(ctx context.Context, opCtx *graphql.O
 				selectedFields = append(selectedFields, oauthprovider.FieldUpdatedBy)
 				fieldSeen[oauthprovider.FieldUpdatedBy] = struct{}{}
 			}
+		case "deletedAt":
+			if _, ok := fieldSeen[oauthprovider.FieldDeletedAt]; !ok {
+				selectedFields = append(selectedFields, oauthprovider.FieldDeletedAt)
+				fieldSeen[oauthprovider.FieldDeletedAt] = struct{}{}
+			}
+		case "deletedBy":
+			if _, ok := fieldSeen[oauthprovider.FieldDeletedBy]; !ok {
+				selectedFields = append(selectedFields, oauthprovider.FieldDeletedBy)
+				fieldSeen[oauthprovider.FieldDeletedBy] = struct{}{}
+			}
 		case "name":
 			if _, ok := fieldSeen[oauthprovider.FieldName]; !ok {
 				selectedFields = append(selectedFields, oauthprovider.FieldName)
@@ -761,6 +668,11 @@ func (op *OauthProviderQuery) collectField(ctx context.Context, opCtx *graphql.O
 			if _, ok := fieldSeen[oauthprovider.FieldClientID]; !ok {
 				selectedFields = append(selectedFields, oauthprovider.FieldClientID)
 				fieldSeen[oauthprovider.FieldClientID] = struct{}{}
+			}
+		case "clientSecret":
+			if _, ok := fieldSeen[oauthprovider.FieldClientSecret]; !ok {
+				selectedFields = append(selectedFields, oauthprovider.FieldClientSecret)
+				fieldSeen[oauthprovider.FieldClientSecret] = struct{}{}
 			}
 		case "redirectURL":
 			if _, ok := fieldSeen[oauthprovider.FieldRedirectURL]; !ok {
@@ -1303,6 +1215,16 @@ func (os *OrganizationSettingQuery) collectField(ctx context.Context, opCtx *gra
 				selectedFields = append(selectedFields, organizationsetting.FieldUpdatedBy)
 				fieldSeen[organizationsetting.FieldUpdatedBy] = struct{}{}
 			}
+		case "deletedAt":
+			if _, ok := fieldSeen[organizationsetting.FieldDeletedAt]; !ok {
+				selectedFields = append(selectedFields, organizationsetting.FieldDeletedAt)
+				fieldSeen[organizationsetting.FieldDeletedAt] = struct{}{}
+			}
+		case "deletedBy":
+			if _, ok := fieldSeen[organizationsetting.FieldDeletedBy]; !ok {
+				selectedFields = append(selectedFields, organizationsetting.FieldDeletedBy)
+				fieldSeen[organizationsetting.FieldDeletedBy] = struct{}{}
+			}
 		case "domains":
 			if _, ok := fieldSeen[organizationsetting.FieldDomains]; !ok {
 				selectedFields = append(selectedFields, organizationsetting.FieldDomains)
@@ -1455,10 +1377,10 @@ func (pat *PersonalAccessTokenQuery) collectField(ctx context.Context, opCtx *gr
 				selectedFields = append(selectedFields, personalaccesstoken.FieldAbilities)
 				fieldSeen[personalaccesstoken.FieldAbilities] = struct{}{}
 			}
-		case "expirationAt":
-			if _, ok := fieldSeen[personalaccesstoken.FieldExpirationAt]; !ok {
-				selectedFields = append(selectedFields, personalaccesstoken.FieldExpirationAt)
-				fieldSeen[personalaccesstoken.FieldExpirationAt] = struct{}{}
+		case "expiresAt":
+			if _, ok := fieldSeen[personalaccesstoken.FieldExpiresAt]; !ok {
+				selectedFields = append(selectedFields, personalaccesstoken.FieldExpiresAt)
+				fieldSeen[personalaccesstoken.FieldExpiresAt] = struct{}{}
 			}
 		case "description":
 			if _, ok := fieldSeen[personalaccesstoken.FieldDescription]; !ok {
@@ -1507,88 +1429,6 @@ func newPersonalAccessTokenPaginateArgs(rv map[string]any) *personalaccesstokenP
 	}
 	if v, ok := rv[whereField].(*PersonalAccessTokenWhereInput); ok {
 		args.opts = append(args.opts, WithPersonalAccessTokenFilter(v.Filter))
-	}
-	return args
-}
-
-// CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
-func (rt *RefreshTokenQuery) CollectFields(ctx context.Context, satisfies ...string) (*RefreshTokenQuery, error) {
-	fc := graphql.GetFieldContext(ctx)
-	if fc == nil {
-		return rt, nil
-	}
-	if err := rt.collectField(ctx, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
-		return nil, err
-	}
-	return rt, nil
-}
-
-func (rt *RefreshTokenQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
-	path = append([]string(nil), path...)
-	var (
-		unknownSeen    bool
-		fieldSeen      = make(map[string]struct{}, len(refreshtoken.Columns))
-		selectedFields = []string{refreshtoken.FieldID}
-	)
-	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
-		switch field.Name {
-		case "expiresAt":
-			if _, ok := fieldSeen[refreshtoken.FieldExpiresAt]; !ok {
-				selectedFields = append(selectedFields, refreshtoken.FieldExpiresAt)
-				fieldSeen[refreshtoken.FieldExpiresAt] = struct{}{}
-			}
-		case "issuedAt":
-			if _, ok := fieldSeen[refreshtoken.FieldIssuedAt]; !ok {
-				selectedFields = append(selectedFields, refreshtoken.FieldIssuedAt)
-				fieldSeen[refreshtoken.FieldIssuedAt] = struct{}{}
-			}
-		case "organizationID":
-			if _, ok := fieldSeen[refreshtoken.FieldOrganizationID]; !ok {
-				selectedFields = append(selectedFields, refreshtoken.FieldOrganizationID)
-				fieldSeen[refreshtoken.FieldOrganizationID] = struct{}{}
-			}
-		case "userID":
-			if _, ok := fieldSeen[refreshtoken.FieldUserID]; !ok {
-				selectedFields = append(selectedFields, refreshtoken.FieldUserID)
-				fieldSeen[refreshtoken.FieldUserID] = struct{}{}
-			}
-		case "id":
-		case "__typename":
-		default:
-			unknownSeen = true
-		}
-	}
-	if !unknownSeen {
-		rt.Select(selectedFields...)
-	}
-	return nil
-}
-
-type refreshtokenPaginateArgs struct {
-	first, last   *int
-	after, before *Cursor
-	opts          []RefreshTokenPaginateOption
-}
-
-func newRefreshTokenPaginateArgs(rv map[string]any) *refreshtokenPaginateArgs {
-	args := &refreshtokenPaginateArgs{}
-	if rv == nil {
-		return args
-	}
-	if v := rv[firstField]; v != nil {
-		args.first = v.(*int)
-	}
-	if v := rv[lastField]; v != nil {
-		args.last = v.(*int)
-	}
-	if v := rv[afterField]; v != nil {
-		args.after = v.(*Cursor)
-	}
-	if v := rv[beforeField]; v != nil {
-		args.before = v.(*Cursor)
-	}
-	if v, ok := rv[whereField].(*RefreshTokenWhereInput); ok {
-		args.opts = append(args.opts, WithRefreshTokenFilter(v.Filter))
 	}
 	return args
 }
@@ -1793,30 +1633,6 @@ func (u *UserQuery) collectField(ctx context.Context, opCtx *graphql.OperationCo
 				return err
 			}
 			u.withSetting = query
-		case "refreshToken":
-			var (
-				alias = field.Alias
-				path  = append(path, alias)
-				query = (&RefreshTokenClient{config: u.config}).Query()
-			)
-			if err := query.collectField(ctx, opCtx, field, path, satisfies...); err != nil {
-				return err
-			}
-			u.WithNamedRefreshToken(alias, func(wq *RefreshTokenQuery) {
-				*wq = *query
-			})
-		case "accessToken":
-			var (
-				alias = field.Alias
-				path  = append(path, alias)
-				query = (&AccessTokenClient{config: u.config}).Query()
-			)
-			if err := query.collectField(ctx, opCtx, field, path, satisfies...); err != nil {
-				return err
-			}
-			u.WithNamedAccessToken(alias, func(wq *AccessTokenQuery) {
-				*wq = *query
-			})
 		case "createdAt":
 			if _, ok := fieldSeen[user.FieldCreatedAt]; !ok {
 				selectedFields = append(selectedFields, user.FieldCreatedAt)
@@ -2015,6 +1831,16 @@ func (us *UserSettingQuery) collectField(ctx context.Context, opCtx *graphql.Ope
 			if _, ok := fieldSeen[usersetting.FieldUpdatedBy]; !ok {
 				selectedFields = append(selectedFields, usersetting.FieldUpdatedBy)
 				fieldSeen[usersetting.FieldUpdatedBy] = struct{}{}
+			}
+		case "deletedAt":
+			if _, ok := fieldSeen[usersetting.FieldDeletedAt]; !ok {
+				selectedFields = append(selectedFields, usersetting.FieldDeletedAt)
+				fieldSeen[usersetting.FieldDeletedAt] = struct{}{}
+			}
+		case "deletedBy":
+			if _, ok := fieldSeen[usersetting.FieldDeletedBy]; !ok {
+				selectedFields = append(selectedFields, usersetting.FieldDeletedBy)
+				fieldSeen[usersetting.FieldDeletedBy] = struct{}{}
 			}
 		case "locked":
 			if _, ok := fieldSeen[usersetting.FieldLocked]; !ok {

@@ -57,6 +57,46 @@ func (eu *EntitlementUpdate) ClearUpdatedBy() *EntitlementUpdate {
 	return eu
 }
 
+// SetDeletedAt sets the "deleted_at" field.
+func (eu *EntitlementUpdate) SetDeletedAt(t time.Time) *EntitlementUpdate {
+	eu.mutation.SetDeletedAt(t)
+	return eu
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (eu *EntitlementUpdate) SetNillableDeletedAt(t *time.Time) *EntitlementUpdate {
+	if t != nil {
+		eu.SetDeletedAt(*t)
+	}
+	return eu
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (eu *EntitlementUpdate) ClearDeletedAt() *EntitlementUpdate {
+	eu.mutation.ClearDeletedAt()
+	return eu
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (eu *EntitlementUpdate) SetDeletedBy(s string) *EntitlementUpdate {
+	eu.mutation.SetDeletedBy(s)
+	return eu
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (eu *EntitlementUpdate) SetNillableDeletedBy(s *string) *EntitlementUpdate {
+	if s != nil {
+		eu.SetDeletedBy(*s)
+	}
+	return eu
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (eu *EntitlementUpdate) ClearDeletedBy() *EntitlementUpdate {
+	eu.mutation.ClearDeletedBy()
+	return eu
+}
+
 // SetTier sets the "tier" field.
 func (eu *EntitlementUpdate) SetTier(e entitlement.Tier) *EntitlementUpdate {
 	eu.mutation.SetTier(e)
@@ -111,6 +151,20 @@ func (eu *EntitlementUpdate) ClearExternalSubscriptionID() *EntitlementUpdate {
 	return eu
 }
 
+// SetExpires sets the "expires" field.
+func (eu *EntitlementUpdate) SetExpires(b bool) *EntitlementUpdate {
+	eu.mutation.SetExpires(b)
+	return eu
+}
+
+// SetNillableExpires sets the "expires" field if the given value is not nil.
+func (eu *EntitlementUpdate) SetNillableExpires(b *bool) *EntitlementUpdate {
+	if b != nil {
+		eu.SetExpires(*b)
+	}
+	return eu
+}
+
 // SetExpiresAt sets the "expires_at" field.
 func (eu *EntitlementUpdate) SetExpiresAt(t time.Time) *EntitlementUpdate {
 	eu.mutation.SetExpiresAt(t)
@@ -128,86 +182,6 @@ func (eu *EntitlementUpdate) SetNillableExpiresAt(t *time.Time) *EntitlementUpda
 // ClearExpiresAt clears the value of the "expires_at" field.
 func (eu *EntitlementUpdate) ClearExpiresAt() *EntitlementUpdate {
 	eu.mutation.ClearExpiresAt()
-	return eu
-}
-
-// SetUpgradedAt sets the "upgraded_at" field.
-func (eu *EntitlementUpdate) SetUpgradedAt(t time.Time) *EntitlementUpdate {
-	eu.mutation.SetUpgradedAt(t)
-	return eu
-}
-
-// SetNillableUpgradedAt sets the "upgraded_at" field if the given value is not nil.
-func (eu *EntitlementUpdate) SetNillableUpgradedAt(t *time.Time) *EntitlementUpdate {
-	if t != nil {
-		eu.SetUpgradedAt(*t)
-	}
-	return eu
-}
-
-// ClearUpgradedAt clears the value of the "upgraded_at" field.
-func (eu *EntitlementUpdate) ClearUpgradedAt() *EntitlementUpdate {
-	eu.mutation.ClearUpgradedAt()
-	return eu
-}
-
-// SetUpgradedTier sets the "upgraded_tier" field.
-func (eu *EntitlementUpdate) SetUpgradedTier(s string) *EntitlementUpdate {
-	eu.mutation.SetUpgradedTier(s)
-	return eu
-}
-
-// SetNillableUpgradedTier sets the "upgraded_tier" field if the given value is not nil.
-func (eu *EntitlementUpdate) SetNillableUpgradedTier(s *string) *EntitlementUpdate {
-	if s != nil {
-		eu.SetUpgradedTier(*s)
-	}
-	return eu
-}
-
-// ClearUpgradedTier clears the value of the "upgraded_tier" field.
-func (eu *EntitlementUpdate) ClearUpgradedTier() *EntitlementUpdate {
-	eu.mutation.ClearUpgradedTier()
-	return eu
-}
-
-// SetDowngradedAt sets the "downgraded_at" field.
-func (eu *EntitlementUpdate) SetDowngradedAt(t time.Time) *EntitlementUpdate {
-	eu.mutation.SetDowngradedAt(t)
-	return eu
-}
-
-// SetNillableDowngradedAt sets the "downgraded_at" field if the given value is not nil.
-func (eu *EntitlementUpdate) SetNillableDowngradedAt(t *time.Time) *EntitlementUpdate {
-	if t != nil {
-		eu.SetDowngradedAt(*t)
-	}
-	return eu
-}
-
-// ClearDowngradedAt clears the value of the "downgraded_at" field.
-func (eu *EntitlementUpdate) ClearDowngradedAt() *EntitlementUpdate {
-	eu.mutation.ClearDowngradedAt()
-	return eu
-}
-
-// SetDowngradedTier sets the "downgraded_tier" field.
-func (eu *EntitlementUpdate) SetDowngradedTier(s string) *EntitlementUpdate {
-	eu.mutation.SetDowngradedTier(s)
-	return eu
-}
-
-// SetNillableDowngradedTier sets the "downgraded_tier" field if the given value is not nil.
-func (eu *EntitlementUpdate) SetNillableDowngradedTier(s *string) *EntitlementUpdate {
-	if s != nil {
-		eu.SetDowngradedTier(*s)
-	}
-	return eu
-}
-
-// ClearDowngradedTier clears the value of the "downgraded_tier" field.
-func (eu *EntitlementUpdate) ClearDowngradedTier() *EntitlementUpdate {
-	eu.mutation.ClearDowngradedTier()
 	return eu
 }
 
@@ -331,6 +305,18 @@ func (eu *EntitlementUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if eu.mutation.UpdatedByCleared() {
 		_spec.ClearField(entitlement.FieldUpdatedBy, field.TypeString)
 	}
+	if value, ok := eu.mutation.DeletedAt(); ok {
+		_spec.SetField(entitlement.FieldDeletedAt, field.TypeTime, value)
+	}
+	if eu.mutation.DeletedAtCleared() {
+		_spec.ClearField(entitlement.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := eu.mutation.DeletedBy(); ok {
+		_spec.SetField(entitlement.FieldDeletedBy, field.TypeString, value)
+	}
+	if eu.mutation.DeletedByCleared() {
+		_spec.ClearField(entitlement.FieldDeletedBy, field.TypeString)
+	}
 	if value, ok := eu.mutation.Tier(); ok {
 		_spec.SetField(entitlement.FieldTier, field.TypeEnum, value)
 	}
@@ -346,35 +332,14 @@ func (eu *EntitlementUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if eu.mutation.ExternalSubscriptionIDCleared() {
 		_spec.ClearField(entitlement.FieldExternalSubscriptionID, field.TypeString)
 	}
+	if value, ok := eu.mutation.Expires(); ok {
+		_spec.SetField(entitlement.FieldExpires, field.TypeBool, value)
+	}
 	if value, ok := eu.mutation.ExpiresAt(); ok {
 		_spec.SetField(entitlement.FieldExpiresAt, field.TypeTime, value)
 	}
 	if eu.mutation.ExpiresAtCleared() {
 		_spec.ClearField(entitlement.FieldExpiresAt, field.TypeTime)
-	}
-	if value, ok := eu.mutation.UpgradedAt(); ok {
-		_spec.SetField(entitlement.FieldUpgradedAt, field.TypeTime, value)
-	}
-	if eu.mutation.UpgradedAtCleared() {
-		_spec.ClearField(entitlement.FieldUpgradedAt, field.TypeTime)
-	}
-	if value, ok := eu.mutation.UpgradedTier(); ok {
-		_spec.SetField(entitlement.FieldUpgradedTier, field.TypeString, value)
-	}
-	if eu.mutation.UpgradedTierCleared() {
-		_spec.ClearField(entitlement.FieldUpgradedTier, field.TypeString)
-	}
-	if value, ok := eu.mutation.DowngradedAt(); ok {
-		_spec.SetField(entitlement.FieldDowngradedAt, field.TypeTime, value)
-	}
-	if eu.mutation.DowngradedAtCleared() {
-		_spec.ClearField(entitlement.FieldDowngradedAt, field.TypeTime)
-	}
-	if value, ok := eu.mutation.DowngradedTier(); ok {
-		_spec.SetField(entitlement.FieldDowngradedTier, field.TypeString, value)
-	}
-	if eu.mutation.DowngradedTierCleared() {
-		_spec.ClearField(entitlement.FieldDowngradedTier, field.TypeString)
 	}
 	if value, ok := eu.mutation.Cancelled(); ok {
 		_spec.SetField(entitlement.FieldCancelled, field.TypeBool, value)
@@ -458,6 +423,46 @@ func (euo *EntitlementUpdateOne) ClearUpdatedBy() *EntitlementUpdateOne {
 	return euo
 }
 
+// SetDeletedAt sets the "deleted_at" field.
+func (euo *EntitlementUpdateOne) SetDeletedAt(t time.Time) *EntitlementUpdateOne {
+	euo.mutation.SetDeletedAt(t)
+	return euo
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (euo *EntitlementUpdateOne) SetNillableDeletedAt(t *time.Time) *EntitlementUpdateOne {
+	if t != nil {
+		euo.SetDeletedAt(*t)
+	}
+	return euo
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (euo *EntitlementUpdateOne) ClearDeletedAt() *EntitlementUpdateOne {
+	euo.mutation.ClearDeletedAt()
+	return euo
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (euo *EntitlementUpdateOne) SetDeletedBy(s string) *EntitlementUpdateOne {
+	euo.mutation.SetDeletedBy(s)
+	return euo
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (euo *EntitlementUpdateOne) SetNillableDeletedBy(s *string) *EntitlementUpdateOne {
+	if s != nil {
+		euo.SetDeletedBy(*s)
+	}
+	return euo
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (euo *EntitlementUpdateOne) ClearDeletedBy() *EntitlementUpdateOne {
+	euo.mutation.ClearDeletedBy()
+	return euo
+}
+
 // SetTier sets the "tier" field.
 func (euo *EntitlementUpdateOne) SetTier(e entitlement.Tier) *EntitlementUpdateOne {
 	euo.mutation.SetTier(e)
@@ -512,6 +517,20 @@ func (euo *EntitlementUpdateOne) ClearExternalSubscriptionID() *EntitlementUpdat
 	return euo
 }
 
+// SetExpires sets the "expires" field.
+func (euo *EntitlementUpdateOne) SetExpires(b bool) *EntitlementUpdateOne {
+	euo.mutation.SetExpires(b)
+	return euo
+}
+
+// SetNillableExpires sets the "expires" field if the given value is not nil.
+func (euo *EntitlementUpdateOne) SetNillableExpires(b *bool) *EntitlementUpdateOne {
+	if b != nil {
+		euo.SetExpires(*b)
+	}
+	return euo
+}
+
 // SetExpiresAt sets the "expires_at" field.
 func (euo *EntitlementUpdateOne) SetExpiresAt(t time.Time) *EntitlementUpdateOne {
 	euo.mutation.SetExpiresAt(t)
@@ -529,86 +548,6 @@ func (euo *EntitlementUpdateOne) SetNillableExpiresAt(t *time.Time) *Entitlement
 // ClearExpiresAt clears the value of the "expires_at" field.
 func (euo *EntitlementUpdateOne) ClearExpiresAt() *EntitlementUpdateOne {
 	euo.mutation.ClearExpiresAt()
-	return euo
-}
-
-// SetUpgradedAt sets the "upgraded_at" field.
-func (euo *EntitlementUpdateOne) SetUpgradedAt(t time.Time) *EntitlementUpdateOne {
-	euo.mutation.SetUpgradedAt(t)
-	return euo
-}
-
-// SetNillableUpgradedAt sets the "upgraded_at" field if the given value is not nil.
-func (euo *EntitlementUpdateOne) SetNillableUpgradedAt(t *time.Time) *EntitlementUpdateOne {
-	if t != nil {
-		euo.SetUpgradedAt(*t)
-	}
-	return euo
-}
-
-// ClearUpgradedAt clears the value of the "upgraded_at" field.
-func (euo *EntitlementUpdateOne) ClearUpgradedAt() *EntitlementUpdateOne {
-	euo.mutation.ClearUpgradedAt()
-	return euo
-}
-
-// SetUpgradedTier sets the "upgraded_tier" field.
-func (euo *EntitlementUpdateOne) SetUpgradedTier(s string) *EntitlementUpdateOne {
-	euo.mutation.SetUpgradedTier(s)
-	return euo
-}
-
-// SetNillableUpgradedTier sets the "upgraded_tier" field if the given value is not nil.
-func (euo *EntitlementUpdateOne) SetNillableUpgradedTier(s *string) *EntitlementUpdateOne {
-	if s != nil {
-		euo.SetUpgradedTier(*s)
-	}
-	return euo
-}
-
-// ClearUpgradedTier clears the value of the "upgraded_tier" field.
-func (euo *EntitlementUpdateOne) ClearUpgradedTier() *EntitlementUpdateOne {
-	euo.mutation.ClearUpgradedTier()
-	return euo
-}
-
-// SetDowngradedAt sets the "downgraded_at" field.
-func (euo *EntitlementUpdateOne) SetDowngradedAt(t time.Time) *EntitlementUpdateOne {
-	euo.mutation.SetDowngradedAt(t)
-	return euo
-}
-
-// SetNillableDowngradedAt sets the "downgraded_at" field if the given value is not nil.
-func (euo *EntitlementUpdateOne) SetNillableDowngradedAt(t *time.Time) *EntitlementUpdateOne {
-	if t != nil {
-		euo.SetDowngradedAt(*t)
-	}
-	return euo
-}
-
-// ClearDowngradedAt clears the value of the "downgraded_at" field.
-func (euo *EntitlementUpdateOne) ClearDowngradedAt() *EntitlementUpdateOne {
-	euo.mutation.ClearDowngradedAt()
-	return euo
-}
-
-// SetDowngradedTier sets the "downgraded_tier" field.
-func (euo *EntitlementUpdateOne) SetDowngradedTier(s string) *EntitlementUpdateOne {
-	euo.mutation.SetDowngradedTier(s)
-	return euo
-}
-
-// SetNillableDowngradedTier sets the "downgraded_tier" field if the given value is not nil.
-func (euo *EntitlementUpdateOne) SetNillableDowngradedTier(s *string) *EntitlementUpdateOne {
-	if s != nil {
-		euo.SetDowngradedTier(*s)
-	}
-	return euo
-}
-
-// ClearDowngradedTier clears the value of the "downgraded_tier" field.
-func (euo *EntitlementUpdateOne) ClearDowngradedTier() *EntitlementUpdateOne {
-	euo.mutation.ClearDowngradedTier()
 	return euo
 }
 
@@ -762,6 +701,18 @@ func (euo *EntitlementUpdateOne) sqlSave(ctx context.Context) (_node *Entitlemen
 	if euo.mutation.UpdatedByCleared() {
 		_spec.ClearField(entitlement.FieldUpdatedBy, field.TypeString)
 	}
+	if value, ok := euo.mutation.DeletedAt(); ok {
+		_spec.SetField(entitlement.FieldDeletedAt, field.TypeTime, value)
+	}
+	if euo.mutation.DeletedAtCleared() {
+		_spec.ClearField(entitlement.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := euo.mutation.DeletedBy(); ok {
+		_spec.SetField(entitlement.FieldDeletedBy, field.TypeString, value)
+	}
+	if euo.mutation.DeletedByCleared() {
+		_spec.ClearField(entitlement.FieldDeletedBy, field.TypeString)
+	}
 	if value, ok := euo.mutation.Tier(); ok {
 		_spec.SetField(entitlement.FieldTier, field.TypeEnum, value)
 	}
@@ -777,35 +728,14 @@ func (euo *EntitlementUpdateOne) sqlSave(ctx context.Context) (_node *Entitlemen
 	if euo.mutation.ExternalSubscriptionIDCleared() {
 		_spec.ClearField(entitlement.FieldExternalSubscriptionID, field.TypeString)
 	}
+	if value, ok := euo.mutation.Expires(); ok {
+		_spec.SetField(entitlement.FieldExpires, field.TypeBool, value)
+	}
 	if value, ok := euo.mutation.ExpiresAt(); ok {
 		_spec.SetField(entitlement.FieldExpiresAt, field.TypeTime, value)
 	}
 	if euo.mutation.ExpiresAtCleared() {
 		_spec.ClearField(entitlement.FieldExpiresAt, field.TypeTime)
-	}
-	if value, ok := euo.mutation.UpgradedAt(); ok {
-		_spec.SetField(entitlement.FieldUpgradedAt, field.TypeTime, value)
-	}
-	if euo.mutation.UpgradedAtCleared() {
-		_spec.ClearField(entitlement.FieldUpgradedAt, field.TypeTime)
-	}
-	if value, ok := euo.mutation.UpgradedTier(); ok {
-		_spec.SetField(entitlement.FieldUpgradedTier, field.TypeString, value)
-	}
-	if euo.mutation.UpgradedTierCleared() {
-		_spec.ClearField(entitlement.FieldUpgradedTier, field.TypeString)
-	}
-	if value, ok := euo.mutation.DowngradedAt(); ok {
-		_spec.SetField(entitlement.FieldDowngradedAt, field.TypeTime, value)
-	}
-	if euo.mutation.DowngradedAtCleared() {
-		_spec.ClearField(entitlement.FieldDowngradedAt, field.TypeTime)
-	}
-	if value, ok := euo.mutation.DowngradedTier(); ok {
-		_spec.SetField(entitlement.FieldDowngradedTier, field.TypeString, value)
-	}
-	if euo.mutation.DowngradedTierCleared() {
-		_spec.ClearField(entitlement.FieldDowngradedTier, field.TypeString)
 	}
 	if value, ok := euo.mutation.Cancelled(); ok {
 		_spec.SetField(entitlement.FieldCancelled, field.TypeBool, value)

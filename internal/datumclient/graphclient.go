@@ -49,7 +49,6 @@ func NewClient(cli *http.Client, baseURL string, options *clientv2.Options, inte
 type Query struct {
 	Node                 generated.Noder               "json:\"node,omitempty\" graphql:\"node\""
 	Nodes                []generated.Noder             "json:\"nodes\" graphql:\"nodes\""
-	AccessTokens         AccessTokenConnection         "json:\"accessTokens\" graphql:\"accessTokens\""
 	Entitlements         EntitlementConnection         "json:\"entitlements\" graphql:\"entitlements\""
 	Groups               GroupConnection               "json:\"groups\" graphql:\"groups\""
 	GroupSettings        GroupSettingConnection        "json:\"groupSettings\" graphql:\"groupSettings\""
@@ -59,11 +58,9 @@ type Query struct {
 	Organizations        OrganizationConnection        "json:\"organizations\" graphql:\"organizations\""
 	OrganizationSettings OrganizationSettingConnection "json:\"organizationSettings\" graphql:\"organizationSettings\""
 	PersonalAccessTokens PersonalAccessTokenConnection "json:\"personalAccessTokens\" graphql:\"personalAccessTokens\""
-	RefreshTokens        RefreshTokenConnection        "json:\"refreshTokens\" graphql:\"refreshTokens\""
 	Sessions             SessionConnection             "json:\"sessions\" graphql:\"sessions\""
 	Users                UserConnection                "json:\"users\" graphql:\"users\""
 	UserSettings         UserSettingConnection         "json:\"userSettings\" graphql:\"userSettings\""
-	AccessToken          AccessToken                   "json:\"accessToken\" graphql:\"accessToken\""
 	Entitlement          Entitlement                   "json:\"entitlement\" graphql:\"entitlement\""
 	Group                Group                         "json:\"group\" graphql:\"group\""
 	GroupSetting         GroupSetting                  "json:\"groupSetting\" graphql:\"groupSetting\""
@@ -73,16 +70,12 @@ type Query struct {
 	Organization         Organization                  "json:\"organization\" graphql:\"organization\""
 	OrganizationSetting  OrganizationSetting           "json:\"organizationSetting\" graphql:\"organizationSetting\""
 	PersonalAccessToken  PersonalAccessToken           "json:\"personalAccessToken\" graphql:\"personalAccessToken\""
-	RefreshToken         RefreshToken                  "json:\"refreshToken\" graphql:\"refreshToken\""
 	Session              Session                       "json:\"session\" graphql:\"session\""
 	User                 User                          "json:\"user\" graphql:\"user\""
 	UserSetting          UserSetting                   "json:\"userSetting\" graphql:\"userSetting\""
 	Service              Service                       "json:\"_service\" graphql:\"_service\""
 }
 type Mutation struct {
-	CreateAccessToken         AccessTokenCreatePayload         "json:\"createAccessToken\" graphql:\"createAccessToken\""
-	UpdateAccessToken         AccessTokenUpdatePayload         "json:\"updateAccessToken\" graphql:\"updateAccessToken\""
-	DeleteAccessToken         AccessTokenDeletePayload         "json:\"deleteAccessToken\" graphql:\"deleteAccessToken\""
 	CreateEntitlement         EntitlementCreatePayload         "json:\"createEntitlement\" graphql:\"createEntitlement\""
 	UpdateEntitlement         EntitlementUpdatePayload         "json:\"updateEntitlement\" graphql:\"updateEntitlement\""
 	DeleteEntitlement         EntitlementDeletePayload         "json:\"deleteEntitlement\" graphql:\"deleteEntitlement\""
@@ -110,9 +103,6 @@ type Mutation struct {
 	CreatePersonalAccessToken PersonalAccessTokenCreatePayload "json:\"createPersonalAccessToken\" graphql:\"createPersonalAccessToken\""
 	UpdatePersonalAccessToken PersonalAccessTokenUpdatePayload "json:\"updatePersonalAccessToken\" graphql:\"updatePersonalAccessToken\""
 	DeletePersonalAccessToken PersonalAccessTokenDeletePayload "json:\"deletePersonalAccessToken\" graphql:\"deletePersonalAccessToken\""
-	CreateRefreshToken        RefreshTokenCreatePayload        "json:\"createRefreshToken\" graphql:\"createRefreshToken\""
-	UpdateRefreshToken        RefreshTokenUpdatePayload        "json:\"updateRefreshToken\" graphql:\"updateRefreshToken\""
-	DeleteRefreshToken        RefreshTokenDeletePayload        "json:\"deleteRefreshToken\" graphql:\"deleteRefreshToken\""
 	CreateSession             SessionCreatePayload             "json:\"createSession\" graphql:\"createSession\""
 	UpdateSession             SessionUpdatePayload             "json:\"updateSession\" graphql:\"updateSession\""
 	DeleteSession             SessionDeletePayload             "json:\"deleteSession\" graphql:\"deleteSession\""
@@ -2103,7 +2093,8 @@ func (t *GetOrganizationSetting_OrganizationSetting) GetOrganization() *GetOrgan
 }
 
 type CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken_Owner struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID          string "json:\"id\" graphql:\"id\""
+	DisplayName string "json:\"displayName\" graphql:\"displayName\""
 }
 
 func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken_Owner) GetID() string {
@@ -2112,18 +2103,62 @@ func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken
 	}
 	return t.ID
 }
-
-type CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken struct {
-	Owner     CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken_Owner "json:\"owner\" graphql:\"owner\""
-	Abilities []string                                                                      "json:\"abilities,omitempty\" graphql:\"abilities\""
-	Name      string                                                                        "json:\"name\" graphql:\"name\""
+func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken_Owner) GetDisplayName() string {
+	if t == nil {
+		t = &CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken_Owner{}
+	}
+	return t.DisplayName
 }
 
-func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken) GetOwner() *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken_Owner {
+type CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken struct {
+	ID          string                                                                        "json:\"id\" graphql:\"id\""
+	CreatedAt   time.Time                                                                     "json:\"createdAt\" graphql:\"createdAt\""
+	UpdatedAt   time.Time                                                                     "json:\"updatedAt\" graphql:\"updatedAt\""
+	CreatedBy   *string                                                                       "json:\"createdBy,omitempty\" graphql:\"createdBy\""
+	UpdatedBy   *string                                                                       "json:\"updatedBy,omitempty\" graphql:\"updatedBy\""
+	Name        string                                                                        "json:\"name\" graphql:\"name\""
+	Abilities   []string                                                                      "json:\"abilities,omitempty\" graphql:\"abilities\""
+	ExpiresAt   time.Time                                                                     "json:\"expiresAt\" graphql:\"expiresAt\""
+	Description *string                                                                       "json:\"description,omitempty\" graphql:\"description\""
+	LastUsedAt  *time.Time                                                                    "json:\"lastUsedAt,omitempty\" graphql:\"lastUsedAt\""
+	Owner       CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken_Owner "json:\"owner\" graphql:\"owner\""
+}
+
+func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken) GetID() string {
 	if t == nil {
 		t = &CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken{}
 	}
-	return &t.Owner
+	return t.ID
+}
+func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken) GetCreatedAt() *time.Time {
+	if t == nil {
+		t = &CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken{}
+	}
+	return &t.CreatedAt
+}
+func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken) GetUpdatedAt() *time.Time {
+	if t == nil {
+		t = &CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken{}
+	}
+	return &t.UpdatedAt
+}
+func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken) GetCreatedBy() *string {
+	if t == nil {
+		t = &CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken{}
+	}
+	return t.CreatedBy
+}
+func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken) GetUpdatedBy() *string {
+	if t == nil {
+		t = &CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken{}
+	}
+	return t.UpdatedBy
+}
+func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken) GetName() string {
+	if t == nil {
+		t = &CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken{}
+	}
+	return t.Name
 }
 func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken) GetAbilities() []string {
 	if t == nil {
@@ -2131,11 +2166,29 @@ func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken
 	}
 	return t.Abilities
 }
-func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken) GetName() string {
+func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken) GetExpiresAt() *time.Time {
 	if t == nil {
 		t = &CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken{}
 	}
-	return t.Name
+	return &t.ExpiresAt
+}
+func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken) GetDescription() *string {
+	if t == nil {
+		t = &CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken{}
+	}
+	return t.Description
+}
+func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken) GetLastUsedAt() *time.Time {
+	if t == nil {
+		t = &CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken{}
+	}
+	return t.LastUsedAt
+}
+func (t *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken) GetOwner() *CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken_Owner {
+	if t == nil {
+		t = &CreatePersonalAccessToken_CreatePersonalAccessToken_PersonalAccessToken{}
+	}
+	return &t.Owner
 }
 
 type CreatePersonalAccessToken_CreatePersonalAccessToken struct {
@@ -2150,7 +2203,8 @@ func (t *CreatePersonalAccessToken_CreatePersonalAccessToken) GetPersonalAccessT
 }
 
 type GetPersonalAccessTokenByID_PersonalAccessToken_Owner struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID          string "json:\"id\" graphql:\"id\""
+	DisplayName string "json:\"displayName\" graphql:\"displayName\""
 }
 
 func (t *GetPersonalAccessTokenByID_PersonalAccessToken_Owner) GetID() string {
@@ -2159,18 +2213,25 @@ func (t *GetPersonalAccessTokenByID_PersonalAccessToken_Owner) GetID() string {
 	}
 	return t.ID
 }
+func (t *GetPersonalAccessTokenByID_PersonalAccessToken_Owner) GetDisplayName() string {
+	if t == nil {
+		t = &GetPersonalAccessTokenByID_PersonalAccessToken_Owner{}
+	}
+	return t.DisplayName
+}
 
 type GetPersonalAccessTokenByID_PersonalAccessToken struct {
-	ID           string                                               "json:\"id\" graphql:\"id\""
-	CreatedAt    time.Time                                            "json:\"createdAt\" graphql:\"createdAt\""
-	UpdatedAt    time.Time                                            "json:\"updatedAt\" graphql:\"updatedAt\""
-	CreatedBy    *string                                              "json:\"createdBy,omitempty\" graphql:\"createdBy\""
-	UpdatedBy    *string                                              "json:\"updatedBy,omitempty\" graphql:\"updatedBy\""
-	Name         string                                               "json:\"name\" graphql:\"name\""
-	Owner        GetPersonalAccessTokenByID_PersonalAccessToken_Owner "json:\"owner\" graphql:\"owner\""
-	Abilities    []string                                             "json:\"abilities,omitempty\" graphql:\"abilities\""
-	ExpirationAt time.Time                                            "json:\"expirationAt\" graphql:\"expirationAt\""
-	LastUsedAt   *time.Time                                           "json:\"lastUsedAt,omitempty\" graphql:\"lastUsedAt\""
+	ID          string                                               "json:\"id\" graphql:\"id\""
+	CreatedAt   time.Time                                            "json:\"createdAt\" graphql:\"createdAt\""
+	UpdatedAt   time.Time                                            "json:\"updatedAt\" graphql:\"updatedAt\""
+	CreatedBy   *string                                              "json:\"createdBy,omitempty\" graphql:\"createdBy\""
+	UpdatedBy   *string                                              "json:\"updatedBy,omitempty\" graphql:\"updatedBy\""
+	Name        string                                               "json:\"name\" graphql:\"name\""
+	Abilities   []string                                             "json:\"abilities,omitempty\" graphql:\"abilities\""
+	ExpiresAt   time.Time                                            "json:\"expiresAt\" graphql:\"expiresAt\""
+	Description *string                                              "json:\"description,omitempty\" graphql:\"description\""
+	LastUsedAt  *time.Time                                           "json:\"lastUsedAt,omitempty\" graphql:\"lastUsedAt\""
+	Owner       GetPersonalAccessTokenByID_PersonalAccessToken_Owner "json:\"owner\" graphql:\"owner\""
 }
 
 func (t *GetPersonalAccessTokenByID_PersonalAccessToken) GetID() string {
@@ -2209,29 +2270,35 @@ func (t *GetPersonalAccessTokenByID_PersonalAccessToken) GetName() string {
 	}
 	return t.Name
 }
-func (t *GetPersonalAccessTokenByID_PersonalAccessToken) GetOwner() *GetPersonalAccessTokenByID_PersonalAccessToken_Owner {
-	if t == nil {
-		t = &GetPersonalAccessTokenByID_PersonalAccessToken{}
-	}
-	return &t.Owner
-}
 func (t *GetPersonalAccessTokenByID_PersonalAccessToken) GetAbilities() []string {
 	if t == nil {
 		t = &GetPersonalAccessTokenByID_PersonalAccessToken{}
 	}
 	return t.Abilities
 }
-func (t *GetPersonalAccessTokenByID_PersonalAccessToken) GetExpirationAt() *time.Time {
+func (t *GetPersonalAccessTokenByID_PersonalAccessToken) GetExpiresAt() *time.Time {
 	if t == nil {
 		t = &GetPersonalAccessTokenByID_PersonalAccessToken{}
 	}
-	return &t.ExpirationAt
+	return &t.ExpiresAt
+}
+func (t *GetPersonalAccessTokenByID_PersonalAccessToken) GetDescription() *string {
+	if t == nil {
+		t = &GetPersonalAccessTokenByID_PersonalAccessToken{}
+	}
+	return t.Description
 }
 func (t *GetPersonalAccessTokenByID_PersonalAccessToken) GetLastUsedAt() *time.Time {
 	if t == nil {
 		t = &GetPersonalAccessTokenByID_PersonalAccessToken{}
 	}
 	return t.LastUsedAt
+}
+func (t *GetPersonalAccessTokenByID_PersonalAccessToken) GetOwner() *GetPersonalAccessTokenByID_PersonalAccessToken_Owner {
+	if t == nil {
+		t = &GetPersonalAccessTokenByID_PersonalAccessToken{}
+	}
+	return &t.Owner
 }
 
 type DeletePersonalAccessToken_DeletePersonalAccessToken struct {
@@ -4185,11 +4252,20 @@ func (c *Client) GetOrganizationSetting(ctx context.Context, organizationSetting
 const CreatePersonalAccessTokenDocument = `mutation CreatePersonalAccessToken ($input: CreatePersonalAccessTokenInput!) {
 	createPersonalAccessToken(input: $input) {
 		PersonalAccessToken {
+			id
+			createdAt
+			updatedAt
+			createdBy
+			updatedBy
+			name
+			abilities
+			expiresAt
+			description
+			lastUsedAt
 			owner {
 				id
+				displayName
 			}
-			abilities
-			name
 		}
 	}
 }
@@ -4220,12 +4296,14 @@ const GetPersonalAccessTokenByIDDocument = `query GetPersonalAccessTokenByID ($p
 		createdBy
 		updatedBy
 		name
+		abilities
+		expiresAt
+		description
+		lastUsedAt
 		owner {
 			id
+			displayName
 		}
-		abilities
-		expirationAt
-		lastUsedAt
 	}
 }
 `

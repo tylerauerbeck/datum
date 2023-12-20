@@ -63,14 +63,6 @@ func (su *SessionUpdate) SetIssuedAt(t time.Time) *SessionUpdate {
 	return su
 }
 
-// SetNillableIssuedAt sets the "issued_at" field if the given value is not nil.
-func (su *SessionUpdate) SetNillableIssuedAt(t *time.Time) *SessionUpdate {
-	if t != nil {
-		su.SetIssuedAt(*t)
-	}
-	return su
-}
-
 // SetExpiresAt sets the "expires_at" field.
 func (su *SessionUpdate) SetExpiresAt(t time.Time) *SessionUpdate {
 	su.mutation.SetExpiresAt(t)
@@ -82,12 +74,6 @@ func (su *SessionUpdate) SetNillableExpiresAt(t *time.Time) *SessionUpdate {
 	if t != nil {
 		su.SetExpiresAt(*t)
 	}
-	return su
-}
-
-// ClearExpiresAt clears the value of the "expires_at" field.
-func (su *SessionUpdate) ClearExpiresAt() *SessionUpdate {
-	su.mutation.ClearExpiresAt()
 	return su
 }
 
@@ -180,6 +166,13 @@ func (su *SessionUpdate) defaults() error {
 		v := session.UpdateDefaultUpdatedAt()
 		su.mutation.SetUpdatedAt(v)
 	}
+	if _, ok := su.mutation.IssuedAt(); !ok {
+		if session.UpdateDefaultIssuedAt == nil {
+			return fmt.Errorf("generated: uninitialized session.UpdateDefaultIssuedAt (forgotten import generated/runtime?)")
+		}
+		v := session.UpdateDefaultIssuedAt()
+		su.mutation.SetIssuedAt(v)
+	}
 	return nil
 }
 
@@ -220,9 +213,6 @@ func (su *SessionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := su.mutation.ExpiresAt(); ok {
 		_spec.SetField(session.FieldExpiresAt, field.TypeTime, value)
-	}
-	if su.mutation.ExpiresAtCleared() {
-		_spec.ClearField(session.FieldExpiresAt, field.TypeTime)
 	}
 	if value, ok := su.mutation.OrganizationID(); ok {
 		_spec.SetField(session.FieldOrganizationID, field.TypeString, value)
@@ -312,14 +302,6 @@ func (suo *SessionUpdateOne) SetIssuedAt(t time.Time) *SessionUpdateOne {
 	return suo
 }
 
-// SetNillableIssuedAt sets the "issued_at" field if the given value is not nil.
-func (suo *SessionUpdateOne) SetNillableIssuedAt(t *time.Time) *SessionUpdateOne {
-	if t != nil {
-		suo.SetIssuedAt(*t)
-	}
-	return suo
-}
-
 // SetExpiresAt sets the "expires_at" field.
 func (suo *SessionUpdateOne) SetExpiresAt(t time.Time) *SessionUpdateOne {
 	suo.mutation.SetExpiresAt(t)
@@ -331,12 +313,6 @@ func (suo *SessionUpdateOne) SetNillableExpiresAt(t *time.Time) *SessionUpdateOn
 	if t != nil {
 		suo.SetExpiresAt(*t)
 	}
-	return suo
-}
-
-// ClearExpiresAt clears the value of the "expires_at" field.
-func (suo *SessionUpdateOne) ClearExpiresAt() *SessionUpdateOne {
-	suo.mutation.ClearExpiresAt()
 	return suo
 }
 
@@ -442,6 +418,13 @@ func (suo *SessionUpdateOne) defaults() error {
 		v := session.UpdateDefaultUpdatedAt()
 		suo.mutation.SetUpdatedAt(v)
 	}
+	if _, ok := suo.mutation.IssuedAt(); !ok {
+		if session.UpdateDefaultIssuedAt == nil {
+			return fmt.Errorf("generated: uninitialized session.UpdateDefaultIssuedAt (forgotten import generated/runtime?)")
+		}
+		v := session.UpdateDefaultIssuedAt()
+		suo.mutation.SetIssuedAt(v)
+	}
 	return nil
 }
 
@@ -499,9 +482,6 @@ func (suo *SessionUpdateOne) sqlSave(ctx context.Context) (_node *Session, err e
 	}
 	if value, ok := suo.mutation.ExpiresAt(); ok {
 		_spec.SetField(session.FieldExpiresAt, field.TypeTime, value)
-	}
-	if suo.mutation.ExpiresAtCleared() {
-		_spec.ClearField(session.FieldExpiresAt, field.TypeTime)
 	}
 	if value, ok := suo.mutation.OrganizationID(); ok {
 		_spec.SetField(session.FieldOrganizationID, field.TypeString, value)

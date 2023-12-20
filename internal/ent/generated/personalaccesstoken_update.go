@@ -90,16 +90,16 @@ func (patu *PersonalAccessTokenUpdate) ClearAbilities() *PersonalAccessTokenUpda
 	return patu
 }
 
-// SetExpirationAt sets the "expiration_at" field.
-func (patu *PersonalAccessTokenUpdate) SetExpirationAt(t time.Time) *PersonalAccessTokenUpdate {
-	patu.mutation.SetExpirationAt(t)
+// SetExpiresAt sets the "expires_at" field.
+func (patu *PersonalAccessTokenUpdate) SetExpiresAt(t time.Time) *PersonalAccessTokenUpdate {
+	patu.mutation.SetExpiresAt(t)
 	return patu
 }
 
-// SetNillableExpirationAt sets the "expiration_at" field if the given value is not nil.
-func (patu *PersonalAccessTokenUpdate) SetNillableExpirationAt(t *time.Time) *PersonalAccessTokenUpdate {
+// SetNillableExpiresAt sets the "expires_at" field if the given value is not nil.
+func (patu *PersonalAccessTokenUpdate) SetNillableExpiresAt(t *time.Time) *PersonalAccessTokenUpdate {
 	if t != nil {
-		patu.SetExpirationAt(*t)
+		patu.SetExpiresAt(*t)
 	}
 	return patu
 }
@@ -115,6 +115,12 @@ func (patu *PersonalAccessTokenUpdate) SetNillableDescription(s *string) *Person
 	if s != nil {
 		patu.SetDescription(*s)
 	}
+	return patu
+}
+
+// ClearDescription clears the value of the "description" field.
+func (patu *PersonalAccessTokenUpdate) ClearDescription() *PersonalAccessTokenUpdate {
+	patu.mutation.ClearDescription()
 	return patu
 }
 
@@ -247,11 +253,14 @@ func (patu *PersonalAccessTokenUpdate) sqlSave(ctx context.Context) (n int, err 
 	if patu.mutation.AbilitiesCleared() {
 		_spec.ClearField(personalaccesstoken.FieldAbilities, field.TypeJSON)
 	}
-	if value, ok := patu.mutation.ExpirationAt(); ok {
-		_spec.SetField(personalaccesstoken.FieldExpirationAt, field.TypeTime, value)
+	if value, ok := patu.mutation.ExpiresAt(); ok {
+		_spec.SetField(personalaccesstoken.FieldExpiresAt, field.TypeTime, value)
 	}
 	if value, ok := patu.mutation.Description(); ok {
 		_spec.SetField(personalaccesstoken.FieldDescription, field.TypeString, value)
+	}
+	if patu.mutation.DescriptionCleared() {
+		_spec.ClearField(personalaccesstoken.FieldDescription, field.TypeString)
 	}
 	if value, ok := patu.mutation.LastUsedAt(); ok {
 		_spec.SetField(personalaccesstoken.FieldLastUsedAt, field.TypeTime, value)
@@ -370,16 +379,16 @@ func (patuo *PersonalAccessTokenUpdateOne) ClearAbilities() *PersonalAccessToken
 	return patuo
 }
 
-// SetExpirationAt sets the "expiration_at" field.
-func (patuo *PersonalAccessTokenUpdateOne) SetExpirationAt(t time.Time) *PersonalAccessTokenUpdateOne {
-	patuo.mutation.SetExpirationAt(t)
+// SetExpiresAt sets the "expires_at" field.
+func (patuo *PersonalAccessTokenUpdateOne) SetExpiresAt(t time.Time) *PersonalAccessTokenUpdateOne {
+	patuo.mutation.SetExpiresAt(t)
 	return patuo
 }
 
-// SetNillableExpirationAt sets the "expiration_at" field if the given value is not nil.
-func (patuo *PersonalAccessTokenUpdateOne) SetNillableExpirationAt(t *time.Time) *PersonalAccessTokenUpdateOne {
+// SetNillableExpiresAt sets the "expires_at" field if the given value is not nil.
+func (patuo *PersonalAccessTokenUpdateOne) SetNillableExpiresAt(t *time.Time) *PersonalAccessTokenUpdateOne {
 	if t != nil {
-		patuo.SetExpirationAt(*t)
+		patuo.SetExpiresAt(*t)
 	}
 	return patuo
 }
@@ -395,6 +404,12 @@ func (patuo *PersonalAccessTokenUpdateOne) SetNillableDescription(s *string) *Pe
 	if s != nil {
 		patuo.SetDescription(*s)
 	}
+	return patuo
+}
+
+// ClearDescription clears the value of the "description" field.
+func (patuo *PersonalAccessTokenUpdateOne) ClearDescription() *PersonalAccessTokenUpdateOne {
+	patuo.mutation.ClearDescription()
 	return patuo
 }
 
@@ -557,11 +572,14 @@ func (patuo *PersonalAccessTokenUpdateOne) sqlSave(ctx context.Context) (_node *
 	if patuo.mutation.AbilitiesCleared() {
 		_spec.ClearField(personalaccesstoken.FieldAbilities, field.TypeJSON)
 	}
-	if value, ok := patuo.mutation.ExpirationAt(); ok {
-		_spec.SetField(personalaccesstoken.FieldExpirationAt, field.TypeTime, value)
+	if value, ok := patuo.mutation.ExpiresAt(); ok {
+		_spec.SetField(personalaccesstoken.FieldExpiresAt, field.TypeTime, value)
 	}
 	if value, ok := patuo.mutation.Description(); ok {
 		_spec.SetField(personalaccesstoken.FieldDescription, field.TypeString, value)
+	}
+	if patuo.mutation.DescriptionCleared() {
+		_spec.ClearField(personalaccesstoken.FieldDescription, field.TypeString)
 	}
 	if value, ok := patuo.mutation.LastUsedAt(); ok {
 		_spec.SetField(personalaccesstoken.FieldLastUsedAt, field.TypeTime, value)

@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 
+	"github.com/datumforge/datum/internal/ent/hooks"
 	"github.com/datumforge/datum/internal/ent/mixin"
 	"github.com/datumforge/datum/internal/keygen"
 )
@@ -22,7 +23,8 @@ type PersonalAccessToken struct {
 // Fields of the PersonalAccessToken
 func (PersonalAccessToken) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name"),
+		field.String("name").
+			Comment("the name associated with the token"),
 		field.String("token").Sensitive().
 			Unique().
 			Immutable().
@@ -31,11 +33,18 @@ func (PersonalAccessToken) Fields() []ent.Field {
 				return token
 			}),
 		field.JSON("abilities", []string{}).
+			Comment("what abilites the token should have").
 			Optional(),
-		field.Time("expiration_at"),
-		field.String("description").Default("").Annotations(
-			entgql.Skip(entgql.SkipWhereInput),
-		),
+		field.Time("expires_at").
+			Comment("when the token expires").
+			Nillable(),
+		field.String("description").
+			Comment("a description of the token's purpose").
+			Optional().
+			Default("").
+			Annotations(
+				entgql.Skip(entgql.SkipWhereInput),
+			),
 		field.Time("last_used_at").
 			UpdateDefault(time.Now).
 			Optional().
@@ -75,5 +84,12 @@ func (PersonalAccessToken) Annotations() []schema.Annotation {
 		entgql.QueryField(),
 		entgql.RelayConnection(),
 		entgql.Mutations(entgql.MutationCreate(), (entgql.MutationUpdate())),
+	}
+}
+
+// Hooks of the AccessToken
+func (PersonalAccessToken) Hooks() []ent.Hook {
+	return []ent.Hook{
+		hooks.HookPersonalAccessToken(),
 	}
 }

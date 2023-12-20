@@ -6,7 +6,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/datumforge/datum/internal/ent/generated/accesstoken"
 	"github.com/datumforge/datum/internal/ent/generated/entitlement"
 	"github.com/datumforge/datum/internal/ent/generated/group"
 	"github.com/datumforge/datum/internal/ent/generated/groupsetting"
@@ -16,7 +15,6 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated/organization"
 	"github.com/datumforge/datum/internal/ent/generated/organizationsetting"
 	"github.com/datumforge/datum/internal/ent/generated/personalaccesstoken"
-	"github.com/datumforge/datum/internal/ent/generated/refreshtoken"
 	"github.com/datumforge/datum/internal/ent/generated/session"
 	"github.com/datumforge/datum/internal/ent/generated/user"
 	"github.com/datumforge/datum/internal/ent/generated/usersetting"
@@ -30,44 +28,13 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
-	accesstokenMixin := schema.AccessToken{}.Mixin()
-	accesstokenMixinHooks0 := accesstokenMixin[0].Hooks()
-	accesstoken.Hooks[0] = accesstokenMixinHooks0[0]
-	accesstokenMixinFields0 := accesstokenMixin[0].Fields()
-	_ = accesstokenMixinFields0
-	accesstokenMixinFields1 := accesstokenMixin[1].Fields()
-	_ = accesstokenMixinFields1
-	accesstokenFields := schema.AccessToken{}.Fields()
-	_ = accesstokenFields
-	// accesstokenDescCreatedAt is the schema descriptor for created_at field.
-	accesstokenDescCreatedAt := accesstokenMixinFields0[0].Descriptor()
-	// accesstoken.DefaultCreatedAt holds the default value on creation for the created_at field.
-	accesstoken.DefaultCreatedAt = accesstokenDescCreatedAt.Default.(func() time.Time)
-	// accesstokenDescUpdatedAt is the schema descriptor for updated_at field.
-	accesstokenDescUpdatedAt := accesstokenMixinFields0[1].Descriptor()
-	// accesstoken.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	accesstoken.DefaultUpdatedAt = accesstokenDescUpdatedAt.Default.(func() time.Time)
-	// accesstoken.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	accesstoken.UpdateDefaultUpdatedAt = accesstokenDescUpdatedAt.UpdateDefault.(func() time.Time)
-	// accesstokenDescExpiresAt is the schema descriptor for expires_at field.
-	accesstokenDescExpiresAt := accesstokenFields[1].Descriptor()
-	// accesstoken.DefaultExpiresAt holds the default value on creation for the expires_at field.
-	accesstoken.DefaultExpiresAt = accesstokenDescExpiresAt.Default.(func() time.Time)
-	// accesstokenDescIssuedAt is the schema descriptor for issued_at field.
-	accesstokenDescIssuedAt := accesstokenFields[2].Descriptor()
-	// accesstoken.DefaultIssuedAt holds the default value on creation for the issued_at field.
-	accesstoken.DefaultIssuedAt = accesstokenDescIssuedAt.Default.(time.Time)
-	// accesstokenDescLastUsedAt is the schema descriptor for last_used_at field.
-	accesstokenDescLastUsedAt := accesstokenFields[3].Descriptor()
-	// accesstoken.UpdateDefaultLastUsedAt holds the default value on update for the last_used_at field.
-	accesstoken.UpdateDefaultLastUsedAt = accesstokenDescLastUsedAt.UpdateDefault.(func() time.Time)
-	// accesstokenDescID is the schema descriptor for id field.
-	accesstokenDescID := accesstokenMixinFields1[0].Descriptor()
-	// accesstoken.DefaultID holds the default value on creation for the id field.
-	accesstoken.DefaultID = accesstokenDescID.Default.(func() string)
 	entitlementMixin := schema.Entitlement{}.Mixin()
 	entitlementMixinHooks0 := entitlementMixin[0].Hooks()
+	entitlementMixinHooks2 := entitlementMixin[2].Hooks()
 	entitlement.Hooks[0] = entitlementMixinHooks0[0]
+	entitlement.Hooks[1] = entitlementMixinHooks2[0]
+	entitlementMixinInters2 := entitlementMixin[2].Interceptors()
+	entitlement.Interceptors[0] = entitlementMixinInters2[0]
 	entitlementMixinFields0 := entitlementMixin[0].Fields()
 	_ = entitlementMixinFields0
 	entitlementMixinFields1 := entitlementMixin[1].Fields()
@@ -84,8 +51,12 @@ func init() {
 	entitlement.DefaultUpdatedAt = entitlementDescUpdatedAt.Default.(func() time.Time)
 	// entitlement.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	entitlement.UpdateDefaultUpdatedAt = entitlementDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// entitlementDescExpires is the schema descriptor for expires field.
+	entitlementDescExpires := entitlementFields[3].Descriptor()
+	// entitlement.DefaultExpires holds the default value on creation for the expires field.
+	entitlement.DefaultExpires = entitlementDescExpires.Default.(bool)
 	// entitlementDescCancelled is the schema descriptor for cancelled field.
-	entitlementDescCancelled := entitlementFields[8].Descriptor()
+	entitlementDescCancelled := entitlementFields[5].Descriptor()
 	// entitlement.DefaultCancelled holds the default value on creation for the cancelled field.
 	entitlement.DefaultCancelled = entitlementDescCancelled.Default.(bool)
 	// entitlementDescID is the schema descriptor for id field.
@@ -136,7 +107,7 @@ func init() {
 	// group.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	group.NameValidator = groupDescName.Validators[0].(func(string) error)
 	// groupDescDisplayName is the schema descriptor for display_name field.
-	groupDescDisplayName := groupFields[3].Descriptor()
+	groupDescDisplayName := groupFields[4].Descriptor()
 	// group.DefaultDisplayName holds the default value on creation for the display_name field.
 	group.DefaultDisplayName = groupDescDisplayName.Default.(string)
 	// group.DisplayNameValidator is a validator for the "display_name" field. It is called by the builders before save.
@@ -147,7 +118,11 @@ func init() {
 	group.DefaultID = groupDescID.Default.(func() string)
 	groupsettingMixin := schema.GroupSetting{}.Mixin()
 	groupsettingMixinHooks0 := groupsettingMixin[0].Hooks()
+	groupsettingMixinHooks2 := groupsettingMixin[2].Hooks()
 	groupsetting.Hooks[0] = groupsettingMixinHooks0[0]
+	groupsetting.Hooks[1] = groupsettingMixinHooks2[0]
+	groupsettingMixinInters2 := groupsettingMixin[2].Interceptors()
+	groupsetting.Interceptors[0] = groupsettingMixinInters2[0]
 	groupsettingMixinFields0 := groupsettingMixin[0].Fields()
 	_ = groupsettingMixinFields0
 	groupsettingMixinFields1 := groupsettingMixin[1].Fields()
@@ -182,7 +157,11 @@ func init() {
 	groupsetting.DefaultID = groupsettingDescID.Default.(func() string)
 	integrationMixin := schema.Integration{}.Mixin()
 	integrationMixinHooks0 := integrationMixin[0].Hooks()
+	integrationMixinHooks2 := integrationMixin[2].Hooks()
 	integration.Hooks[0] = integrationMixinHooks0[0]
+	integration.Hooks[1] = integrationMixinHooks2[0]
+	integrationMixinInters2 := integrationMixin[2].Interceptors()
+	integration.Interceptors[0] = integrationMixinInters2[0]
 	integrationMixinFields0 := integrationMixin[0].Fields()
 	_ = integrationMixinFields0
 	integrationMixinFields1 := integrationMixin[1].Fields()
@@ -209,7 +188,11 @@ func init() {
 	integration.DefaultID = integrationDescID.Default.(func() string)
 	oauthproviderMixin := schema.OauthProvider{}.Mixin()
 	oauthproviderMixinHooks0 := oauthproviderMixin[0].Hooks()
+	oauthproviderMixinHooks2 := oauthproviderMixin[2].Hooks()
 	oauthprovider.Hooks[0] = oauthproviderMixinHooks0[0]
+	oauthprovider.Hooks[1] = oauthproviderMixinHooks2[0]
+	oauthproviderMixinInters2 := oauthproviderMixin[2].Interceptors()
+	oauthprovider.Interceptors[0] = oauthproviderMixinInters2[0]
 	oauthproviderMixinFields0 := oauthproviderMixin[0].Fields()
 	_ = oauthproviderMixinFields0
 	oauthproviderMixinFields1 := oauthproviderMixin[1].Fields()
@@ -338,7 +321,11 @@ func init() {
 	organization.DefaultID = organizationDescID.Default.(func() string)
 	organizationsettingMixin := schema.OrganizationSetting{}.Mixin()
 	organizationsettingMixinHooks0 := organizationsettingMixin[0].Hooks()
+	organizationsettingMixinHooks2 := organizationsettingMixin[2].Hooks()
 	organizationsetting.Hooks[0] = organizationsettingMixinHooks0[0]
+	organizationsetting.Hooks[1] = organizationsettingMixinHooks2[0]
+	organizationsettingMixinInters2 := organizationsettingMixin[2].Interceptors()
+	organizationsetting.Interceptors[0] = organizationsettingMixinInters2[0]
 	organizationsettingMixinFields0 := organizationsettingMixin[0].Fields()
 	_ = organizationsettingMixinFields0
 	organizationsettingMixinFields1 := organizationsettingMixin[1].Fields()
@@ -365,7 +352,9 @@ func init() {
 	organizationsetting.DefaultID = organizationsettingDescID.Default.(func() string)
 	personalaccesstokenMixin := schema.PersonalAccessToken{}.Mixin()
 	personalaccesstokenMixinHooks0 := personalaccesstokenMixin[0].Hooks()
+	personalaccesstokenHooks := schema.PersonalAccessToken{}.Hooks()
 	personalaccesstoken.Hooks[0] = personalaccesstokenMixinHooks0[0]
+	personalaccesstoken.Hooks[1] = personalaccesstokenHooks[0]
 	personalaccesstokenMixinFields0 := personalaccesstokenMixin[0].Fields()
 	_ = personalaccesstokenMixinFields0
 	personalaccesstokenMixinFields1 := personalaccesstokenMixin[1].Fields()
@@ -398,26 +387,11 @@ func init() {
 	personalaccesstokenDescID := personalaccesstokenMixinFields1[0].Descriptor()
 	// personalaccesstoken.DefaultID holds the default value on creation for the id field.
 	personalaccesstoken.DefaultID = personalaccesstokenDescID.Default.(func() string)
-	refreshtokenMixin := schema.RefreshToken{}.Mixin()
-	refreshtokenMixinFields0 := refreshtokenMixin[0].Fields()
-	_ = refreshtokenMixinFields0
-	refreshtokenFields := schema.RefreshToken{}.Fields()
-	_ = refreshtokenFields
-	// refreshtokenDescExpiresAt is the schema descriptor for expires_at field.
-	refreshtokenDescExpiresAt := refreshtokenFields[1].Descriptor()
-	// refreshtoken.DefaultExpiresAt holds the default value on creation for the expires_at field.
-	refreshtoken.DefaultExpiresAt = refreshtokenDescExpiresAt.Default.(func() time.Time)
-	// refreshtokenDescIssuedAt is the schema descriptor for issued_at field.
-	refreshtokenDescIssuedAt := refreshtokenFields[2].Descriptor()
-	// refreshtoken.DefaultIssuedAt holds the default value on creation for the issued_at field.
-	refreshtoken.DefaultIssuedAt = refreshtokenDescIssuedAt.Default.(time.Time)
-	// refreshtokenDescID is the schema descriptor for id field.
-	refreshtokenDescID := refreshtokenMixinFields0[0].Descriptor()
-	// refreshtoken.DefaultID holds the default value on creation for the id field.
-	refreshtoken.DefaultID = refreshtokenDescID.Default.(func() string)
 	sessionMixin := schema.Session{}.Mixin()
 	sessionMixinHooks0 := sessionMixin[0].Hooks()
+	sessionHooks := schema.Session{}.Hooks()
 	session.Hooks[0] = sessionMixinHooks0[0]
+	session.Hooks[1] = sessionHooks[0]
 	sessionMixinFields0 := sessionMixin[0].Fields()
 	_ = sessionMixinFields0
 	sessionMixinFields1 := sessionMixin[1].Fields()
@@ -436,12 +410,8 @@ func init() {
 	session.UpdateDefaultUpdatedAt = sessionDescUpdatedAt.UpdateDefault.(func() time.Time)
 	// sessionDescIssuedAt is the schema descriptor for issued_at field.
 	sessionDescIssuedAt := sessionFields[1].Descriptor()
-	// session.DefaultIssuedAt holds the default value on creation for the issued_at field.
-	session.DefaultIssuedAt = sessionDescIssuedAt.Default.(func() time.Time)
-	// sessionDescExpiresAt is the schema descriptor for expires_at field.
-	sessionDescExpiresAt := sessionFields[2].Descriptor()
-	// session.DefaultExpiresAt holds the default value on creation for the expires_at field.
-	session.DefaultExpiresAt = sessionDescExpiresAt.Default.(func() time.Time)
+	// session.UpdateDefaultIssuedAt holds the default value on update for the issued_at field.
+	session.UpdateDefaultIssuedAt = sessionDescIssuedAt.UpdateDefault.(func() time.Time)
 	// sessionDescID is the schema descriptor for id field.
 	sessionDescID := sessionMixinFields1[0].Descriptor()
 	// session.DefaultID holds the default value on creation for the id field.
@@ -584,7 +554,11 @@ func init() {
 	user.DefaultID = userDescID.Default.(func() string)
 	usersettingMixin := schema.UserSetting{}.Mixin()
 	usersettingMixinHooks0 := usersettingMixin[0].Hooks()
+	usersettingMixinHooks2 := usersettingMixin[2].Hooks()
 	usersetting.Hooks[0] = usersettingMixinHooks0[0]
+	usersetting.Hooks[1] = usersettingMixinHooks2[0]
+	usersettingMixinInters2 := usersettingMixin[2].Interceptors()
+	usersetting.Interceptors[0] = usersettingMixinInters2[0]
 	usersettingMixinFields0 := usersettingMixin[0].Fields()
 	_ = usersettingMixinFields0
 	usersettingMixinFields1 := usersettingMixin[1].Fields()
