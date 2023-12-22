@@ -250,8 +250,9 @@ func TestMutation_CreateOrganization(t *testing.T) {
 	echoContext.SetRequest(echoContext.Request().WithContext(reqCtx))
 
 	parentOrg := (&OrganizationBuilder{}).MustNew(reqCtx)
+	parentPersonalOrg := (&OrganizationBuilder{PersonalOrg: true}).MustNew(reqCtx)
 
-	listObjects := []string{fmt.Sprintf("organization:%s", parentOrg.ID)}
+	listObjects := []string{fmt.Sprintf("organization:%s", parentOrg.ID), fmt.Sprintf("organization:%s", parentPersonalOrg.ID)}
 
 	// setup deleted org
 	orgToDelete := (&OrganizationBuilder{}).MustNew(reqCtx)
@@ -278,6 +279,13 @@ func TestMutation_CreateOrganization(t *testing.T) {
 			orgName:        gofakeit.Name(),
 			orgDescription: gofakeit.HipsterSentence(10),
 			parentOrgID:    parentOrg.ID,
+		},
+		{
+			name:           "happy path organization with parent personal org",
+			orgName:        gofakeit.Name(),
+			orgDescription: gofakeit.HipsterSentence(10),
+			parentOrgID:    parentPersonalOrg.ID,
+			errorMsg:       "personal organizations are not allowed to have child organizations",
 		},
 		{
 			name:           "empty organization name",
@@ -340,6 +348,8 @@ func TestMutation_CreateOrganization(t *testing.T) {
 
 				// There is a check to ensure user has write access to parent org
 				mockCheckAny(mockCtrl, mc, reqCtx, true)
+				// There is a check to ensure the parent org is not a parent org
+				mockListAny(mockCtrl, mc, reqCtx, listObjects)
 			}
 
 			// When calls are expected to fail, we won't ever write tuples
@@ -386,6 +396,7 @@ func TestMutation_CreateOrganization(t *testing.T) {
 	}
 
 	(&OrganizationCleanup{OrgID: parentOrg.ID}).MustDelete(reqCtx)
+	(&OrganizationCleanup{OrgID: parentPersonalOrg.ID}).MustDelete(reqCtx)
 }
 
 func TestMutation_CreateOrganizationNoAuth(t *testing.T) {
