@@ -52,7 +52,7 @@ steps:
     plugins:
       - docker#v5.9.0:
           image: "registry.hub.docker.com/securego/gosec:2.18.2"
-          command: ["-no-fail", "-exclude-generated", "-fmt sonarqube", "-out", "results.sarif", "./..."]
+          command: ["-no-fail", "-exclude-generated", "-fmt sonarqube", "-out", "results.txt", "./..."]
     artifact_paths: ["results.txt"]
 
   - label: ":github: upload fork PR reports"
