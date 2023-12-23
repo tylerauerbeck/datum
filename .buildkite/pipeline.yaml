@@ -53,10 +53,12 @@ steps:
       - docker#v5.9.0:
           image: "registry.hub.docker.com/securego/gosec:2.18.2"
           command: ["-no-fail", "-exclude-generated", "-fmt sonarqube", "-out", "results.txt", "./..."]
+          environment:
+            - "GOTOOLCHAIN=auto"
     artifact_paths: ["results.txt"]
 
   - label: ":github: upload fork PR reports"
-    key: "gosec-upload-pr"
+    key: "scan-upload-pr"
     if: (build.pull_request.labels includes "run-ci" ) 
     depends_on: ["gosec", "go_test"]
     plugins:
@@ -69,15 +71,17 @@ steps:
             environment:
               - "SONAR_TOKEN=$SONAR_TOKEN"
               - "SONAR_HOST_URL=$SONAR_HOST"
-              - "SONAR_SCANNER_OPTS=-Dsonar.branch.name=$BUILDKITE_BRANCH -Dsonar.branch.target=$BUILDKITE_PULL_REQUEST_BASE_BRANCH"
+              - "SONAR_SCANNER_OPTS=-Dsonar.pullrequest.branch=$BUILDKITE_BRANCH -Dsonar.pullrequest.base=$BUILDKITE_PULL_REQUEST_BASE_BRANCH -Dsonar.pullrequest.key=$BUILDKITE_PULL_REQUEST"
 
   - label: ":github: upload reports"
-    key: "gosec-upload"
+    key: "scan-upload"
     if: (build.branch == "main") || (build.branch !~ /:/i)
     depends_on: ["gosec", "go_test"]
     plugins:
       - artifacts#v1.9.2:
           download: results.txt
+      - artifacts#v1.9.2:
+          download: coverage.out
       - docker#v5.9.0:
             image: "sonarsource/sonar-scanner-cli:4"
             environment:
