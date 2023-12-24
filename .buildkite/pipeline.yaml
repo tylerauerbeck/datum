@@ -69,7 +69,7 @@ steps:
       - docker#v5.9.0:
             image: "sonarsource/sonar-scanner-cli:4"
             environment:
-              - "SONAR_TOKEN=$$SONAR_TOKEN"
+              - "SONAR_TOKEN"
               - "SONAR_HOST_URL=$SONAR_HOST"
               - "SONAR_SCANNER_OPTS=-Dsonar.pullrequest.branch=$BUILDKITE_BRANCH -Dsonar.pullrequest.base=$BUILDKITE_PULL_REQUEST_BASE_BRANCH -Dsonar.pullrequest.key=$BUILDKITE_PULL_REQUEST"
 
@@ -85,7 +85,7 @@ steps:
       - docker#v5.9.0:
             image: "sonarsource/sonar-scanner-cli:4"
             environment:
-              - "SONAR_TOKEN=$$SONAR_TOKEN"
+              - "SONAR_TOKEN"
               - "SONAR_HOST_URL=$SONAR_HOST"
 
 - group: ":golang: Builds"
