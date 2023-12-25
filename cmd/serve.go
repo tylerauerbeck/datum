@@ -123,12 +123,12 @@ func serve(ctx context.Context) error {
 	// Add Driver to the Handlers Config
 	so.Config.Server.Handler.DBClient = entdbClient
 
-	srv := server.NewServer(so.Config.Server, so.Config.Logger.Desugar())
+	srv := server.NewServer(so.Config.Server, so.Config.Logger)
 
 	// Setup Graph API Handlers
 	so.AddServerOptions(serveropts.WithGraphRoute(srv, entdbClient, settings, mw))
 
-	if err := srv.StartEchoServer(); err != nil {
+	if err := srv.StartEchoServer(ctx); err != nil {
 		logger.Error("failed to run server", zap.Error(err))
 	}
 
