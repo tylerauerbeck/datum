@@ -1,11 +1,15 @@
 package handlers
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/datumforge/datum/internal/ent/generated"
+
+	echo "github.com/datumforge/echox"
 )
 
 var (
@@ -32,6 +36,20 @@ var (
 
 	// ErrNotFound is returned when the requested object is not found
 	ErrNotFound = errors.New("object not found in the database")
+
+	// ErrMissingField is returned when a field is missing duh
+	ErrMissingField = errors.New("missing required field")
+
+	// ErrInvalidCredentials is returned when the password is invalid or missing
+	ErrInvalidCredentials = errors.New("datum credentials are missing or invalid")
+
+	// ErrUnverifiedUser is returned when email_verified on the user is false
+	ErrUnverifiedUser = errors.New("user is not verified")
+
+	// ErrNoAuthUser is returned when the user couldn't be identified by the request
+	ErrNoAuthUser = errors.New("could not identify authenticated user in request")
+
+	unsuccessful = echo.HTTPError{}
 )
 
 // InvalidEmailConfigError is returned when an invalid url configuration was provided
@@ -115,4 +133,32 @@ func IsForeignKeyConstraintError(err error) bool {
 	}
 
 	return false
+}
+
+// ErrorResponse constructs a new response for an error or simply returns unsuccessful
+func ErrorResponse(err interface{}) *echo.HTTPError {
+	if err == nil {
+		return &unsuccessful
+	}
+
+	rep := echo.HTTPError{Code: http.StatusBadRequest}
+	switch err := err.(type) {
+	case error:
+		rep.Message = err.Error()
+	case string:
+		rep.Message = err
+	case fmt.Stringer:
+		rep.Message = err.String()
+	case json.Marshaler:
+		data, e := err.MarshalJSON()
+		if e != nil {
+			panic(err)
+		}
+
+		rep.Message = string(data)
+	default:
+		rep.Message = "unhandled error response"
+	}
+
+	return &rep
 }

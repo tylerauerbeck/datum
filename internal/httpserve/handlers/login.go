@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	echo "github.com/datumforge/echox"
@@ -25,13 +26,33 @@ func (h *Handler) LoginHandler(ctx echo.Context) error {
 
 	access, refresh, err := h.TM.CreateTokenPair(claims)
 	if err != nil {
-		return auth.ErrorResponse(err)
+		return ErrorResponse(err)
 	}
 
 	// set cookies on request with the access and refresh token
 	// when cookie domain is localhost, this is dropped but expected
 	if err := auth.SetAuthCookies(ctx, access, refresh, h.CookieDomain); err != nil {
-		return auth.ErrorResponse(err)
+		return ErrorResponse(err)
+	}
+
+	tx, err := h.DBClient.Tx(ctx.Request().Context())
+	if err != nil {
+		h.Logger.Errorw("error starting transaction", "error", err)
+		return ctx.JSON(http.StatusInternalServerError, ErrProcessingRequest)
+	}
+
+	if _, err := tx.User.Update().SetLastSeen(time.Now()).Where(func(s *sql.Selector) {
+		s.Where(sql.EQ("id", user.userID))
+	}).Save(ctx.Request().Context()); err != nil {
+		if err := tx.Rollback(); err != nil {
+			return err
+		}
+
+		return err
+	}
+
+	if err = tx.Commit(); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
 	}
 
 	return ctx.JSON(http.StatusOK, Response{Message: "success"})
@@ -68,25 +89,25 @@ func (h *Handler) verifyUserPassword(ctx echo.Context) (*User, error) {
 	}).Only(ctx.Request().Context())
 	if err != nil {
 		auth.Unauthorized(ctx) //nolint:errcheck
-		return nil, auth.ErrNoAuthUser
+		return nil, ErrNoAuthUser
 	}
 
 	if user.Edges.Setting.Status != "ACTIVE" {
 		auth.Unauthorized(ctx) //nolint:errcheck
-		return nil, auth.ErrNoAuthUser
+		return nil, ErrNoAuthUser
 	}
 
 	// verify the password is correct
 	valid, err := passwd.VerifyDerivedKey(*user.Password, u.Password)
 	if err != nil || !valid {
 		auth.Unauthorized(ctx) //nolint:errcheck
-		return nil, auth.ErrInvalidCredentials
+		return nil, ErrInvalidCredentials
 	}
 
 	// verify email is verified
 	if !user.Edges.Setting.EmailConfirmed {
 		auth.Unverified(ctx) //nolint:errcheck
-		return nil, auth.ErrUnverifiedUser
+		return nil, ErrUnverifiedUser
 	}
 
 	u.userID = user.ID
