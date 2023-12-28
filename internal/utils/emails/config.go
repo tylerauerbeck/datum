@@ -12,8 +12,8 @@ import (
 // Config is a struct for sending emails via SendGrid and managing marketing contacts
 // TODO: migrate these configs into the default httpserve/config struct and add local yaml / viper configs
 type Config struct {
-	// APIKey is the sendgrid API key
-	APIKey string `split_words:"true" required:"false"`
+	// SendGridAPIKey is the sendgrid API key
+	SendGridAPIKey string `split_words:"true" required:"false"`
 	// FromEmail is the default email we'll send from and is safe to configure by default as our emails and domain are signed
 	FromEmail string `split_words:"true" default:"no-reply@datum.net"`
 	// Testing is a bool flag to indicate we shouldn't be sending live emails and defaults to true so needs to be specifically changed to send live emails
@@ -36,7 +36,7 @@ const (
 )
 
 // Validate the from and admin emails are present if the SendGrid API is enabled
-func (c Config) Validate() (err error) {
+func (c *Config) Validate() (err error) {
 	if c.Enabled() {
 		if c.AdminEmail == "" || c.FromEmail == "" {
 			return ErrBothAdminAndFromRequired
@@ -59,12 +59,12 @@ func (c Config) Validate() (err error) {
 }
 
 // Enabled returns true if there is a SendGrid API key available
-func (c Config) Enabled() bool {
-	return c.APIKey != ""
+func (c *Config) Enabled() bool {
+	return c.SendGridAPIKey != ""
 }
 
 // FromContact parses the FromEmail and returns a sendgrid contact
-func (c Config) FromContact() (sendgrid.Contact, error) {
+func (c *Config) FromContact() (sendgrid.Contact, error) {
 	return parseEmail(c.FromEmail)
 }
 
@@ -75,7 +75,7 @@ func (c Config) AdminContact() (sendgrid.Contact, error) {
 
 // MustFromContact function is a helper function that returns the
 // `sendgrid.Contact` for the `FromEmail` field in the `Config` struct
-func (c Config) MustFromContact() sendgrid.Contact {
+func (c *Config) MustFromContact() sendgrid.Contact {
 	contact, err := c.FromContact()
 	if err != nil {
 		panic(err)
@@ -89,7 +89,7 @@ func (c Config) MustFromContact() sendgrid.Contact {
 // `AdminContact` function to parse the `AdminEmail` and return a `sendgrid.Contact`. If there is an
 // error parsing the email, it will panic and throw an error. Otherwise, it will return the parsed
 // `sendgrid.Contact`
-func (c Config) MustAdminContact() sendgrid.Contact {
+func (c *Config) MustAdminContact() sendgrid.Contact {
 	contact, err := c.AdminContact()
 	if err != nil {
 		panic(err)

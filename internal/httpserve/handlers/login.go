@@ -13,12 +13,6 @@ import (
 	"github.com/datumforge/datum/internal/tokens"
 )
 
-type User struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	userID   string
-}
-
 // LoginHandler validates the user credentials and returns a valid cookie
 // this only supports username password login today (not oauth)
 func (h *Handler) LoginHandler(ctx echo.Context) error {

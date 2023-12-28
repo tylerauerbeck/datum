@@ -13,7 +13,7 @@ import (
 )
 
 // New email manager with the specified configuration
-func New(conf Config) (m *EmailManager, err error) {
+func New(conf *Config) (m *EmailManager, err error) {
 	m = &EmailManager{conf: conf}
 
 	if conf.Testing {
@@ -22,10 +22,10 @@ func New(conf Config) (m *EmailManager, err error) {
 			Storage: conf.Archive,
 		}
 	} else {
-		if conf.APIKey == "" {
+		if conf.SendGridAPIKey == "" {
 			return nil, ErrFailedToCreateEmailClient
 		}
-		m.client = sendgrid.NewSendClient(conf.APIKey)
+		m.client = sendgrid.NewSendClient(conf.SendGridAPIKey)
 	}
 
 	// Parse the from and admin emails from the configuration
@@ -38,7 +38,7 @@ func New(conf Config) (m *EmailManager, err error) {
 
 // EmailManager allows a server to send rich emails using the SendGrid service
 type EmailManager struct {
-	conf      Config
+	conf      *Config
 	client    SendGridClient
 	fromEmail *mail.Address
 }

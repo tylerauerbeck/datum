@@ -1,8 +1,6 @@
 package emails
 
 import (
-	"fmt"
-
 	sg "github.com/datumforge/datum/internal/utils/sendgrid"
 )
 
@@ -34,8 +32,8 @@ func (m *EmailManager) AddContact(contact *sg.Contact, listIDs ...string) (err e
 	}
 
 	// Invoke the SendGrid API to add the contact
-	if err = sg.AddContacts(m.conf.APIKey, sgdata); err != nil {
-		return fmt.Errorf("could not add contact to sendgrid: %w", err)
+	if err = sg.AddContacts(m.conf.SendGridAPIKey, sgdata); err != nil {
+		return err
 	}
 
 	return nil
