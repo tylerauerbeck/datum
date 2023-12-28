@@ -6,6 +6,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/datumforge/datum/internal/ent/generated/emailverificationtoken"
 	"github.com/datumforge/datum/internal/ent/generated/entitlement"
 	"github.com/datumforge/datum/internal/ent/generated/group"
 	"github.com/datumforge/datum/internal/ent/generated/groupsetting"
@@ -28,6 +29,47 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	emailverificationtokenMixin := schema.EmailVerificationToken{}.Mixin()
+	emailverificationtokenMixinHooks0 := emailverificationtokenMixin[0].Hooks()
+	emailverificationtokenMixinHooks2 := emailverificationtokenMixin[2].Hooks()
+	emailverificationtokenHooks := schema.EmailVerificationToken{}.Hooks()
+	emailverificationtoken.Hooks[0] = emailverificationtokenMixinHooks0[0]
+	emailverificationtoken.Hooks[1] = emailverificationtokenMixinHooks2[0]
+	emailverificationtoken.Hooks[2] = emailverificationtokenHooks[0]
+	emailverificationtokenMixinInters2 := emailverificationtokenMixin[2].Interceptors()
+	emailverificationtoken.Interceptors[0] = emailverificationtokenMixinInters2[0]
+	emailverificationtokenMixinFields0 := emailverificationtokenMixin[0].Fields()
+	_ = emailverificationtokenMixinFields0
+	emailverificationtokenMixinFields1 := emailverificationtokenMixin[1].Fields()
+	_ = emailverificationtokenMixinFields1
+	emailverificationtokenFields := schema.EmailVerificationToken{}.Fields()
+	_ = emailverificationtokenFields
+	// emailverificationtokenDescCreatedAt is the schema descriptor for created_at field.
+	emailverificationtokenDescCreatedAt := emailverificationtokenMixinFields0[0].Descriptor()
+	// emailverificationtoken.DefaultCreatedAt holds the default value on creation for the created_at field.
+	emailverificationtoken.DefaultCreatedAt = emailverificationtokenDescCreatedAt.Default.(func() time.Time)
+	// emailverificationtokenDescUpdatedAt is the schema descriptor for updated_at field.
+	emailverificationtokenDescUpdatedAt := emailverificationtokenMixinFields0[1].Descriptor()
+	// emailverificationtoken.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	emailverificationtoken.DefaultUpdatedAt = emailverificationtokenDescUpdatedAt.Default.(func() time.Time)
+	// emailverificationtoken.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	emailverificationtoken.UpdateDefaultUpdatedAt = emailverificationtokenDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// emailverificationtokenDescToken is the schema descriptor for token field.
+	emailverificationtokenDescToken := emailverificationtokenFields[0].Descriptor()
+	// emailverificationtoken.TokenValidator is a validator for the "token" field. It is called by the builders before save.
+	emailverificationtoken.TokenValidator = emailverificationtokenDescToken.Validators[0].(func(string) error)
+	// emailverificationtokenDescEmail is the schema descriptor for email field.
+	emailverificationtokenDescEmail := emailverificationtokenFields[2].Descriptor()
+	// emailverificationtoken.EmailValidator is a validator for the "email" field. It is called by the builders before save.
+	emailverificationtoken.EmailValidator = emailverificationtokenDescEmail.Validators[0].(func(string) error)
+	// emailverificationtokenDescSecret is the schema descriptor for secret field.
+	emailverificationtokenDescSecret := emailverificationtokenFields[3].Descriptor()
+	// emailverificationtoken.SecretValidator is a validator for the "secret" field. It is called by the builders before save.
+	emailverificationtoken.SecretValidator = emailverificationtokenDescSecret.Validators[0].(func([]byte) error)
+	// emailverificationtokenDescID is the schema descriptor for id field.
+	emailverificationtokenDescID := emailverificationtokenMixinFields1[0].Descriptor()
+	// emailverificationtoken.DefaultID holds the default value on creation for the id field.
+	emailverificationtoken.DefaultID = emailverificationtokenDescID.Default.(func() string)
 	entitlementMixin := schema.Entitlement{}.Mixin()
 	entitlementMixinHooks0 := entitlementMixin[0].Hooks()
 	entitlementMixinHooks2 := entitlementMixin[2].Hooks()
