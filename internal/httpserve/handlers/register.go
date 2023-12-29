@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"strings"
@@ -26,7 +27,8 @@ type RegisterReply struct {
 	ID      string `json:"user_id"`
 	Email   string `json:"email"`
 	Message string `json:"message"`
-	Token   string `json:"token"`
+	// TODO: remove this before go live, we shouldn't actually return the token here
+	Token string `json:"token"`
 }
 
 // RegisterHandler handles the registration of a new datum user, creating the user, personal organization
@@ -79,39 +81,11 @@ func (h *Handler) RegisterHandler(ctx echo.Context) error {
 		FirstName: in.FirstName,
 		LastName:  in.LastName,
 		Email:     in.Email,
-		Password:  in.Password,
+		ID:        meowuser.ID,
 	}
 
-	if err = user.CreateVerificationToken(); err != nil {
-		h.Logger.Errorw("unable to create verification token", "error", err)
-		return ctx.JSON(http.StatusInternalServerError, ErrProcessingRequest)
-	}
-
-	ttl, err := time.Parse(time.RFC3339Nano, user.EmailVerificationExpires.String)
+	meowtoken, err := h.storeEmailVerificationToken(ctx.Request().Context(), tx, user)
 	if err != nil {
-		return err
-	}
-
-	meowtoken, err := tx.EmailVerificationToken.Create().
-		SetOwnerID(meowuser.ID).
-		SetToken(user.EmailVerificationToken.String).
-		SetTTL(ttl).
-		SetEmail(user.Email).
-		SetSecret(user.EmailVerificationSecret).
-		Save(ctx.Request().Context())
-	if err != nil {
-		if err := tx.Rollback(); err != nil {
-			return err
-		}
-
-		return err
-	}
-
-	if err = h.SendVerificationEmail(user); err != nil {
-		if err := tx.Rollback(); err != nil {
-			return err
-		}
-
 		return ctx.JSON(http.StatusInternalServerError, auth.ErrorResponse(err))
 	}
 
@@ -135,6 +109,50 @@ func (h *Handler) RegisterHandler(ctx echo.Context) error {
 	}
 
 	return ctx.JSON(http.StatusCreated, out)
+}
+
+func (h *Handler) storeEmailVerificationToken(ctx context.Context, tx *generated.Tx, user *User) (*generated.EmailVerificationToken, error) {
+	if err := user.CreateVerificationToken(); err != nil {
+		h.Logger.Errorw("unable to create verification token", "error", err)
+		return nil, err
+	}
+
+	ttl, err := time.Parse(time.RFC3339Nano, user.EmailVerificationExpires.String)
+	if err != nil {
+		h.Logger.Errorw("unable to parse ttl", "error", err)
+		return nil, err
+	}
+
+	meowtoken, err := tx.EmailVerificationToken.Create().
+		SetOwnerID(user.ID).
+		SetToken(user.EmailVerificationToken.String).
+		SetTTL(ttl).
+		SetEmail(user.Email).
+		SetSecret(user.EmailVerificationSecret).
+		Save(ctx)
+	if err != nil {
+		if err := tx.Rollback(); err != nil {
+			h.Logger.Errorw("error rolling back transaction", "error", err)
+			return nil, err
+		}
+
+		h.Logger.Errorw("error creating email verification token", "error", err)
+
+		return nil, err
+	}
+
+	if err = h.SendVerificationEmail(user); err != nil {
+		if err := tx.Rollback(); err != nil {
+			h.Logger.Errorw("error rolling back transaction", "error", err)
+			return nil, err
+		}
+
+		h.Logger.Errorw("error sending verification email", "error", err)
+
+		return nil, err
+	}
+
+	return meowtoken, nil
 }
 
 // Validate the register request ensuring that the required fields are available and
