@@ -1,14 +1,12 @@
 package handlers
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 
 	echo "github.com/datumforge/echox"
 
 	ent "github.com/datumforge/datum/internal/ent/generated"
-	"github.com/datumforge/datum/internal/ent/generated/user"
 )
 
 // ResendRequest contains fields for a resend email verification request
@@ -40,13 +38,11 @@ func (h *Handler) ResendEmail(ctx echo.Context) error {
 	}
 
 	// start transaction
-	tx, err := h.DBClient.Tx(ctx.Request().Context())
-	if err != nil {
-		h.Logger.Errorw("error starting transaction", "error", err)
-		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(ErrProcessingRequest))
+	if err := h.startTransaction(ctx.Request().Context()); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, ErrProcessingRequest)
 	}
 
-	entUser, err := h.getUserByEmail(ctx.Request().Context(), tx, in.Email)
+	entUser, err := h.getUserByEmail(ctx.Request().Context(), in.Email)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			// return a 200 response even if user is not found to avoid
@@ -61,6 +57,12 @@ func (h *Handler) ResendEmail(ctx echo.Context) error {
 
 	// check to see if user is already confirmed
 	if entUser.Edges.Setting.EmailConfirmed {
+		if err = h.TXClient.Commit(); err != nil {
+			h.Logger.Errorw(transactionCommitErr, "error", err)
+
+			return ctx.JSON(http.StatusInternalServerError, ErrorResponse(ErrProcessingRequest))
+		}
+
 		out.Message = "email is already confirmed"
 
 		return ctx.JSON(http.StatusOK, out)
@@ -74,11 +76,13 @@ func (h *Handler) ResendEmail(ctx echo.Context) error {
 		ID:        entUser.ID,
 	}
 
-	if _, err = h.storeAndSendEmailVerificationToken(ctx.Request().Context(), tx, user); err != nil {
+	if _, err = h.storeAndSendEmailVerificationToken(ctx.Request().Context(), user); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(ErrProcessingRequest))
 	}
 
-	if err = tx.Commit(); err != nil {
+	if err = h.TXClient.Commit(); err != nil {
+		h.Logger.Errorw(transactionCommitErr, "error", err)
+
 		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(ErrProcessingRequest))
 	}
 
@@ -92,23 +96,4 @@ func validateResendRequest(req *ResendRequest) error {
 	}
 
 	return nil
-}
-
-// getUserByEmail returns the ent user with the user settings based on the email in the request
-func (h *Handler) getUserByEmail(ctx context.Context, tx *ent.Tx, email string) (*ent.User, error) {
-	user, err := h.DBClient.User.Query().WithSetting().
-		Where(user.Email(email)).
-		Only(ctx)
-	if err != nil {
-		if err := tx.Rollback(); err != nil {
-			h.Logger.Errorw("error rolling back transaction", "error", err)
-			return nil, err
-		}
-
-		h.Logger.Errorw("error obtaining user from email verification token", "error", err)
-
-		return nil, err
-	}
-
-	return user, nil
 }

@@ -3,9 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 
-	"entgo.io/ent/dialect/sql"
 	echo "github.com/datumforge/echox"
 	"github.com/golang-jwt/jwt/v5"
 
@@ -42,23 +40,17 @@ func (h *Handler) LoginHandler(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
 	}
 
-	tx, err := h.DBClient.Tx(ctx.Request().Context())
-	if err != nil {
-		h.Logger.Errorw("error starting transaction", "error", err)
+	if err := h.startTransaction(ctx.Request().Context()); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, ErrProcessingRequest)
 	}
 
-	if _, err := tx.User.Update().SetLastSeen(time.Now()).Where(func(s *sql.Selector) {
-		s.Where(sql.EQ("id", user.ID))
-	}).Save(ctx.Request().Context()); err != nil {
-		if err := tx.Rollback(); err != nil {
-			return ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
-		}
-
+	if err := h.updateUserLastSeen(ctx.Request().Context(), user.ID); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
 	}
 
-	if err = tx.Commit(); err != nil {
+	if err = h.TXClient.Commit(); err != nil {
+		h.Logger.Errorw(transactionCommitErr, "error", err)
+
 		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
 	}
 
@@ -88,12 +80,18 @@ func (h *Handler) verifyUserPassword(ctx echo.Context) (*generated.User, error) 
 		return nil, ErrMissingRequiredFields
 	}
 
+	if err := h.startTransaction(ctx.Request().Context()); err != nil {
+		return nil, err
+	}
+
 	// check user in the database, username == email and ensure only one record is returned
-	user, err := h.DBClient.User.Query().WithSetting().Where(func(s *sql.Selector) {
-		s.Where(sql.EQ("email", l.Username))
-	}).Only(ctx.Request().Context())
+	user, err := h.getUserByEmail(ctx.Request().Context(), l.Username)
 	if err != nil {
 		return nil, ErrNoAuthUser
+	}
+
+	if err = h.TXClient.Commit(); err != nil {
+		return nil, err
 	}
 
 	if user.Edges.Setting.Status != "ACTIVE" {

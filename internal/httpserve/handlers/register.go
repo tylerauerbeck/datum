@@ -3,9 +3,9 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/cenkalti/backoff/v4"
 	echo "github.com/datumforge/echox"
@@ -56,23 +56,19 @@ func (h *Handler) RegisterHandler(ctx echo.Context) error {
 		Password:  &in.Password,
 	}
 
-	tx, err := h.DBClient.Tx(ctx.Request().Context())
-	if err != nil {
-		h.Logger.Errorw("error starting transaction", "error", err)
+	if err := h.startTransaction(ctx.Request().Context()); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, ErrProcessingRequest)
 	}
 
-	meowuser, err := tx.User.Create().
-		SetInput(input).
-		Save(ctx.Request().Context())
+	meowuser, err := h.createUser(ctx.Request().Context(), input)
 	if err != nil {
-		if err := tx.Rollback(); err != nil {
-			h.Logger.Errorw("error rolling back transaction", "error", err)
-			return ctx.JSON(http.StatusInternalServerError, ErrProcessingRequest)
-		}
-
 		if IsUniqueConstraintError(err) {
 			return ctx.JSON(http.StatusBadRequest, ErrorResponse("user already exists"))
+		}
+
+		if generated.IsValidationError(err) {
+			field := err.(*generated.ValidationError).Name
+			return ctx.JSON(http.StatusBadRequest, ErrorResponse(fmt.Sprintf("%s was invalid", field)))
 		}
 
 		return err
@@ -86,13 +82,15 @@ func (h *Handler) RegisterHandler(ctx echo.Context) error {
 		ID:        meowuser.ID,
 	}
 
-	meowtoken, err := h.storeAndSendEmailVerificationToken(ctx.Request().Context(), tx, user)
+	meowtoken, err := h.storeAndSendEmailVerificationToken(ctx.Request().Context(), user)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
 	}
 
 	// TODO: this will rollback on email failure, but FGA tuples will not get rolled back
-	if err = tx.Commit(); err != nil {
+	if err = h.TXClient.Commit(); err != nil {
+		h.Logger.Errorw(transactionCommitErr, "error", err)
+
 		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
 	}
 
@@ -106,32 +104,35 @@ func (h *Handler) RegisterHandler(ctx echo.Context) error {
 	return ctx.JSON(http.StatusCreated, out)
 }
 
-func (h *Handler) storeAndSendEmailVerificationToken(ctx context.Context, tx *generated.Tx, user *User) (*generated.EmailVerificationToken, error) {
-	if err := user.CreateVerificationToken(); err != nil {
-		h.Logger.Errorw("unable to create verification token", "error", err)
-		return nil, err
-	}
-
-	ttl, err := time.Parse(time.RFC3339Nano, user.EmailVerificationExpires.String)
-	if err != nil {
-		h.Logger.Errorw("unable to parse ttl", "error", err)
-		return nil, err
-	}
-
-	meowtoken, err := tx.EmailVerificationToken.Create().
-		SetOwnerID(user.ID).
-		SetToken(user.EmailVerificationToken.String).
-		SetTTL(ttl).
-		SetEmail(user.Email).
-		SetSecret(user.EmailVerificationSecret).
-		Save(ctx)
-	if err != nil {
-		if err := tx.Rollback(); err != nil {
-			h.Logger.Errorw("error rolling back transaction", "error", err)
+func (h *Handler) storeAndSendEmailVerificationToken(ctx context.Context, user *User) (*generated.EmailVerificationToken, error) {
+	if err := h.expireAllVerificationTokensUserByEmail(ctx, user.Email); err != nil {
+		if err := h.TXClient.Rollback(); err != nil {
+			h.Logger.Errorw(rollbackErr, "error", err)
 			return nil, err
 		}
 
-		h.Logger.Errorw("error creating email verification token", "error", err)
+		h.Logger.Errorw("error expiring existing tokens", "error", err)
+
+		return nil, err
+	}
+
+	if err := user.CreateVerificationToken(); err != nil {
+		if err := h.TXClient.Rollback(); err != nil {
+			h.Logger.Errorw(rollbackErr, "error", err)
+			return nil, err
+		}
+
+		h.Logger.Errorw("unable to create verification token", "error", err)
+
+		return nil, err
+	}
+
+	meowtoken, err := h.createEmailVerificationToken(ctx, user)
+	if err != nil {
+		if err := h.TXClient.Rollback(); err != nil {
+			h.Logger.Errorw(rollbackErr, "error", err)
+			return nil, err
+		}
 
 		return nil, err
 	}
@@ -143,8 +144,8 @@ func (h *Handler) storeAndSendEmailVerificationToken(ctx context.Context, tx *ge
 		marionette.WithBackoff(backoff.NewExponentialBackOff()),
 		marionette.WithErrorf("could not send verification email to user %s", user.ID),
 	); err != nil {
-		if err := tx.Rollback(); err != nil {
-			h.Logger.Errorw("error rolling back transaction", "error", err)
+		if err := h.TXClient.Rollback(); err != nil {
+			h.Logger.Errorw(rollbackErr, "error", err)
 			return nil, err
 		}
 
