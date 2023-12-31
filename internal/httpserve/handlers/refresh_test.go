@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/brianvoe/gofakeit/v6"
-	echo "github.com/datumforge/echox"
 	"github.com/golang-jwt/jwt/v5"
 	_ "github.com/mattn/go-sqlite3" // sqlite3 driver
 	"github.com/stretchr/testify/assert"
@@ -98,8 +97,9 @@ func TestRefreshHandler(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			// create echo context
-			e := echo.New()
+			// create echo context with middleware
+			e := setupEcho()
+			e.POST("refresh", h.RefreshHandler)
 
 			refreshJSON := handlers.RefreshRequest{
 				RefreshToken: tc.refresh,
@@ -107,7 +107,7 @@ func TestRefreshHandler(t *testing.T) {
 
 			body, err := json.Marshal(refreshJSON)
 			if err != nil {
-				t.Error("error creating refresh json")
+				require.NoError(t, err)
 			}
 
 			req := httptest.NewRequest(http.MethodPost, "/refresh", strings.NewReader(string(body)))
@@ -115,10 +115,8 @@ func TestRefreshHandler(t *testing.T) {
 			// Set writer for tests that write on the response
 			recorder := httptest.NewRecorder()
 
-			ctx := e.NewContext(req, recorder)
-
-			err = h.RefreshHandler(ctx)
-			require.NoError(t, err)
+			// Using the ServerHTTP on echo will trigger the router and middleware
+			e.ServeHTTP(recorder, req)
 
 			res := recorder.Result()
 			defer res.Body.Close()
@@ -130,7 +128,7 @@ func TestRefreshHandler(t *testing.T) {
 				t.Error("error parsing response", err)
 			}
 
-			assert.Equal(t, tc.expectedStatus, ctx.Response().Status)
+			assert.Equal(t, tc.expectedStatus, recorder.Code)
 
 			if tc.expectedStatus == http.StatusOK {
 				assert.Equal(t, out.Message, "success")
