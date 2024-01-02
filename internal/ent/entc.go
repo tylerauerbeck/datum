@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"text/template"
 
@@ -30,7 +31,10 @@ var (
 )
 
 func main() {
-	generateSchemaFuncs()
+	check, _ := strconv.ParseBool(os.Getenv("SCHEMAGEN"))
+	if check {
+		generateSchemaFuncs()
+	}
 
 	xExt, err := entx.NewExtension(
 		entx.WithJSONScalar(),
