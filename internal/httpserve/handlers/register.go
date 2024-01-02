@@ -1,16 +1,19 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
-	"time"
 
+	"github.com/cenkalti/backoff/v4"
 	echo "github.com/datumforge/echox"
 
 	"github.com/datumforge/datum/internal/ent/generated"
 	"github.com/datumforge/datum/internal/httpserve/middleware/auth"
 	"github.com/datumforge/datum/internal/passwd"
+	"github.com/datumforge/datum/internal/utils/marionette"
 )
 
 // RegisterRequest holds the fields that should be included on a request to the `/register` endpoint
@@ -26,7 +29,8 @@ type RegisterReply struct {
 	ID      string `json:"user_id"`
 	Email   string `json:"email"`
 	Message string `json:"message"`
-	Token   string `json:"token"`
+	// TODO: remove this before go live, we shouldn't actually return the token here
+	Token string `json:"token"`
 }
 
 // RegisterHandler handles the registration of a new datum user, creating the user, personal organization
@@ -37,11 +41,11 @@ func (h *Handler) RegisterHandler(ctx echo.Context) error {
 
 	// parse request body
 	if err := json.NewDecoder(ctx.Request().Body).Decode(&in); err != nil {
-		return ctx.JSON(http.StatusBadRequest, auth.ErrorResponse(err))
+		return ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
 	}
 
 	if err := in.Validate(); err != nil {
-		return ctx.JSON(http.StatusBadRequest, auth.ErrorResponse(err))
+		return ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
 	}
 
 	// create user
@@ -52,23 +56,15 @@ func (h *Handler) RegisterHandler(ctx echo.Context) error {
 		Password:  &in.Password,
 	}
 
-	tx, err := h.DBClient.Tx(ctx.Request().Context())
+	meowuser, err := h.createUser(ctx.Request().Context(), input)
 	if err != nil {
-		h.Logger.Errorw("error starting transaction", "error", err)
-		return ctx.JSON(http.StatusInternalServerError, ErrProcessingRequest)
-	}
-
-	meowuser, err := tx.User.Create().
-		SetInput(input).
-		Save(ctx.Request().Context())
-	if err != nil {
-		if err := tx.Rollback(); err != nil {
-			h.Logger.Errorw("error rolling back transaction", "error", err)
-			return ctx.JSON(http.StatusInternalServerError, ErrProcessingRequest)
+		if IsUniqueConstraintError(err) {
+			return ctx.JSON(http.StatusBadRequest, ErrorResponse("user already exists"))
 		}
 
-		if IsUniqueConstraintError(err) {
-			return ctx.JSON(http.StatusBadRequest, auth.ErrorResponse("user already exists"))
+		if generated.IsValidationError(err) {
+			field := err.(*generated.ValidationError).Name
+			return ctx.JSON(http.StatusBadRequest, ErrorResponse(fmt.Sprintf("%s was invalid", field)))
 		}
 
 		return err
@@ -79,53 +75,13 @@ func (h *Handler) RegisterHandler(ctx echo.Context) error {
 		FirstName: in.FirstName,
 		LastName:  in.LastName,
 		Email:     in.Email,
-		Password:  in.Password,
+		ID:        meowuser.ID,
 	}
 
-	if err = user.CreateVerificationToken(); err != nil {
-		h.Logger.Errorw("unable to create verification token", "error", err)
-		return ctx.JSON(http.StatusInternalServerError, ErrProcessingRequest)
-	}
-
-	ttl, err := time.Parse(time.RFC3339Nano, user.EmailVerificationExpires.String)
+	meowtoken, err := h.storeAndSendEmailVerificationToken(ctx.Request().Context(), user)
 	if err != nil {
-		return err
+		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
 	}
-
-	meowtoken, err := tx.EmailVerificationToken.Create().
-		SetOwnerID(meowuser.ID).
-		SetToken(user.EmailVerificationToken.String).
-		SetTTL(ttl).
-		SetEmail(user.Email).
-		SetSecret(user.EmailVerificationSecret).
-		Save(ctx.Request().Context())
-	if err != nil {
-		if err := tx.Rollback(); err != nil {
-			return err
-		}
-
-		return err
-	}
-
-	if err = h.SendVerificationEmail(user); err != nil {
-		if err := tx.Rollback(); err != nil {
-			return err
-		}
-
-		return ctx.JSON(http.StatusInternalServerError, auth.ErrorResponse(err))
-	}
-
-	// TODO: this will rollback on email failure, but FGA tuples will not get rolled back
-	if err = tx.Commit(); err != nil {
-		return ctx.JSON(http.StatusInternalServerError, auth.ErrorResponse(err))
-	}
-
-	// h.tasks.Queue(marionette.TaskFunc(func(ctx context.Context) error {
-	//	return h.SendVerificationEmail(user)
-	// }), marionette.WithRetries(3),
-	//	marionette.WithBackoff(backoff.NewExponentialBackOff()),
-	//	marionette.WithErrorf("could not send verification email to user %s", meowuser.ID),
-	//)
 
 	out := &RegisterReply{
 		ID:      meowuser.ID,
@@ -135,6 +91,37 @@ func (h *Handler) RegisterHandler(ctx echo.Context) error {
 	}
 
 	return ctx.JSON(http.StatusCreated, out)
+}
+
+func (h *Handler) storeAndSendEmailVerificationToken(ctx context.Context, user *User) (*generated.EmailVerificationToken, error) {
+	if err := h.expireAllVerificationTokensUserByEmail(ctx, user.Email); err != nil {
+		h.Logger.Errorw("error expiring existing tokens", "error", err)
+
+		return nil, err
+	}
+
+	if err := user.CreateVerificationToken(); err != nil {
+		h.Logger.Errorw("unable to create verification token", "error", err)
+
+		return nil, err
+	}
+
+	meowtoken, err := h.createEmailVerificationToken(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+
+	// send emails via TaskMan as to not create blocking operations in the server
+	if err := h.TaskMan.Queue(marionette.TaskFunc(func(ctx context.Context) error {
+		return h.SendVerificationEmail(user)
+	}), marionette.WithRetries(3), // nolint: gomnd
+		marionette.WithBackoff(backoff.NewExponentialBackOff()),
+		marionette.WithErrorf("could not send verification email to user %s", user.ID),
+	); err != nil {
+		return nil, err
+	}
+
+	return meowtoken, nil
 }
 
 // Validate the register request ensuring that the required fields are available and
@@ -150,6 +137,10 @@ func (r *RegisterRequest) Validate() error {
 	switch {
 	case r.Email == "":
 		return auth.MissingField("email")
+	case r.FirstName == "":
+		return auth.MissingField("first name")
+	case r.LastName == "":
+		return auth.MissingField("last name")
 	case r.Password == "":
 		return auth.MissingField("password")
 	case passwd.Strength(r.Password) < passwd.Moderate:

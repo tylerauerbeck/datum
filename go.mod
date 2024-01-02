@@ -9,7 +9,7 @@ require (
 	github.com/99designs/gqlgen v0.17.41
 	github.com/99designs/keyring v1.2.2
 	github.com/TylerBrock/colorjson v0.0.0-20200706003622-8a50f05110d2
-	github.com/Yamashou/gqlgenc v0.16.0
+	github.com/Yamashou/gqlgenc v0.16.1
 	github.com/brianvoe/gofakeit/v6 v6.26.3
 	github.com/datumforge/echo-prometheus/v5 v5.0.0-20231205192725-e697eaa86d58
 	github.com/datumforge/echozap v0.0.0-20231205193458-b29cc54cd34c
@@ -22,7 +22,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/ogen-go/ogen v0.81.0
 	github.com/openfga/go-sdk v0.3.3
-	github.com/openfga/language/pkg/go v0.0.0-20231228012558-41ecd3dad8ec
+	github.com/openfga/language/pkg/go v0.0.0-20240101091435-53d68ae8b4bf
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.18.0
 	github.com/spf13/cobra v1.8.0
@@ -107,6 +107,7 @@ require (
 	ariga.io/atlas v0.16.0 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
+	github.com/alexedwards/scs/v2 v2.7.0
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.1
 	github.com/cpuguy83/go-md2man/v2 v2.0.3 // indirect

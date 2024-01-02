@@ -250,6 +250,7 @@ input CreateUserInput {
   personalAccessTokenIDs: [ID!]
   settingID: ID!
   emailVerificationTokenIDs: [ID!]
+  resetTokenIDs: [ID!]
 }
 """
 CreateUserSettingInput is used for create UserSetting object.
@@ -1968,6 +1969,8 @@ type PersonalAccessToken implements Node {
   updatedAt: Time!
   createdBy: String
   updatedBy: String
+  deletedAt: Time
+  deletedBy: String
   """the name associated with the token"""
   name: String!
   """what abilites the token should have"""
@@ -2064,6 +2067,33 @@ input PersonalAccessTokenWhereInput {
   updatedByNotNil: Boolean
   updatedByEqualFold: String
   updatedByContainsFold: String
+  """deleted_at field predicates"""
+  deletedAt: Time
+  deletedAtNEQ: Time
+  deletedAtIn: [Time!]
+  deletedAtNotIn: [Time!]
+  deletedAtGT: Time
+  deletedAtGTE: Time
+  deletedAtLT: Time
+  deletedAtLTE: Time
+  deletedAtIsNil: Boolean
+  deletedAtNotNil: Boolean
+  """deleted_by field predicates"""
+  deletedBy: String
+  deletedByNEQ: String
+  deletedByIn: [String!]
+  deletedByNotIn: [String!]
+  deletedByGT: String
+  deletedByGTE: String
+  deletedByLT: String
+  deletedByLTE: String
+  deletedByContains: String
+  deletedByHasPrefix: String
+  deletedByHasSuffix: String
+  deletedByIsNil: Boolean
+  deletedByNotNil: Boolean
+  deletedByEqualFold: String
+  deletedByContainsFold: String
   """name field predicates"""
   name: String
   nameNEQ: String
@@ -2785,6 +2815,9 @@ input UpdateUserInput {
   addEmailVerificationTokenIDs: [ID!]
   removeEmailVerificationTokenIDs: [ID!]
   clearEmailVerificationTokens: Boolean
+  addResetTokenIDs: [ID!]
+  removeResetTokenIDs: [ID!]
+  clearResetTokens: Boolean
 }
 """
 UpdateUserSettingInput is used for update UserSetting object.

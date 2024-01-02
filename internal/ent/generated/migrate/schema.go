@@ -308,6 +308,45 @@ var (
 			},
 		},
 	}
+	// PasswordResetTokensColumns holds the columns for the "password_reset_tokens" table.
+	PasswordResetTokensColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "created_by", Type: field.TypeString, Nullable: true},
+		{Name: "updated_by", Type: field.TypeString, Nullable: true},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "deleted_by", Type: field.TypeString, Nullable: true},
+		{Name: "token", Type: field.TypeString, Unique: true},
+		{Name: "ttl", Type: field.TypeTime},
+		{Name: "email", Type: field.TypeString},
+		{Name: "secret", Type: field.TypeBytes},
+		{Name: "user_reset_tokens", Type: field.TypeString},
+	}
+	// PasswordResetTokensTable holds the schema information for the "password_reset_tokens" table.
+	PasswordResetTokensTable = &schema.Table{
+		Name:       "password_reset_tokens",
+		Columns:    PasswordResetTokensColumns,
+		PrimaryKey: []*schema.Column{PasswordResetTokensColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "password_reset_tokens_users_reset_tokens",
+				Columns:    []*schema.Column{PasswordResetTokensColumns[11]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "passwordresettoken_token",
+				Unique:  true,
+				Columns: []*schema.Column{PasswordResetTokensColumns[7]},
+				Annotation: &entsql.IndexAnnotation{
+					Where: "deleted_at is NULL",
+				},
+			},
+		},
+	}
 	// PersonalAccessTokensColumns holds the columns for the "personal_access_tokens" table.
 	PersonalAccessTokensColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
@@ -315,6 +354,8 @@ var (
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "created_by", Type: field.TypeString, Nullable: true},
 		{Name: "updated_by", Type: field.TypeString, Nullable: true},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "deleted_by", Type: field.TypeString, Nullable: true},
 		{Name: "name", Type: field.TypeString},
 		{Name: "token", Type: field.TypeString, Unique: true},
 		{Name: "abilities", Type: field.TypeJSON, Nullable: true},
@@ -331,7 +372,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "personal_access_tokens_users_personal_access_tokens",
-				Columns:    []*schema.Column{PersonalAccessTokensColumns[11]},
+				Columns:    []*schema.Column{PersonalAccessTokensColumns[13]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -340,7 +381,7 @@ var (
 			{
 				Name:    "personalaccesstoken_token",
 				Unique:  false,
-				Columns: []*schema.Column{PersonalAccessTokensColumns[6]},
+				Columns: []*schema.Column{PersonalAccessTokensColumns[8]},
 			},
 		},
 	}
@@ -428,7 +469,7 @@ var (
 		{Name: "status", Type: field.TypeEnum, Enums: []string{"ACTIVE", "INACTIVE", "DEACTIVATED", "SUSPENDED"}, Default: "ACTIVE"},
 		{Name: "role", Type: field.TypeEnum, Enums: []string{"USER", "ADMIN", "OWNER"}, Default: "USER"},
 		{Name: "permissions", Type: field.TypeJSON},
-		{Name: "email_confirmed", Type: field.TypeBool, Default: true},
+		{Name: "email_confirmed", Type: field.TypeBool, Default: false},
 		{Name: "tags", Type: field.TypeJSON},
 		{Name: "user_setting", Type: field.TypeString, Unique: true, Nullable: true},
 	}
@@ -507,6 +548,7 @@ var (
 		OhAuthTooTokensTable,
 		OrganizationsTable,
 		OrganizationSettingsTable,
+		PasswordResetTokensTable,
 		PersonalAccessTokensTable,
 		SessionsTable,
 		UsersTable,
@@ -525,6 +567,7 @@ func init() {
 	OauthProvidersTable.ForeignKeys[0].RefTable = OrganizationsTable
 	OrganizationsTable.ForeignKeys[0].RefTable = OrganizationsTable
 	OrganizationSettingsTable.ForeignKeys[0].RefTable = OrganizationsTable
+	PasswordResetTokensTable.ForeignKeys[0].RefTable = UsersTable
 	PersonalAccessTokensTable.ForeignKeys[0].RefTable = UsersTable
 	SessionsTable.ForeignKeys[0].RefTable = UsersTable
 	UserSettingsTable.ForeignKeys[0].RefTable = UsersTable

@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"entgo.io/ent/dialect/sql"
 	echo "github.com/datumforge/echox"
 
+	ent "github.com/datumforge/datum/internal/ent/generated"
 	"github.com/datumforge/datum/internal/httpserve/middleware/auth"
 )
 
@@ -20,35 +20,40 @@ func (h *Handler) RefreshHandler(ctx echo.Context) error {
 
 	// parse request body
 	if err := json.NewDecoder(ctx.Request().Body).Decode(&r); err != nil {
-		auth.Unauthorized(ctx) //nolint:errcheck
-		return ErrBadRequest
+		h.Logger.Errorw("error parsing request", "error", err)
+
+		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(ErrProcessingRequest))
 	}
 
 	if r.RefreshToken == "" {
-		auth.Unauthorized(ctx) //nolint:errcheck
-		return ErrBadRequest
+		return ctx.JSON(http.StatusBadRequest, ErrorResponse(newMissingRequiredFieldError("refresh_token")))
+	}
+
+	if err := h.SM.RenewToken(ctx.Request().Context()); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
 	}
 
 	// verify the refresh token
 	claims, err := h.TM.Verify(r.RefreshToken)
 	if err != nil {
-		auth.Unauthorized(ctx) //nolint:errcheck
-		return err
+		h.Logger.Errorw("error verifying token", "error", err)
+
+		return ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
 	}
 
 	// check user in the database, sub == claims subject and ensure only one record is returned
-	user, err := h.DBClient.User.Query().WithSetting().Where(func(s *sql.Selector) {
-		s.Where(sql.EQ("sub", claims.Subject))
-	}).Only(ctx.Request().Context())
+	user, err := h.getUserBySub(ctx.Request().Context(), claims.Subject)
 	if err != nil {
-		auth.Unauthorized(ctx) //nolint:errcheck
-		return auth.ErrNoAuthUser
+		if ent.IsNotFound(err) {
+			return ctx.JSON(http.StatusNotFound, ErrNoAuthUser)
+		}
+
+		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(ErrProcessingRequest))
 	}
 
 	// ensure the user is still active
 	if user.Edges.Setting.Status != "ACTIVE" {
-		auth.Unauthorized(ctx) //nolint:errcheck
-		return auth.ErrNoAuthUser
+		return ctx.JSON(http.StatusNotFound, ErrNoAuthUser)
 	}
 
 	// UserID is not on the refresh token, so we need to set it now
@@ -56,14 +61,20 @@ func (h *Handler) RefreshHandler(ctx echo.Context) error {
 
 	accessToken, refreshToken, err := h.TM.CreateTokenPair(claims)
 	if err != nil {
-		return err
+		h.Logger.Errorw("error creating token pair", "error", err)
+
+		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(ErrProcessingRequest))
 	}
 
 	// set cookies on request with the access and refresh token
 	// when cookie domain is localhost, this is dropped but expected
 	if err := auth.SetAuthCookies(ctx, accessToken, refreshToken, h.CookieDomain); err != nil {
-		return auth.ErrorResponse(err)
+		h.Logger.Errorw("error setting cookies", "error", err)
+
+		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(ErrProcessingRequest))
 	}
+
+	h.SM.Put(ctx.Request().Context(), "userID", user.ID)
 
 	return ctx.JSON(http.StatusOK, Response{Message: "success"})
 }

@@ -4,24 +4,22 @@ import (
 	"net/http"
 
 	echo "github.com/datumforge/echox"
+
+	"github.com/datumforge/datum/internal/httpserve/handlers"
 )
 
 // ForgotPassword is a service for users to request a password reset email. The email
 // address must be provided in the POST request and the user must exist in the
 // database. This endpoint always returns 204 regardless of whether the user exists or
 // not to avoid leaking information about users in the database.
-
-// TODO: implement forgotpass handler
-func registerForgotPasswordHandler(router *echo.Echo) (err error) { //nolint:unused
+func registerForgotPasswordHandler(router *echo.Echo, h *handlers.Handler) (err error) {
 	_, err = router.AddRoute(echo.Route{
-		Method: http.MethodGet,
+		Method: http.MethodPost,
 		Path:   "/forgot-password",
 		Handler: func(c echo.Context) error {
-			return c.JSON(http.StatusNotImplemented, echo.Map{
-				"error": "Not implemented",
-			})
+			return h.ForgotPassword(c)
 		},
-	}.ForGroup(V1Version, mw))
+	}.ForGroup(V1Version, restrictedEndpointsMW))
 
 	return
 }

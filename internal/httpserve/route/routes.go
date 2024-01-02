@@ -1,10 +1,14 @@
 package route
 
 import (
+	"time"
+
 	echo "github.com/datumforge/echox"
 	"github.com/datumforge/echox/middleware"
 
 	"github.com/datumforge/datum/internal/httpserve/handlers"
+	"github.com/datumforge/datum/internal/httpserve/middleware/ratelimit"
+	"github.com/datumforge/datum/internal/httpserve/middleware/transaction"
 )
 
 const (
@@ -14,6 +18,13 @@ const (
 
 var (
 	mw = []echo.MiddlewareFunc{middleware.Recover()}
+
+	restrictedRateLimit = &ratelimit.Config{
+		RateLimit:  1,
+		BurstLimit: 1,
+		ExpiresIn:  15 * time.Minute, //nolint:gomnd
+	}
+	restrictedEndpointsMW = []echo.MiddlewareFunc{}
 )
 
 type Route struct {
@@ -27,6 +38,18 @@ type Route struct {
 
 // RegisterRoutes with the echo routers
 func RegisterRoutes(router *echo.Echo, h *handlers.Handler) error {
+	// add transaction middleware
+	transactionConfig := transaction.Client{
+		EntDBClient: h.DBClient,
+		Logger:      h.Logger,
+	}
+
+	mw = append(mw, transactionConfig.Middleware)
+
+	// Middleware for restricted endpoints
+	restrictedEndpointsMW = append(restrictedEndpointsMW, mw...)
+	restrictedEndpointsMW = append(restrictedEndpointsMW, ratelimit.RateLimiterWithConfig(restrictedRateLimit)) // add restricted ratelimit middleware
+
 	// register handlers
 	if err := registerLivenessHandler(router); err != nil {
 		return err
@@ -44,11 +67,11 @@ func RegisterRoutes(router *echo.Echo, h *handlers.Handler) error {
 		return err
 	}
 
-	if err := registerForgotPasswordHandler(router); err != nil {
+	if err := registerForgotPasswordHandler(router, h); err != nil {
 		return err
 	}
 
-	if err := registerVerifyHandler(router); err != nil {
+	if err := registerVerifyHandler(router, h); err != nil {
 		return err
 	}
 
@@ -56,7 +79,7 @@ func RegisterRoutes(router *echo.Echo, h *handlers.Handler) error {
 		return err
 	}
 
-	if err := registerResendEmailHandler(router); err != nil {
+	if err := registerResendEmailHandler(router, h); err != nil {
 		return err
 	}
 

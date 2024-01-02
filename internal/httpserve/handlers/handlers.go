@@ -1,12 +1,14 @@
 package handlers
 
 import (
+	"github.com/alexedwards/scs/v2"
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"go.uber.org/zap"
 
 	ent "github.com/datumforge/datum/internal/ent/generated"
 	"github.com/datumforge/datum/internal/tokens"
 	"github.com/datumforge/datum/internal/utils/emails"
+	"github.com/datumforge/datum/internal/utils/marionette"
 )
 
 // Handler contains configuration options for handlers
@@ -28,7 +30,11 @@ type Handler struct {
 	// emailManager to handle sending emails
 	emailManager *emails.EmailManager
 	// EmailURL contains the urls used within emails
-	EmailURL URLConfig
+	EmailURL *URLConfig
+	// TaskMan manages tasks in a separate goroutine to allow for non blocking operations
+	TaskMan *marionette.TaskManager
+	// SessionManager manages sessions for users
+	SM *scs.SessionManager
 }
 
 type Response struct {

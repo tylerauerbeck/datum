@@ -6,13 +6,11 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/brianvoe/gofakeit/v6"
-	echo "github.com/datumforge/echox"
 	_ "github.com/mattn/go-sqlite3" // sqlite3 driver
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/zap"
+	"github.com/stretchr/testify/require"
 
 	"github.com/datumforge/datum/internal/ent/generated/privacy"
 	_ "github.com/datumforge/datum/internal/ent/generated/runtime"
@@ -22,17 +20,7 @@ import (
 )
 
 func TestLoginHandler(t *testing.T) {
-	tm, err := createTokenManager(15 * time.Minute) //nolint:gomnd
-	if err != nil {
-		t.Error("error creating token manager")
-	}
-
-	h := handlers.Handler{
-		TM:           tm,
-		DBClient:     EntClient,
-		Logger:       zap.NewNop().Sugar(),
-		CookieDomain: "datum.net",
-	}
+	h := handlerSetup(t)
 
 	ec := echocontext.NewTestEchoContext().Request().Context()
 
@@ -71,62 +59,69 @@ func TestLoginHandler(t *testing.T) {
 		SaveX(ec)
 
 	testCases := []struct {
-		name     string
-		username string
-		password string
-		err      error
+		name           string
+		username       string
+		password       string
+		expectedErr    error
+		expectedStatus int
 	}{
 		{
-			name:     "happy path, valid credentials",
-			username: validConfirmedUser,
-			password: validPassword,
-			err:      nil,
+			name:           "happy path, valid credentials",
+			username:       validConfirmedUser,
+			password:       validPassword,
+			expectedStatus: http.StatusOK,
 		},
 		{
-			name:     "email unverified",
-			username: validUnconfirmedUser,
-			password: validPassword,
-			err:      auth.ErrUnverifiedUser,
+			name:           "email unverified",
+			username:       validUnconfirmedUser,
+			password:       validPassword,
+			expectedStatus: http.StatusBadRequest,
+			expectedErr:    auth.ErrUnverifiedUser,
 		},
 		{
-			name:     "invalid password",
-			username: validConfirmedUser,
-			password: "thisisnottherightone",
-			err:      auth.ErrInvalidCredentials,
+			name:           "invalid password",
+			username:       validConfirmedUser,
+			password:       "thisisnottherightone",
+			expectedStatus: http.StatusBadRequest,
+			expectedErr:    auth.ErrInvalidCredentials,
 		},
 		{
-			name:     "user not found",
-			username: "rick.sanchez@datum.net",
-			password: validPassword,
-			err:      auth.ErrNoAuthUser,
+			name:           "user not found",
+			username:       "rick.sanchez@datum.net",
+			password:       validPassword,
+			expectedStatus: http.StatusBadRequest,
+			expectedErr:    auth.ErrNoAuthUser,
 		},
 		{
-			name:     "empty username",
-			username: "",
-			password: validPassword,
-			err:      handlers.ErrMissingRequiredFields,
+			name:           "empty username",
+			username:       "",
+			password:       validPassword,
+			expectedStatus: http.StatusBadRequest,
+			expectedErr:    handlers.ErrMissingRequiredFields,
 		},
 		{
-			name:     "empty username",
-			username: validConfirmedUser,
-			password: "",
-			err:      handlers.ErrMissingRequiredFields,
+			name:           "empty username",
+			username:       validConfirmedUser,
+			password:       "",
+			expectedStatus: http.StatusBadRequest,
+			expectedErr:    handlers.ErrMissingRequiredFields,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			// create echo context
-			e := echo.New()
+			// create echo context with middleware
+			e := setupEcho(h.SM)
+			e.POST("login", h.LoginHandler)
 
-			userJSON := handlers.User{
+			loginJSON := handlers.LoginRequest{
 				Username: tc.username,
 				Password: tc.password,
 			}
 
-			body, err := json.Marshal(userJSON)
+			body, err := json.Marshal(loginJSON)
 			if err != nil {
-				t.Error("error creating user json")
+				require.NoError(t, err)
 			}
 
 			req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(string(body)))
@@ -134,18 +129,26 @@ func TestLoginHandler(t *testing.T) {
 			// Set writer for tests that write on the response
 			recorder := httptest.NewRecorder()
 
-			ctx := e.NewContext(req, recorder)
+			// Using the ServerHTTP on echo will trigger the router and middleware
+			e.ServeHTTP(recorder, req)
 
-			err = h.LoginHandler(ctx)
+			res := recorder.Result()
+			defer res.Body.Close()
 
-			if tc.err != nil {
-				assert.Error(t, err)
-				assert.ErrorContains(t, err, tc.err.Error())
+			var out *handlers.Response
 
-				return
+			// parse request body
+			if err := json.NewDecoder(res.Body).Decode(&out); err != nil {
+				t.Error("error parsing response", err)
 			}
 
-			assert.NoError(t, err)
+			assert.Equal(t, tc.expectedStatus, recorder.Code)
+
+			if tc.expectedStatus == http.StatusOK {
+				assert.Equal(t, out.Message, "success")
+			} else {
+				assert.Contains(t, out.Message, tc.expectedErr.Error())
+			}
 		})
 	}
 

@@ -8,11 +8,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/brianvoe/gofakeit/v6"
-	echo "github.com/datumforge/echox"
 	"github.com/golang-jwt/jwt/v5"
 	_ "github.com/mattn/go-sqlite3" // sqlite3 driver
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
 	"github.com/datumforge/datum/internal/ent/generated/privacy"
@@ -30,11 +31,14 @@ func TestRefreshHandler(t *testing.T) {
 		t.Error("error creating token manager")
 	}
 
+	sm := scs.New()
+
 	h := handlers.Handler{
 		TM:           tm,
 		DBClient:     EntClient,
 		Logger:       zap.NewNop().Sugar(),
 		CookieDomain: "datum.net",
+		SM:           sm,
 	}
 
 	ec := echocontext.NewTestEchoContext().Request().Context()
@@ -77,26 +81,29 @@ func TestRefreshHandler(t *testing.T) {
 	}
 
 	testCases := []struct {
-		name    string
-		refresh string
-		err     error
+		name               string
+		refresh            string
+		expectedErrMessage string
+		expectedStatus     int
 	}{
 		{
-			name:    "happy path, valid credentials",
-			refresh: refresh,
-			err:     nil,
+			name:           "happy path, valid credentials",
+			refresh:        refresh,
+			expectedStatus: http.StatusOK,
 		},
 		{
-			name:    "empty refresh",
-			refresh: "",
-			err:     handlers.ErrBadRequest,
+			name:               "empty refresh",
+			refresh:            "",
+			expectedStatus:     http.StatusBadRequest,
+			expectedErrMessage: "refresh_token is required",
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			// create echo context
-			e := echo.New()
+			// create echo context with middleware
+			e := setupEcho(h.SM)
+			e.POST("refresh", h.RefreshHandler)
 
 			refreshJSON := handlers.RefreshRequest{
 				RefreshToken: tc.refresh,
@@ -104,7 +111,7 @@ func TestRefreshHandler(t *testing.T) {
 
 			body, err := json.Marshal(refreshJSON)
 			if err != nil {
-				t.Error("error creating refresh json")
+				require.NoError(t, err)
 			}
 
 			req := httptest.NewRequest(http.MethodPost, "/refresh", strings.NewReader(string(body)))
@@ -112,18 +119,26 @@ func TestRefreshHandler(t *testing.T) {
 			// Set writer for tests that write on the response
 			recorder := httptest.NewRecorder()
 
-			ctx := e.NewContext(req, recorder)
+			// Using the ServerHTTP on echo will trigger the router and middleware
+			e.ServeHTTP(recorder, req)
 
-			err = h.RefreshHandler(ctx)
+			res := recorder.Result()
+			defer res.Body.Close()
 
-			if tc.err != nil {
-				assert.Error(t, err)
-				assert.ErrorContains(t, err, tc.err.Error())
+			var out *handlers.Response
 
-				return
+			// parse request body
+			if err := json.NewDecoder(res.Body).Decode(&out); err != nil {
+				t.Error("error parsing response", err)
 			}
 
-			assert.NoError(t, err)
+			assert.Equal(t, tc.expectedStatus, recorder.Code)
+
+			if tc.expectedStatus == http.StatusOK {
+				assert.Equal(t, out.Message, "success")
+			} else {
+				assert.Contains(t, out.Message, tc.expectedErrMessage)
+			}
 		})
 	}
 

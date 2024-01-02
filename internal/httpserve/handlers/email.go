@@ -11,10 +11,9 @@ import (
 
 // NewEmailManager is responsible for initializing and configuring the email manager used for sending emails
 func (h *Handler) NewEmailManager() error {
-	// TODO: go back and configure with viper config instead of setting defaults
 	h.SendGridConfig = &emails.Config{}
 
-	err := envconfig.Process("datum", h.SendGridConfig)
+	err := envconfig.Process("datum_email", h.SendGridConfig)
 	if err != nil {
 		return err
 	}
@@ -24,9 +23,34 @@ func (h *Handler) NewEmailManager() error {
 		return err
 	}
 
-	h.EmailURL = URLConfig{}
+	h.EmailURL = &URLConfig{}
+	if err := envconfig.Process("datum_email_url", h.EmailURL); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// NewTestEmailManager is responsible for initializing and configuring the email manager used for sending emails but does not
+// send emails, should be used in tests
+func (h *Handler) NewTestEmailManager() error {
+	h.SendGridConfig = &emails.Config{}
+
+	err := envconfig.Process("datum", h.SendGridConfig)
+	if err != nil {
+		return err
+	}
+
+	h.SendGridConfig.Testing = true
+
+	h.emailManager, err = emails.New(h.SendGridConfig)
+	if err != nil {
+		return err
+	}
+
+	h.EmailURL = &URLConfig{}
 	if err := envconfig.Process("datum", h.EmailURL); err != nil {
-		return nil
+		return err
 	}
 
 	return nil
@@ -77,14 +101,16 @@ func (h *Handler) SendPasswordResetRequestEmail(user *User) error {
 		EmailData: emails.EmailData{
 			Sender: h.SendGridConfig.MustFromContact(),
 			Recipient: sendgrid.Contact{
-				Email: user.Email,
+				Email:     user.Email,
+				FirstName: user.FirstName,
+				LastName:  user.LastName,
 			},
 		},
 	}
 	data.Recipient.ParseName(user.Name)
 
 	var err error
-	if data.ResetURL, err = h.EmailURL.ResetURL(user.GetVerificationToken()); err != nil {
+	if data.ResetURL, err = h.EmailURL.ResetURL(user.GetPasswordResetToken()); err != nil {
 		return err
 	}
 
@@ -117,12 +143,11 @@ func (h *Handler) SendPasswordResetSuccessEmail(user *User) error {
 }
 
 // URLConfig for the datum registration
-// TODO: move this to the same config setup as everything else
 type URLConfig struct {
 	Base   string `split_words:"true" default:"https://app.datum.net"`
-	Verify string `split_words:"true" default:"/verify"`
-	Invite string `split_words:"true" default:"/invite"`
-	Reset  string `split_words:"true" default:"/reset"`
+	Verify string `split_words:"true" default:"/v1/verify"`
+	Invite string `split_words:"true" default:"/v1/invite"`
+	Reset  string `split_words:"true" default:"/v1/reset"`
 }
 
 func (c URLConfig) Validate() error {
