@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/brianvoe/gofakeit/v6"
 	_ "github.com/mattn/go-sqlite3" // sqlite3 driver
 	"github.com/stretchr/testify/assert"
@@ -32,11 +33,14 @@ func handlerSetup(t *testing.T) *handlers.Handler {
 		t.Fatal("error creating token manager")
 	}
 
+	sm := scs.New()
+
 	h := &handlers.Handler{
 		TM:           tm,
 		DBClient:     EntClient,
 		Logger:       zap.NewNop().Sugar(),
 		CookieDomain: "datum.net",
+		SM:           sm,
 	}
 
 	if err := h.NewTestEmailManager(); err != nil {
@@ -107,7 +111,7 @@ func TestVerifyHandler(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// create echo context with middleware
-			e := setupEcho()
+			e := setupEcho(h.SM)
 			e.GET("verify", h.VerifyEmail)
 
 			// create user in the database

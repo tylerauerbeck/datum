@@ -92,7 +92,8 @@ func TestRegisterHandler(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// create echo context with middleware
-			e := setupEcho()
+			e := setupEcho(h.SM)
+
 			e.POST("register", h.RegisterHandler)
 
 			registerJSON := handlers.RegisterRequest{

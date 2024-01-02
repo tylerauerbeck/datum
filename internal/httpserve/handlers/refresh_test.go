@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/golang-jwt/jwt/v5"
 	_ "github.com/mattn/go-sqlite3" // sqlite3 driver
@@ -30,11 +31,14 @@ func TestRefreshHandler(t *testing.T) {
 		t.Error("error creating token manager")
 	}
 
+	sm := scs.New()
+
 	h := handlers.Handler{
 		TM:           tm,
 		DBClient:     EntClient,
 		Logger:       zap.NewNop().Sugar(),
 		CookieDomain: "datum.net",
+		SM:           sm,
 	}
 
 	ec := echocontext.NewTestEchoContext().Request().Context()
@@ -98,7 +102,7 @@ func TestRefreshHandler(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// create echo context with middleware
-			e := setupEcho()
+			e := setupEcho(h.SM)
 			e.POST("refresh", h.RefreshHandler)
 
 			refreshJSON := handlers.RefreshRequest{

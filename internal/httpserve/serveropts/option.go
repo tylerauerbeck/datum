@@ -6,10 +6,13 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
+	"net/http"
 	"os"
 	"time"
 
 	"entgo.io/ent/dialect"
+	"github.com/alexedwards/scs/v2"
+	"github.com/alexedwards/scs/v2/memstore"
 	echo "github.com/datumforge/echox"
 	"go.uber.org/zap"
 
@@ -326,5 +329,21 @@ func WithTaskManager() ServerOption {
 		tm.Start()
 
 		s.Config.Server.Handler.TaskMan = tm
+	})
+}
+
+// WithSessionManager sets up the default session manager with a 15 minute timeout and stale sessions are cleaned every 5 minutes
+func WithSessionManager() ServerOption {
+	return newApplyFunc(func(s *ServerOptions) {
+		sm := scs.New()
+		sm.Lifetime = time.Hour
+		sm.Store = memstore.NewWithCleanupInterval(5 * time.Minute) // nolint: gomnd
+		sm.IdleTimeout = 15 * time.Minute                           // nolint: gomnd
+		sm.Cookie.Name = "__Host-datum"
+		sm.Cookie.HttpOnly = true
+		sm.Cookie.Persist = false
+		sm.Cookie.SameSite = http.SameSiteStrictMode
+		sm.Cookie.Secure = true
+		s.Config.Server.Handler.SM = sm
 	})
 }
