@@ -24,10 +24,6 @@ const (
 	OTLPGRPCProvider = "otlpgrpc"
 )
 
-var (
-	defaultTimeout = 10 * time.Second
-)
-
 type Config struct {
 	Enabled     bool   `yaml:"enabled" split_words:"true" default:"false"`
 	Provider    string `yaml:"provider" split_words:"true" default:"stdout"`
