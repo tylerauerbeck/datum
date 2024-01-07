@@ -59,7 +59,7 @@ func NewTracer(c Config, name string, logger *zap.SugaredLogger) error {
 	exp, err := newTraceExporter(c)
 	if err != nil {
 		logger.Debugw("Failed to create trace exporter", "error", err)
-		return nil
+		return err
 	}
 
 	opts := []sdktrace.TracerProviderOption{

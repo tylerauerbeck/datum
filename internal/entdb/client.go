@@ -8,7 +8,7 @@ import (
 	"ariga.io/entcache"
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
-	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
+	"go.opentelemetry.io/otel/attribute"
 
 	"github.com/pkg/errors"
 	"github.com/uptrace/opentelemetry-go-extra/otelsql"
@@ -74,7 +74,7 @@ func (c *EntClientConfig) newEntDB(dataSource string) (*entsql.Driver, error) {
 
 	// setup db connection
 	db, err := otelsql.Open(dialect, dataSource,
-		otelsql.WithAttributes(semconv.DBSystemSqlite),
+		otelsql.WithAttributes(attribute.String("db.system", dialect)),
 		// TODO: determine additional useful attributes
 		// TODO: make db name configurable
 		otelsql.WithDBName("datum"))
