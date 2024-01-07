@@ -6,13 +6,17 @@ import (
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/entql"
 	"entgo.io/ent/schema"
-	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 
+	"github.com/datumforge/datum/internal/ent/generated"
+	"github.com/datumforge/datum/internal/ent/generated/privacy"
 	"github.com/datumforge/datum/internal/ent/hooks"
 	"github.com/datumforge/datum/internal/ent/mixin"
+	"github.com/datumforge/datum/internal/ent/privacy/rule"
+	"github.com/datumforge/datum/internal/ent/privacy/token"
 	"github.com/datumforge/datum/internal/entx"
 )
 
@@ -47,12 +51,7 @@ func (EmailVerificationToken) Fields() []ent.Field {
 
 // Edges of the EmailVerificationToken
 func (EmailVerificationToken) Edges() []ent.Edge {
-	return []ent.Edge{
-		edge.From("owner", User.Type).
-			Ref("email_verification_tokens").
-			Required().
-			Unique(),
-	}
+	return []ent.Edge{}
 }
 
 // Mixin of the EmailVerificationToken
@@ -61,6 +60,9 @@ func (EmailVerificationToken) Mixin() []ent.Mixin {
 		mixin.AuditMixin{},
 		mixin.IDMixin{},
 		mixin.SoftDeleteMixin{},
+		UserOwnedMixin{
+			Ref: "email_verification_tokens",
+		},
 	}
 }
 
@@ -85,5 +87,42 @@ func (EmailVerificationToken) Annotations() []schema.Annotation {
 func (EmailVerificationToken) Hooks() []ent.Hook {
 	return []ent.Hook{
 		hooks.HookEmailVerificationToken(),
+	}
+}
+
+// Policy of the EmailVerificationToken
+func (EmailVerificationToken) Policy() ent.Policy {
+	return privacy.Policy{
+		Query: privacy.QueryPolicy{
+			rule.AllowIfOwnedByViewer(),
+			rule.AllowAfterApplyingPrivacyTokenFilter(
+				&token.VerifyToken{},
+				func(t token.PrivacyToken, filter privacy.Filter) {
+					actualToken := t.(*token.VerifyToken)
+					tokenFilter := filter.(*generated.EmailVerificationTokenFilter)
+					tokenFilter.WhereToken(entql.StringEQ(actualToken.GetToken()))
+				},
+			),
+			privacy.AlwaysDenyRule(),
+		},
+		Mutation: privacy.MutationPolicy{
+			privacy.OnMutationOperation(
+				privacy.MutationPolicy{
+					rule.AllowIfAdmin(),
+					rule.AllowIfContextHasPrivacyTokenOfType(&token.SignUpToken{}),
+					rule.AllowMutationAfterApplyingOwnerFilter(),
+					privacy.AlwaysDenyRule(),
+				},
+				ent.OpCreate,
+			),
+			privacy.OnMutationOperation(
+				privacy.MutationPolicy{
+					rule.AllowIfAdmin(),
+					rule.AllowMutationAfterApplyingOwnerFilter(),
+					privacy.AlwaysDenyRule(),
+				},
+				ent.OpUpdateOne|ent.OpUpdate|ent.OpDeleteOne|ent.OpDelete,
+			),
+		},
 	}
 }

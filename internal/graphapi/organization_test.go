@@ -31,7 +31,7 @@ func TestQuery_Organization(t *testing.T) {
 	defer entClient.Close()
 
 	// Setup Test Graph Client
-	client := graphTestClient(entClient)
+	client := graphTestClient(t, entClient)
 
 	sub := ulids.New().String()
 
@@ -40,11 +40,9 @@ func TestQuery_Organization(t *testing.T) {
 		t.Fatal()
 	}
 
-	echoContext := *ec
+	reqCtx := context.WithValue(ec.Request().Context(), echocontext.EchoContextKey, ec)
 
-	reqCtx := context.WithValue(echoContext.Request().Context(), echocontext.EchoContextKey, echoContext)
-
-	echoContext.SetRequest(echoContext.Request().WithContext(reqCtx))
+	ec.SetRequest(ec.Request().WithContext(reqCtx))
 
 	org1 := (&OrganizationBuilder{}).MustNew(reqCtx)
 	listObjects := []string{fmt.Sprintf("organization:%s", org1.ID)}
@@ -103,7 +101,7 @@ func TestQuery_Organization(t *testing.T) {
 
 func TestQuery_OrganizationsNoAuth(t *testing.T) {
 	// Setup Test Graph Client Without Auth
-	client := graphTestClientNoAuth(EntClient)
+	client := graphTestClientNoAuth(t, EntClient)
 
 	ec := echocontext.NewTestEchoContext()
 
@@ -156,7 +154,7 @@ func TestQuery_OrganizationsAuth(t *testing.T) {
 	defer entClient.Close()
 
 	// Setup Test Graph Client
-	client := graphTestClient(entClient)
+	client := graphTestClient(t, entClient)
 
 	sub := ulids.New().String()
 
@@ -165,11 +163,9 @@ func TestQuery_OrganizationsAuth(t *testing.T) {
 		t.Fatal()
 	}
 
-	echoContext := *ec
+	reqCtx := context.WithValue(ec.Request().Context(), echocontext.EchoContextKey, ec)
 
-	reqCtx := context.WithValue(echoContext.Request().Context(), echocontext.EchoContextKey, echoContext)
-
-	echoContext.SetRequest(echoContext.Request().WithContext(reqCtx))
+	ec.SetRequest(ec.Request().WithContext(reqCtx))
 
 	org1 := (&OrganizationBuilder{}).MustNew(reqCtx)
 	org2 := (&OrganizationBuilder{}).MustNew(reqCtx)
@@ -233,7 +229,7 @@ func TestMutation_CreateOrganization(t *testing.T) {
 	defer entClient.Close()
 
 	// Setup Test Graph Client
-	client := graphTestClient(entClient)
+	client := graphTestClient(t, entClient)
 
 	// Setup echo context
 	sub := ulids.New().String()
@@ -243,11 +239,9 @@ func TestMutation_CreateOrganization(t *testing.T) {
 		t.Fatal()
 	}
 
-	echoContext := *ec
+	reqCtx := context.WithValue(ec.Request().Context(), echocontext.EchoContextKey, ec)
 
-	reqCtx := context.WithValue(echoContext.Request().Context(), echocontext.EchoContextKey, echoContext)
-
-	echoContext.SetRequest(echoContext.Request().WithContext(reqCtx))
+	ec.SetRequest(ec.Request().WithContext(reqCtx))
 
 	parentOrg := (&OrganizationBuilder{}).MustNew(reqCtx)
 	parentPersonalOrg := (&OrganizationBuilder{PersonalOrg: true}).MustNew(reqCtx)
@@ -401,7 +395,7 @@ func TestMutation_CreateOrganization(t *testing.T) {
 
 func TestMutation_CreateOrganizationNoAuth(t *testing.T) {
 	// Setup Test Graph Client Without Auth
-	client := graphTestClientNoAuth(EntClient)
+	client := graphTestClientNoAuth(t, EntClient)
 
 	ec := echocontext.NewTestEchoContext()
 
@@ -495,7 +489,7 @@ func TestMutation_UpdateOrganization(t *testing.T) {
 	defer entClient.Close()
 
 	// Setup Test Graph Client
-	client := graphTestClient(entClient)
+	client := graphTestClient(t, entClient)
 
 	// Setup echo context
 	sub := ulids.New().String()
@@ -505,11 +499,9 @@ func TestMutation_UpdateOrganization(t *testing.T) {
 		t.Fatal()
 	}
 
-	echoContext := *ec
+	reqCtx := context.WithValue(ec.Request().Context(), echocontext.EchoContextKey, ec)
 
-	reqCtx := context.WithValue(echoContext.Request().Context(), echocontext.EchoContextKey, echoContext)
-
-	echoContext.SetRequest(echoContext.Request().WithContext(reqCtx))
+	ec.SetRequest(ec.Request().WithContext(reqCtx))
 
 	nameUpdate := gofakeit.Name()
 	displayNameUpdate := gofakeit.LetterN(40)
@@ -616,7 +608,7 @@ func TestMutation_DeleteOrganization(t *testing.T) {
 	defer entClient.Close()
 
 	// Setup Test Graph Client
-	client := graphTestClient(entClient)
+	client := graphTestClient(t, entClient)
 
 	// Setup echo context
 	sub := ulids.New().String()
@@ -626,11 +618,9 @@ func TestMutation_DeleteOrganization(t *testing.T) {
 		t.Fatal()
 	}
 
-	echoContext := *ec
+	reqCtx := context.WithValue(ec.Request().Context(), echocontext.EchoContextKey, ec)
 
-	reqCtx := context.WithValue(echoContext.Request().Context(), echocontext.EchoContextKey, echoContext)
-
-	echoContext.SetRequest(echoContext.Request().WithContext(reqCtx))
+	ec.SetRequest(ec.Request().WithContext(reqCtx))
 
 	org := (&OrganizationBuilder{}).MustNew(reqCtx)
 
@@ -724,7 +714,7 @@ func TestMutation_DeleteOrganization(t *testing.T) {
 }
 
 func TestMutation_OrganizationCascadeDelete(t *testing.T) {
-	client := graphTestClientNoAuth(EntClient)
+	client := graphTestClientNoAuth(t, EntClient)
 
 	ec := echocontext.NewTestEchoContext()
 
@@ -762,13 +752,13 @@ func TestMutation_OrganizationCascadeDelete(t *testing.T) {
 
 	o, err = client.GetOrganizationByID(ctx, org.ID)
 
-	require.Equal(t, o.Organization.ID, org.ID)
 	require.NoError(t, err)
+	require.Equal(t, o.Organization.ID, org.ID)
 
 	g, err = client.GetGroupByID(ctx, group1.ID)
 
-	require.Equal(t, g.Group.ID, group1.ID)
 	require.NoError(t, err)
+	require.Equal(t, g.Group.ID, group1.ID)
 }
 
 func TestMutation_CreateOrganizationTransaction(t *testing.T) {
@@ -783,7 +773,7 @@ func TestMutation_CreateOrganizationTransaction(t *testing.T) {
 	defer entClient.Close()
 
 	// Setup Test Graph Client
-	client := graphTestClient(entClient)
+	client := graphTestClient(t, entClient)
 
 	// Setup echo context
 	sub := ulids.New().String()
@@ -793,14 +783,12 @@ func TestMutation_CreateOrganizationTransaction(t *testing.T) {
 		t.Fatal()
 	}
 
-	echoContext := *ec
-
-	reqCtx := context.WithValue(echoContext.Request().Context(), echocontext.EchoContextKey, echoContext)
+	reqCtx := context.WithValue(ec.Request().Context(), echocontext.EchoContextKey, ec)
 
 	// add client to context for transactional client
 	reqCtx = ent.NewContext(reqCtx, entClient)
 
-	echoContext.SetRequest(echoContext.Request().WithContext(reqCtx))
+	ec.SetRequest(ec.Request().WithContext(reqCtx))
 
 	t.Run("Create should not write if FGA transaction fails", func(t *testing.T) {
 		input := datumclient.CreateOrganizationInput{
@@ -816,7 +804,7 @@ func TestMutation_CreateOrganizationTransaction(t *testing.T) {
 		require.Empty(t, resp)
 
 		// Make sure the org was not added to the database (check without auth)
-		clientNoAuth := graphTestClientNoAuth(EntClient)
+		clientNoAuth := graphTestClientNoAuth(t, EntClient)
 
 		ec := echocontext.NewTestEchoContext()
 

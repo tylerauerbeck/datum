@@ -14,6 +14,7 @@ import (
 	"github.com/oklog/ulid/v2"
 
 	"github.com/datumforge/datum/internal/ent/generated"
+	"github.com/datumforge/datum/internal/ent/privacy/viewer"
 	"github.com/datumforge/datum/internal/httpserve/middleware/auth"
 	"github.com/datumforge/datum/internal/passwd"
 	"github.com/datumforge/datum/internal/tokens"
@@ -124,13 +125,16 @@ func (h *Handler) ResetPassword(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, ErrorResponse(auth.ErrNonUniquePassword))
 	}
 
-	if err := h.updateUserPassword(ctx.Request().Context(), entUser.ID, rp.Password); err != nil {
+	// set context for remaining request based on logged in user
+	userCtx := viewer.NewContext(ctx.Request().Context(), viewer.NewUserViewerFromID(user.ID, true))
+
+	if err := h.updateUserPassword(userCtx, entUser.ID, rp.Password); err != nil {
 		h.Logger.Errorw("error updating user password", "error", err)
 
 		return ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
 	}
 
-	if err := h.expireAllResetTokensUserByEmail(ctx.Request().Context(), user.Email); err != nil {
+	if err := h.expireAllResetTokensUserByEmail(userCtx, user.Email); err != nil {
 		h.Logger.Errorw("error expiring existing tokens", "error", err)
 
 		return ctx.JSON(http.StatusBadRequest, ErrorResponse(err))

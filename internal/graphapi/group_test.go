@@ -30,7 +30,7 @@ func TestQuery_Group(t *testing.T) {
 	defer entClient.Close()
 
 	// Setup Test Graph Client
-	client := graphTestClient(entClient)
+	client := graphTestClient(t, entClient)
 
 	sub := ulids.New().String()
 
@@ -39,11 +39,9 @@ func TestQuery_Group(t *testing.T) {
 		t.Fatal()
 	}
 
-	echoContext := *ec
+	reqCtx := context.WithValue(ec.Request().Context(), echocontext.EchoContextKey, ec)
 
-	reqCtx := context.WithValue(echoContext.Request().Context(), echocontext.EchoContextKey, echoContext)
-
-	echoContext.SetRequest(echoContext.Request().WithContext(reqCtx))
+	ec.SetRequest(ec.Request().WithContext(reqCtx))
 
 	org1 := (&OrganizationBuilder{}).MustNew(reqCtx)
 	group1 := (&GroupBuilder{Owner: org1.ID}).MustNew(reqCtx)
@@ -107,7 +105,7 @@ func TestQuery_Group(t *testing.T) {
 
 func TestQuery_GroupsNoAuth(t *testing.T) {
 	// Setup Test Graph Client Without Auth
-	client := graphTestClientNoAuth(EntClient)
+	client := graphTestClientNoAuth(t, EntClient)
 
 	ec := echocontext.NewTestEchoContext()
 
@@ -163,7 +161,7 @@ func TestQuery_GroupsByOwner(t *testing.T) {
 	defer entClient.Close()
 
 	// Setup Test Graph Client
-	client := graphTestClient(entClient)
+	client := graphTestClient(t, entClient)
 
 	sub := ulids.New().String()
 
@@ -172,11 +170,9 @@ func TestQuery_GroupsByOwner(t *testing.T) {
 		t.Fatal()
 	}
 
-	echoContext := *ec
+	reqCtx := context.WithValue(ec.Request().Context(), echocontext.EchoContextKey, ec)
 
-	reqCtx := context.WithValue(echoContext.Request().Context(), echocontext.EchoContextKey, echoContext)
-
-	echoContext.SetRequest(echoContext.Request().WithContext(reqCtx))
+	ec.SetRequest(ec.Request().WithContext(reqCtx))
 
 	org1 := (&OrganizationBuilder{}).MustNew(reqCtx)
 	org2 := (&OrganizationBuilder{}).MustNew(reqCtx)
@@ -251,7 +247,7 @@ func TestQuery_GroupsByOwner(t *testing.T) {
 
 func TestQuery_GroupsByOwnerNoAuth(t *testing.T) {
 	// Setup Test Graph Client Without Auth
-	client := graphTestClientNoAuth(EntClient)
+	client := graphTestClientNoAuth(t, EntClient)
 
 	ec := echocontext.NewTestEchoContext()
 
@@ -317,7 +313,7 @@ func TestQuery_Groups(t *testing.T) {
 	defer entClient.Close()
 
 	// Setup Test Graph Client
-	client := graphTestClient(entClient)
+	client := graphTestClient(t, entClient)
 
 	sub := ulids.New().String()
 
@@ -326,11 +322,9 @@ func TestQuery_Groups(t *testing.T) {
 		t.Fatal()
 	}
 
-	echoContext := *ec
+	reqCtx := context.WithValue(ec.Request().Context(), echocontext.EchoContextKey, ec)
 
-	reqCtx := context.WithValue(echoContext.Request().Context(), echocontext.EchoContextKey, echoContext)
-
-	echoContext.SetRequest(echoContext.Request().WithContext(reqCtx))
+	ec.SetRequest(ec.Request().WithContext(reqCtx))
 
 	org1 := (&OrganizationBuilder{}).MustNew(reqCtx)
 	org2 := (&OrganizationBuilder{}).MustNew(reqCtx)
@@ -404,7 +398,7 @@ func TestQuery_Groups(t *testing.T) {
 
 func TestQuery_GroupNoAuth(t *testing.T) {
 	// Setup Test Graph Client Without Auth
-	client := graphTestClientNoAuth(EntClient)
+	client := graphTestClientNoAuth(t, EntClient)
 
 	ec := echocontext.NewTestEchoContext()
 
@@ -468,7 +462,7 @@ func TestMutation_CreateGroup(t *testing.T) {
 	defer entClient.Close()
 
 	// Setup Test Graph Client
-	client := graphTestClient(entClient)
+	client := graphTestClient(t, entClient)
 
 	// Setup echo context
 	sub := ulids.New().String()
@@ -478,11 +472,9 @@ func TestMutation_CreateGroup(t *testing.T) {
 		t.Fatal()
 	}
 
-	echoContext := *ec
+	reqCtx := context.WithValue(ec.Request().Context(), echocontext.EchoContextKey, ec)
 
-	reqCtx := context.WithValue(echoContext.Request().Context(), echocontext.EchoContextKey, echoContext)
-
-	echoContext.SetRequest(echoContext.Request().WithContext(reqCtx))
+	ec.SetRequest(ec.Request().WithContext(reqCtx))
 
 	owner1 := (&OrganizationBuilder{}).MustNew(reqCtx)
 	owner2 := (&OrganizationBuilder{}).MustNew(reqCtx)
@@ -575,7 +567,7 @@ func TestMutation_CreateGroup(t *testing.T) {
 
 func TestMutation_CreateGroupNoAuth(t *testing.T) {
 	// Setup Test Graph Client Without Auth
-	client := graphTestClientNoAuth(EntClient)
+	client := graphTestClientNoAuth(t, EntClient)
 
 	ec := echocontext.NewTestEchoContext()
 
@@ -677,7 +669,7 @@ func TestMutation_UpdateGroup(t *testing.T) {
 	defer entClient.Close()
 
 	// Setup Test Graph Client
-	client := graphTestClient(entClient)
+	client := graphTestClient(t, entClient)
 
 	// Setup echo context
 	sub := ulids.New().String()
@@ -687,11 +679,9 @@ func TestMutation_UpdateGroup(t *testing.T) {
 		t.Fatal()
 	}
 
-	echoContext := *ec
+	reqCtx := context.WithValue(ec.Request().Context(), echocontext.EchoContextKey, ec)
 
-	reqCtx := context.WithValue(echoContext.Request().Context(), echocontext.EchoContextKey, echoContext)
-
-	echoContext.SetRequest(echoContext.Request().WithContext(reqCtx))
+	ec.SetRequest(ec.Request().WithContext(reqCtx))
 
 	nameUpdate := gofakeit.Name()
 	displayNameUpdate := gofakeit.LetterN(40)
@@ -777,7 +767,7 @@ func TestMutation_UpdateGroup(t *testing.T) {
 
 func TestMutation_UpdateGroupNoAuth(t *testing.T) {
 	// Setup Test Graph Client Without Auth
-	client := graphTestClientNoAuth(EntClient)
+	client := graphTestClientNoAuth(t, EntClient)
 
 	ec := echocontext.NewTestEchoContext()
 
@@ -896,7 +886,7 @@ func TestMutation_DeleteGroup(t *testing.T) {
 	defer entClient.Close()
 
 	// Setup Test Graph Client
-	client := graphTestClient(entClient)
+	client := graphTestClient(t, entClient)
 
 	// Setup echo context
 	sub := ulids.New().String()
@@ -906,11 +896,9 @@ func TestMutation_DeleteGroup(t *testing.T) {
 		t.Fatal()
 	}
 
-	echoContext := *ec
+	reqCtx := context.WithValue(ec.Request().Context(), echocontext.EchoContextKey, ec)
 
-	reqCtx := context.WithValue(echoContext.Request().Context(), echocontext.EchoContextKey, echoContext)
-
-	echoContext.SetRequest(echoContext.Request().WithContext(reqCtx))
+	ec.SetRequest(ec.Request().WithContext(reqCtx))
 
 	group := (&GroupBuilder{}).MustNew(reqCtx)
 
@@ -977,7 +965,7 @@ func TestMutation_DeleteGroup(t *testing.T) {
 
 func TestMutation_DeleteGroupNoAuth(t *testing.T) {
 	// Setup Test Graph Client Without Auth
-	client := graphTestClientNoAuth(EntClient)
+	client := graphTestClientNoAuth(t, EntClient)
 
 	ec := echocontext.NewTestEchoContext()
 

@@ -13,10 +13,10 @@ import (
 )
 
 func (h *Handler) updateUserLastSeen(ctx context.Context, id string) error {
-	if _, err := transaction.FromContext(ctx).User.Update().SetLastSeen(time.Now()).
-		Where(
-			user.ID(id),
-		).
+	if _, err := transaction.FromContext(ctx).
+		User.
+		UpdateOneID(id).
+		SetLastSeen(time.Now()).
 		Save(ctx); err != nil {
 		h.Logger.Errorw("error updating user last seen", "error", err)
 
@@ -88,7 +88,7 @@ func (h *Handler) createPasswordResetToken(ctx context.Context, user *User) (*en
 // getUserByEVToken returns the ent user with the user settings and email verification token fields based on the
 // token in the request
 func (h *Handler) getUserByEVToken(ctx context.Context, token string) (*ent.User, error) {
-	user, err := transaction.FromContext(ctx).EmailVerificationToken.Query().WithOwner().
+	user, err := transaction.FromContext(ctx).EmailVerificationToken.Query().
 		Where(
 			emailverificationtoken.Token(token),
 		).

@@ -11,6 +11,7 @@ import (
 	"github.com/datumforge/datum/internal/ent/generated"
 	"github.com/datumforge/datum/internal/ent/generated/privacy"
 	_ "github.com/datumforge/datum/internal/ent/generated/runtime"
+	"github.com/datumforge/datum/internal/ent/privacy/viewer"
 	"github.com/datumforge/datum/internal/httpserve/middleware/auth"
 )
 
@@ -36,6 +37,11 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input generated.Creat
 			return nil, err
 		}
 
+		if errors.Is(err, privacy.Deny) {
+			return nil, ErrPermissionDenied
+
+		}
+
 		r.logger.Errorw("failed to create user", "error", err)
 		return nil, ErrInternalServerError
 	}
@@ -45,12 +51,22 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input generated.Creat
 
 // UpdateUser is the resolver for the updateUser field.
 func (r *mutationResolver) UpdateUser(ctx context.Context, id string, input generated.UpdateUserInput) (*UserUpdatePayload, error) {
-	// TODO - add permissions checks
+	if r.authDisabled {
+		ctx = privacy.DecisionContext(ctx, privacy.Allow)
+	} else {
+		// setup view context
+		ctx = viewer.NewContext(ctx, viewer.NewUserViewerFromSubject(ctx))
+	}
 
 	user, err := withTransactionalMutation(ctx).User.Get(ctx, id)
 	if err != nil {
 		if generated.IsNotFound(err) {
 			return nil, err
+		}
+
+		if errors.Is(err, privacy.Deny) {
+			return nil, ErrPermissionDenied
+
 		}
 
 		r.logger.Errorw("failed to get user", "error", err)
@@ -78,11 +94,21 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, id string, input gene
 
 // DeleteUser is the resolver for the deleteUser field.
 func (r *mutationResolver) DeleteUser(ctx context.Context, id string) (*UserDeletePayload, error) {
-	// TODO - add permissions checks
+	if r.authDisabled {
+		ctx = privacy.DecisionContext(ctx, privacy.Allow)
+	} else {
+		// setup view context
+		ctx = viewer.NewContext(ctx, viewer.NewUserViewerFromSubject(ctx))
+	}
 
 	if err := withTransactionalMutation(ctx).User.DeleteOneID(id).Exec(ctx); err != nil {
 		if generated.IsNotFound(err) {
 			return nil, err
+		}
+
+		if errors.Is(err, privacy.Deny) {
+			return nil, ErrPermissionDenied
+
 		}
 
 		r.logger.Errorw("failed to delete user", "error", err)
@@ -98,10 +124,22 @@ func (r *mutationResolver) DeleteUser(ctx context.Context, id string) (*UserDele
 
 // User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id string) (*generated.User, error) {
+	if r.authDisabled {
+		ctx = privacy.DecisionContext(ctx, privacy.Allow)
+	} else {
+		// setup view context
+		ctx = viewer.NewContext(ctx, viewer.NewUserViewerFromSubject(ctx))
+	}
+
 	user, err := r.client.User.Get(ctx, id)
 	if err != nil {
 		if generated.IsNotFound(err) {
 			return nil, err
+		}
+
+		if errors.Is(err, privacy.Deny) {
+			return nil, ErrPermissionDenied
+
 		}
 
 		r.logger.Errorw("failed to get user", "error", err)

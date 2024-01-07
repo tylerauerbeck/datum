@@ -9,6 +9,7 @@ import (
 	echo "github.com/datumforge/echox"
 
 	ent "github.com/datumforge/datum/internal/ent/generated"
+	"github.com/datumforge/datum/internal/ent/privacy/viewer"
 	"github.com/datumforge/datum/internal/utils/marionette"
 )
 
@@ -54,7 +55,9 @@ func (h *Handler) ForgotPassword(ctx echo.Context) error {
 		ID:        entUser.ID,
 	}
 
-	if _, err = h.storeAndSendPasswordResetToken(ctx.Request().Context(), user); err != nil {
+	viewerCtx := viewer.NewContext(ctx.Request().Context(), viewer.NewUserViewerFromID(entUser.ID, true))
+
+	if _, err = h.storeAndSendPasswordResetToken(viewerCtx, user); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, ErrorResponse(ErrProcessingRequest))
 	}
 
